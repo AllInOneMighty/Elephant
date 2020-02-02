@@ -155,7 +155,6 @@ L['chatnames']  = {
   ['whisper']  = WHISPER,
   ['yell']  = YELL_MESSAGE,
   ['achievement'] = ACHIEVEMENTS,
-  ['instance'] = INSTANCE,
   ['instance'] = INSTANCE
 }
 
