@@ -15,6 +15,8 @@
 ## X-Category: Chat/Communication
 ## X-Credits: harl, Antikleia, <CWDG>月色狼影, Cossy
 ## X-Embeds: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0
+## X-Curse-Project-ID: 2309
+## X-WoWI-ID: 5423
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
