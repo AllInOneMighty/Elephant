@@ -6,8 +6,8 @@
 
 ## Solution to chat loss annoyance
 
-**Elephant** logs the chat for you in the background even when you get
-disconnected. It saves the WHISPER & BATTLE.NET, RAID, INSTANCE & BATTLEGROUND,
+**Elephant** logs the chat for you in the background __even when you get
+disconnected__. It saves the WHISPER & BATTLE.NET, RAID, INSTANCE & BATTLEGROUND,
 PARTY, GUILD, SAY, YELL and OFFICER chats separately, but also all *general
 chats* (General, Trade, LocalDefense, ...), *custom chats* you are currently on,
 *achievements*, *loots* and finally *system* messages (auctions, rolls, server
