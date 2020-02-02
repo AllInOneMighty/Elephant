@@ -538,7 +538,7 @@ this method does nothing.
 function Elephant:ResetButtonPosition()
   if ElephantButtonFrame then
     ElephantButtonFrame:ClearAllPoints()
-    ElephantButtonFrame:SetPoint("BOTTOM", QuickJoinToastButton, "TOP")
+    ElephantButtonFrame:SetPoint("BOTTOM", ChatFrameChannelButton, "TOP")
   end
 end
 
