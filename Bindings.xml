@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="ELEPHANT_TOGGLE" header="ELEPHANT">
+		LibStub("AceAddon-3.0"):GetAddon("Elephant"):Toggle()
+	</Binding>
+</Bindings>

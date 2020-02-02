@@ -1,0 +1,53 @@
+﻿## Interface: 80300
+## Title: Elephant
+## Title-zhCN: Elephant �?�天记录器
+## Notes: A friendly companion that remembers the chat.
+## Notes-zhCN: �?�天记录�?助手
+## Notes-frFR: Un compagnon amical qui se souvient de vos discussions.
+## Notes-deDE: A friendly companion that remembers the chat.
+## Notes-zhTW: �?�天記錄�?助手。
+## Notes-ruRU: Друже�?твенный компаньон который запоминает чат.
+## Author: All-in-one Mighty
+## Version: @project-version@
+## SavedVariables: ElephantDB
+## SavedVariablesPerCharacter: ElephantDBPerChar
+## OptionalDeps: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0, Prat
+## X-Category: Chat/Communication
+## X-Credits: harl, Antikleia, <CWDG>月色狼影, Cossy
+## X-Embeds: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+#@end-no-lib-strip@
+
+Locales\Locale-enUS.lua
+Locales\Locale-frFR.lua
+Locales\Locale-deDE.lua
+Locales\Locale-zhCN.lua
+Locales\Locale-zhTW.lua
+Locales\Locale-ruRU.lua
+Core.lua
+Broker.lua
+Options.lua
+Structure.lua
+Interface.lua
+Interface-Dropdown.lua
+Initialize.lua
+Message.lua
+Event.lua
+
+Elephant.xml
+Elephant-Copy.xml
+Elephant-Button.xml
