@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
-<Frame name="ElephantCopyFrameTemplate" toplevel="true" enableMouse="true" hidden="true" virtual="true">
+<Frame name="ElephantCopyFrameTemplate" toplevel="true" enableMouse="true" hidden="true" virtual="true" inherits="BackdropTemplate">
 	<Size x="500" y="500"/>
+	<!-- H.Sch. - ReglohPri - Backdrop is deprecated since Patch 9.0.1
 	<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\AddOns\Elephant\roth" tile="true">
 		<EdgeSize>
 			<AbsValue val="16" />
@@ -10,9 +11,13 @@
 		</TileSize>
 		<BackgroundInsets  left="5" right="5" top="5" bottom="5"/>
 		<Color b="0.0" r="0.0" g="0.0" a="0.45"/>
-	</Backdrop>
+	</Backdrop> -->
 	<Scripts>
-		<OnLoad>
+		<OnLoad inherit="prepend">
+			<!-- H.Sch. - ReglohPri - BACKDROP_ELEPHANT2_16_16 is defined in core.lua -->
+			self:SetBackdrop(BACKDROP_ELEPHANT2_16_16);
+			self:SetBackdropColor(0, 0, 0);
+			self:SetBackdropBorderColor(0, 0, 0, 0.45);
 			self:SetPoint("TOP", Elephant.defaultConf.copyposition.x, Elephant.defaultConf.copyposition.y)
 			getglobal(self:GetName().."TitleFontString"):SetText(Elephant.L['copywindow'])
 		</OnLoad>
@@ -95,7 +100,11 @@
 				</EditBox>
 			</ScrollChild>
 		</ScrollFrame>
-		<Frame name="$parentScrollTextureFrame">
+		<Frame name="$parentScrollTextureFrame" inherits="BackdropTemplate">
+			<!-- H.Sch. - ReglohPri - this is the changes for Backdrop. -->
+			<KeyValues>
+				<KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
+			</KeyValues>
 			<Size x="435" y="435" />
 			<Anchors>
 				<Anchor point="TOP">
@@ -104,6 +113,7 @@
 					</Offset>
 				</Anchor>
 			</Anchors>
+			<!-- H.Sch. - ReglohPri - Backdrop is deprecated since Patch 9.0.1
 			<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 				<EdgeSize>
 					<AbsValue val="16" />
@@ -115,7 +125,14 @@
 					<AbsInset left="5" right="5" top="5" bottom="5" />
 				</BackgroundInsets>
 				<Color b="0.0" r="0.0" g="0.0" a="0.45"/>
-			</Backdrop>
+			</Backdrop> -->
+			<Scripts>
+				<OnLoad>
+					<!-- H.Sch - ReglohPri - BACKDROP_ELEPHANT_16_16 is defined in core.lua -->
+					self:SetBackdrop(BACKDROP_ELEPHANT_16_16);
+					self:SetBackdropColor(0, 0, 0);
+				</OnLoad>
+			</Scripts>
 		</Frame>
 		<Button name="$parentBBCodeButton" inherits="OptionsButtonTemplate">
 			<Anchors>

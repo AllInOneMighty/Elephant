@@ -1,20 +1,25 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
-<Frame name="ElephantFrame" parent="UIParent" enableMouse="true" movable="true" toplevel="true" hidden="true">
+<Frame name="ElephantFrame" parent="UIParent" enableMouse="true" movable="true" toplevel="true" hidden="true" inherits="BackdropTemplate" mixin="BackdropTemplateMixin">
 	<Size x="600" y="580"/>
+	<!-- H.Sch. - ReglohPri - Backdrop is deprecated since Patch 9.0.1
 	<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\AddOns\Elephant\roth" tile="true">
 		<TileSize val="16"/>
 		<EdgeSize val="16"/>
 		<BackgroundInsets left="5" right="5" top="5" bottom="5"/>
 		<Color b="0.0" r="0.0" g="0.0" a="0.45"/>
-	</Backdrop>
+	</Backdrop> -->
 	<Scripts>
-		<OnLoad>
+		<OnLoad inherit="prepend">
+			<!-- H.Sch. - ReglohPri - BACKDROP_ELEPHANT2_16_16 is defined in core.lua -->
+			self:SetBackdrop(BACKDROP_ELEPHANT2_16_16);
+			self:SetBackdropColor(0, 0, 0);
+			self:SetBackdropBorderColor(0, 0, 0, 0.45);
 			self:SetPoint("TOP",
 				UIParent,
 				"TOP",
 				Elephant.defaultConf.position.x,
 				Elephant.defaultConf.position.y)
-			getglobal(self:GetName().."TitleFontString"):SetText("Elephant @project-version@")
+			getglobal(self:GetName().."TitleFontString"):SetText("Elephant 9.0.1-beta.1")
 		</OnLoad>
 		<OnShow>
 			if ElephantCopyFrame then
@@ -155,19 +160,27 @@
 		</ScrollingMessageFrame>
 		
 		<!-- Buttons for scrolling -->
-		<Frame name="$parentScrollingMessageTextureFrame">
+		<Frame name="$parentScrollingMessageTextureFrame" inherits="BackdropTemplate">
 			<Size x="535" y="510"/>
 			<Anchors>
 				<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 					<Offset x="25" y="-28"/>
 				</Anchor>
 			</Anchors>
+			<!-- H.Sch. - ReglohPri - Backdrop is deprecated since Patch 9.0.1
 			<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 				<TileSize val="16"/>
 				<EdgeSize val="16"/>
 				<BackgroundInsets left="5" right="5" top="5" bottom="5"/>
 				<Color b="0.0" r="0.0" g="0.0" a="0.5"/>
-			</Backdrop>
+			</Backdrop> -->
+			<Scripts>
+				<OnLoad>
+					<!-- H.Sch - ReglohPri - BACKDROP_ELEPHANT_16_16 is defined in core.lua -->
+					self:SetBackdrop(BACKDROP_ELEPHANT_16_16);
+					self:SetBackdropColor(0, 0, 0);
+				</OnLoad>
+			</Scripts>
 		</Frame>
 		<Button name="$parentScrollBottomButton">
 			<Size x="32" y="32"/>

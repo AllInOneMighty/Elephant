@@ -2,6 +2,27 @@
 Elephant = LibStub("AceAddon-3.0"):NewAddon("Elephant", "AceConsole-3.0", "AceEvent-3.0")
 Elephant.L = LibStub("AceLocale-3.0"):GetLocale("Elephant")
 
+-- H.Sch. - ReglohPri - this 2 backdrops were used for Elephant.xml and Elephant-Copy.xml, because since Patch 9.0.1 is Backdrop deprecated.
+BACKDROP_ELEPHANT_16_16 = {
+	bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileEdge = true,
+	tileSize = 16,
+	edgeSize = 16,
+	insets = { left = 5, right = 5, top = 5, bottom = 5 },
+};
+
+BACKDROP_ELEPHANT2_16_16 = {
+	bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+	edgeFile = "Interface\\AddOns\\Elephant\\roth",
+	tile = true,
+	tileEdge = true,
+	tileSize = 16,
+	edgeSize = 16,
+	insets = { left = 5, right = 5, top = 5, bottom = 5 },
+};
+
 --[[ Bindings ]]
 BINDING_HEADER_ELEPHANT = "Elephant"
 BINDING_NAME_ELEPHANT_TOGGLE = Elephant.L['toggle']
