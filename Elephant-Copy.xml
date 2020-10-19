@@ -1,16 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
 <Frame name="ElephantCopyFrameTemplate" toplevel="true" enableMouse="true" hidden="true" virtual="true">
 	<Size x="500" y="500"/>
-	<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\AddOns\Elephant\roth" tile="true">
-		<EdgeSize>
-			<AbsValue val="16" />
-		</EdgeSize>
-		<TileSize>
-			<AbsValue val="16" />
-		</TileSize>
-		<BackgroundInsets  left="5" right="5" top="5" bottom="5"/>
-		<Color b="0.0" r="0.0" g="0.0" a="0.45"/>
-	</Backdrop>
 	<Scripts>
 		<OnLoad>
 			self:SetPoint("TOP", Elephant.defaultConf.copyposition.x, Elephant.defaultConf.copyposition.y)
@@ -21,6 +11,65 @@
 		</OnEnter>
 	</Scripts>
 	<Layers>
+    <Layer layer="BACKGROUND">
+      <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5">
+        <Size x="64" y="64"/>
+      </Texture>
+    </Layer>
+    <Layer layer="BORDER">
+      <Texture file="Interface\AddOns\Elephant\roth-TL" alpha="0.5">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" x="-8" y="8"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-T" alpha="0.5" horizTile="true">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" x="0" y="8"/>
+          <Anchor point="TOPRIGHT" x="0" y="8"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-TR">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="TOPRIGHT" x="8" y="8"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-L" alpha="0.5" vertTile="true">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" x="-8" y="0"/>
+          <Anchor point="BOTTOMLEFT" x="-8" y="0"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-R" alpha="0.5" vertTile="true">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="TOPRIGHT" x="8" y="0"/>
+          <Anchor point="BOTTOMRIGHT" x="8" y="0"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-BL" alpha="0.5">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" x="-8" y="-8"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-B" alpha="0.5" horizTile="true">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" x="0" y="-8"/>
+          <Anchor point="BOTTOMRIGHT" x="0" y="-8"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\AddOns\Elephant\roth-BR" alpha="0.5">
+        <Size x="8" y="8"/>
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" x="8" y="-8"/>
+        </Anchors>
+      </Texture>
+    </Layer>
 		<Layer level="ARTWORK">
 			<Texture file="Interface\DialogFrame\UI-DialogBox-Header">
 				<Size>
@@ -104,18 +153,65 @@
 					</Offset>
 				</Anchor>
 			</Anchors>
-			<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-				<EdgeSize>
-					<AbsValue val="16" />
-				</EdgeSize>
-				<TileSize>
-					<AbsValue val="16" />
-				</TileSize>
-				<BackgroundInsets>
-					<AbsInset left="5" right="5" top="5" bottom="5" />
-				</BackgroundInsets>
-				<Color b="0.0" r="0.0" g="0.0" a="0.45"/>
-			</Backdrop>
+			<Layers>
+        <Layer layer="BACKGROUND">
+          <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5"/>
+        </Layer>
+        <Layer layer="BORDER">
+          <Texture file="Interface\Tooltips\UI-Tooltip-TL" alpha="0.5">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="TOPLEFT" x="-2" y="2"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-T" alpha="0.5" horizTile="true">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="TOPLEFT" x="6" y="2"/>
+              <Anchor point="TOPRIGHT" x="-6" y="2"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-TR" alpha="0.5">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="TOPRIGHT" x="2" y="2"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-L" alpha="0.5" vertTile="true">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="TOPLEFT" x="-2" y="-6"/>
+              <Anchor point="BOTTOMLEFT" x="-2" y="6"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-R" alpha="0.5" vertTile="true">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="TOPRIGHT" x="2" y="-6"/>
+              <Anchor point="BOTTOMRIGHT" x="2" y="6"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-BL" alpha="0.5">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="BOTTOMLEFT" x="-2" y="-2"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-B" alpha="0.5" horizTile="true">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="BOTTOMLEFT" x="6" y="-2"/>
+              <Anchor point="BOTTOMRIGHT" x="-6" y="-2"/>
+            </Anchors>
+          </Texture>
+          <Texture file="Interface\Tooltips\UI-Tooltip-BR" alpha="0.5">
+            <Size x="8" y="8"/>
+            <Anchors>
+              <Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
+            </Anchors>
+          </Texture>
+        </Layer>
+      </Layers>
 		</Frame>
 		<Button name="$parentBBCodeButton" inherits="OptionsButtonTemplate">
 			<Anchors>
