@@ -43,6 +43,7 @@ function Elephant:OnInitialize()
 end
 
 local function SetTabButtonProperties(obj, name, typeInfo)
+  if name == nil then return end
   obj:SetNormalFontObject(GameFontNormalSmall2)
   getglobal(obj:GetName() .. "Text"):SetPoint("CENTER", obj, "CENTER", 0, 2)
   obj:SetText(string.sub(name, 0, 1))
