@@ -1,4 +1,4 @@
-﻿## Interface: 90002
+﻿## Interface: 90005
 ## Title: Elephant
 ## Title-zhCN: Elephant �?�天记录器
 ## Notes: A friendly companion that remembers the chat.
