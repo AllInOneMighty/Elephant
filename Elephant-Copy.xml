@@ -12,7 +12,7 @@
 	</Scripts>
 	<Layers>
     <Layer layer="BACKGROUND">
-      <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5">
+      <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.75">
         <Size x="64" y="64"/>
       </Texture>
     </Layer>
@@ -98,18 +98,18 @@
     <Frame name="$parentTitleInfoFrame" setAllPoints="true">
       <Layers>
         <Layer>
-          <FontString name="$parentLogLengthFontString" inherits="GameFontNormalSmall">
+          <FontString name="$parentLogLengthFontString" inherits="GameFontNormal">
             <Anchors>
               <Anchor point="TOPRIGHT">
-                <Offset x="-45" y="-15"/>
+                <Offset x="-38" y="-12"/>
               </Anchor>
             </Anchors>
             <Color b="1.0" r="1.0" g="1.0"/>
           </FontString>
-          <FontString name="$parentCopyLogDisplayed" inherits="GameFontNormalSmall">
+          <FontString name="$parentCopyLogDisplayed" inherits="GameFontNormal">
             <Anchors>
               <Anchor point="TOPLEFT">
-                <Offset x="35" y="-15"/>
+                <Offset x="28" y="-12"/>
               </Anchor>
             </Anchors>
             <Color b="1.0" r="1.0" g="1.0"/>
@@ -118,14 +118,21 @@
       </Layers>
     </Frame>
 		<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-			<Size x="425" y="425" />
+			<Size x="424" y="423" />
 			<Anchors>
-				<Anchor point="TOP">
+				<Anchor point="TOPLEFT">
 					<Offset>
-						<AbsDimension x="0" y="-30"/>
+						<AbsDimension x="33" y="-32"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
+      <Layers>
+        <Layer layer="BACKGROUND">
+          <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.7">
+            <Size x="64" y="64"/>
+          </Texture>
+        </Layer>
+      </Layers>
 			<ScrollChild>
 				<EditBox name="$parentEditBox" letters="50000" multiLine="true" autoFocus="false">
 					<Size>

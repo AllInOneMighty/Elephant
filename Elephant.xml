@@ -34,7 +34,7 @@
 	</Scripts>
 	<Layers>
     <Layer layer="BACKGROUND">
-      <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5">
+      <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.75">
         <Size x="64" y="64"/>
       </Texture>
     </Layer>
@@ -148,18 +148,18 @@
 		<Frame name="$parentTitleInfoFrame" setAllPoints="true">
 			<Layers>
 				<Layer>
-					<FontString name="$parentMaxLogFontString" inherits="GameFontNormalSmall">
+					<FontString name="$parentMaxLogFontString" inherits="GameFontNormal">
 						<Anchors>
 							<Anchor point="TOPRIGHT">
-								<Offset x="-60" y="-15"/>
+								<Offset x="-40" y="-15"/>
 							</Anchor>
 						</Anchors>
 						<Color b="1.0" r="1.0" g="1.0"/>
 					</FontString>
-					<FontString name="$parentTabFontString" inherits="GameFontNormalSmall">
+					<FontString name="$parentTabFontString" inherits="GameFontNormal">
 						<Anchors>
 							<Anchor point="TOPLEFT">
-								<Offset x="35" y="-15"/>
+								<Offset x="28" y="-15"/>
 							</Anchor>
 						</Anchors>
 						<!-- No color here, will be set during OnEnable() -->
@@ -167,7 +167,7 @@
 					<FontString name="$parentCurrentLineFontString" text="0 / 0" inherits="GameFontNormalSmall">
 						<Anchors>
 							<Anchor point="TOPLEFT">
-								<Offset x="175" y="-15"/>
+								<Offset x="170" y="-15"/>
 							</Anchor>
 						</Anchors>
 						<!-- No color here, will be set during OnEnable() -->
@@ -178,12 +178,19 @@
 		
 		<!-- Main scrolling message frame -->
 		<ScrollingMessageFrame name="$parentScrollingMessageFrame">
-			<Size x="525" y="499"/>
+			<Size x="523" y="498"/>
 			<Anchors>
 				<Anchor point="TOPLEFT">
-					<Offset x="30" y="-33"/>
+					<Offset x="31" y="-34"/>
 				</Anchor>
 			</Anchors>
+      <Layers>
+        <Layer layer="BACKGROUND">
+          <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.7">
+            <Size x="64" y="64"/>
+          </Texture>
+        </Layer>
+      </Layers>
 			<Scripts>
 				<OnLoad>
           self:SetFontObject(ChatFontNormal)
