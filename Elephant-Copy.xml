@@ -11,12 +11,12 @@
 		</OnEnter>
 	</Scripts>
 	<Layers>
-    <Layer layer="BACKGROUND">
+    <Layer level="BACKGROUND">
       <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.75">
         <Size x="64" y="64"/>
       </Texture>
     </Layer>
-    <Layer layer="BORDER">
+    <Layer level="BORDER">
       <Texture file="Interface\AddOns\Elephant\roth-TL" alpha="0.5">
         <Size x="8" y="8"/>
         <Anchors>
@@ -127,7 +127,7 @@
 				</Anchor>
 			</Anchors>
       <Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.7">
             <Size x="64" y="64"/>
           </Texture>
@@ -161,10 +161,10 @@
 				</Anchor>
 			</Anchors>
 			<Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5"/>
         </Layer>
-        <Layer layer="BORDER">
+        <Layer level="BORDER">
           <Texture file="Interface\Tooltips\UI-Tooltip-TL" alpha="0.5">
             <Size x="8" y="8"/>
             <Anchors>
@@ -220,7 +220,8 @@
         </Layer>
       </Layers>
 		</Frame>
-		<Button name="$parentBBCodeButton" inherits="OptionsButtonTemplate">
+		<Button name="$parentBBCodeButton" inherits="UIPanelButtonTemplate">
+      <Size x="80" y="22"/>
 			<Anchors>
 				<Anchor point="BOTTOM">
 					<Offset>
@@ -256,7 +257,8 @@
 				<Color b="1.0" r="1.0" g="1.0"/>
 			</ButtonText>
 		</Button>
-    <Button name="$parentBackButton" inherits="OptionsButtonTemplate">
+    <Button name="$parentBackButton" inherits="UIPanelButtonTemplate">
+      <Size x="80" y="22"/>
       <Anchors>
         <Anchor point="BOTTOMLEFT">
           <Offset>
@@ -275,7 +277,8 @@
       </Scripts>
       <ButtonText font="GameFontNormal" outline="NORMAL"/>
     </Button>
-		<Button name="$parentHideButton" inherits="OptionsButtonTemplate">
+		<Button name="$parentHideButton" inherits="UIPanelButtonTemplate">
+      <Size x="80" y="22"/>
 			<Anchors>
 				<Anchor point="BOTTOMRIGHT">
 					<Offset>
