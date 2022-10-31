@@ -70,7 +70,7 @@ L['copywindowbbcode']    = "BBCode"
 L['itemLinkSite'] = "http://de.wowhead.com/?item="
 
 --[[ Special log messages ]]
-L['logstartedon']  = "Log gestartet am %s up %s."
+L['logstartedon']  = "Log gestartet am %s um %s."
 L['logstopped']    = "Log gestoppt."
 L['monstersay']    = "%s sagt"
 L['monsteryell']    = "%s schreit"
