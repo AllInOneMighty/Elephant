@@ -33,12 +33,12 @@
         </OnMouseUp>
     </Scripts>
     <Layers>
-    <Layer layer="BACKGROUND">
+    <Layer level="BACKGROUND">
       <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.75">
         <Size x="64" y="64"/>
       </Texture>
     </Layer>
-    <Layer layer="BORDER">
+    <Layer level="BORDER">
       <Texture file="Interface\AddOns\Elephant\roth-TL" alpha="0.5">
         <Size x="8" y="8"/>
         <Anchors>
@@ -92,7 +92,7 @@
         </Anchors>
       </Texture>
     </Layer>
-        <Layer layer="ARTWORK">
+        <Layer level="ARTWORK">
             <Texture name="$parentTitleTexture" file="Interface\BUTTONS\UI-DialogBox-Button-Up">
                 <Size x="128" y="42"/>
                 <Anchors>
@@ -185,7 +185,7 @@
                 </Anchor>
             </Anchors>
       <Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.7">
             <Size x="64" y="64"/>
           </Texture>
@@ -223,10 +223,10 @@
                 </Anchor>
             </Anchors>
       <Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5"/>
         </Layer>
-        <Layer layer="BORDER">
+        <Layer level="BORDER">
           <Texture file="Interface\Tooltips\UI-Tooltip-TL" alpha="0.5">
             <Size x="8" y="8"/>
             <Anchors>
@@ -764,7 +764,8 @@
     </Button>
 
         <!-- Action buttons: delete, enable, copy, close -->
-        <Button name="$parentDeleteButton" inherits="OptionsButtonTemplate">
+        <Button name="$parentDeleteButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
             <Anchors>
                 <Anchor point="BOTTOMLEFT">
                     <Offset x="20" y="15"/>
@@ -784,7 +785,8 @@
                 <Color b="1.0" r="1.0" g="1.0"/>
             </ButtonText>
         </Button>
-        <Button name="$parentEnableButton" inherits="OptionsButtonTemplate">
+        <Button name="$parentEnableButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
             <Anchors>
                 <Anchor point="BOTTOM">
                     <Offset x="0" y="15"/>
@@ -802,7 +804,8 @@
                 <Color b="1.0" r="1.0" g="1.0"/>
             </ButtonText>
         </Button>
-        <Button name="$parentEmptyButton" inherits="OptionsButtonTemplate">
+        <Button name="$parentEmptyButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
             <Anchors>
                 <Anchor point="RIGHT" relativeTo="$parentEnableButton" relativePoint="LEFT"/>
             </Anchors>
@@ -818,7 +821,8 @@
                 <Color b="1.0" r="1.0" g="1.0"/>
             </ButtonText>
         </Button>
-        <Button name="$parentCopyButton" inherits="OptionsButtonTemplate">
+        <Button name="$parentCopyButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
             <Anchors>
                 <Anchor point="LEFT" relativeTo="$parentEnableButton" relativePoint="RIGHT"/>
             </Anchors>
@@ -850,7 +854,8 @@
                 <Color b="1.0" r="1.0" g="1.0"/>
             </ButtonText>
         </Button>
-        <Button name="$parentCloseButton" inherits="OptionsButtonTemplate">
+        <Button name="$parentCloseButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
             <Anchors>
                 <Anchor point="BOTTOMRIGHT">
                     <Offset x="-15" y="15"/>
