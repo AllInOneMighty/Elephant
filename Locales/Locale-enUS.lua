@@ -134,6 +134,7 @@ L['monstersay']    = "%s says"
 L['monsteryell']    = "%s yells"
 L['whisperfrom']    = "%s whispers"
 L['whisperto']    = "To %s"
+L['id'] = "id"
 
 --[[ Addon messages ]]
 L['clearallconfirm']    = "All chats cleared."
