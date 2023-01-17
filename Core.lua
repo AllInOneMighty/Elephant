@@ -3,8 +3,7 @@ Elephant = LibStub("AceAddon-3.0"):NewAddon("Elephant", "AceConsole-3.0", "AceEv
 Elephant.L = LibStub("AceLocale-3.0"):GetLocale("Elephant")
 
 --[[ Bindings ]]
-BINDING_HEADER_ELEPHANT = "Elephant"
-BINDING_NAME_ELEPHANT_TOGGLE = Elephant.L['toggle']
+_G['BINDING_NAME_ELEPHANT_TOGGLE'] = Elephant.L['toggle']
 
 --[[ Popup dialogs ]]
 StaticPopupDialogs['ELEPHANT_CLEARALL'] = {
