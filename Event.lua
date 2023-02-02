@@ -22,8 +22,14 @@ end
 Returns the channel index to be used for the given channel name.
 Correctly detects general channels and returns an appropriate
 integer for them.
+
+Returns nil if a channel cannot be found.
 ]]
 local function getCIndexFromChannelName(channelName)
+  if channelName == "" then
+    return nil
+  end
+
   channelName = string.lower(channelName)
   local cIndex
   for k, v in pairs(Elephant.L['generalchats']) do
@@ -63,7 +69,8 @@ local function HandleMessage(prat_msg, event, ...)
   if event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_CHANNEL_NOTICE" then
     cIndex = getCIndexFromChannelName(channelName)
 
-    if Elephant:IsFiltered(cIndex) then return end
+    -- cIndex == nil should never happen, but better to ignore than crash.
+    if cIndex == nil or Elephant:IsFiltered(cIndex) then return end
 
     if event == "CHAT_MSG_CHANNEL" then
       -- Fixing error where structure for channel does not exist

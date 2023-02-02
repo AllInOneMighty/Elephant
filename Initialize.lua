@@ -87,10 +87,6 @@ function Elephant:OnEnable()
     Elephant.L['chatnames']['raid'],
     'RAID')
   SetTabButtonProperties(
-    ElephantFrameInstanceTabButton,
-    Elephant.L['chatnames']['instance'],
-    'INSTANCE_CHAT')
-  SetTabButtonProperties(
     ElephantFrameSayTabButton,
     Elephant.L['chatnames']['say'],
     'SAY')

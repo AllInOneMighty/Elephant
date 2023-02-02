@@ -3,8 +3,7 @@ Elephant = LibStub("AceAddon-3.0"):NewAddon("Elephant", "AceConsole-3.0", "AceEv
 Elephant.L = LibStub("AceLocale-3.0"):GetLocale("Elephant")
 
 --[[ Bindings ]]
-BINDING_HEADER_ELEPHANT = "Elephant"
-BINDING_NAME_ELEPHANT_TOGGLE = Elephant.L['toggle']
+_G['BINDING_NAME_ELEPHANT_TOGGLE'] = Elephant.L['toggle']
 
 --[[ Popup dialogs ]]
 StaticPopupDialogs['ELEPHANT_CLEARALL'] = {
@@ -86,7 +85,6 @@ Elephant.defaultConf = {
     loot = 8,
     system = 9,
     achievement = 10,
-    instance = 11,
   },
   defaultnames = {
     whisper = Elephant.L['chatnames']['whisper'],
@@ -99,7 +97,6 @@ Elephant.defaultConf = {
     loot = Elephant.L['chatnames']['loot'],
     system = Elephant.L['chatnames']['system'],
     achievement = Elephant.L['chatnames']['achievement'],
-    instance = Elephant.L['chatnames']['instance'],
   },
   defaultlogindex = 1,
 
@@ -164,7 +161,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
     desc = CHAT_MSG_BG_SYSTEM_ALLIANCE,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_BG_SYSTEM_HORDE'] = {
@@ -173,7 +169,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
     desc = CHAT_MSG_BG_SYSTEM_HORDE,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_BG_SYSTEM_NEUTRAL'] = {
@@ -182,7 +177,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
     desc = CHAT_MSG_BG_SYSTEM_NEUTRAL,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_BN_WHISPER'] = {
@@ -214,7 +208,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
       [Elephant.defaultConf.defaultindexes.party] = 0,
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 0,
     }
   },
   ['CHAT_MSG_GUILD'] = {
@@ -232,20 +225,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.achievement] = -1,
       [Elephant.defaultConf.defaultindexes.guild] = 0,
       [Elephant.defaultConf.defaultindexes.officer] = 0,
-    }
-  },
-  ['CHAT_MSG_INSTANCE_CHAT'] = {
-    type = "INSTANCE_CHAT",
-    desc = INSTANCE_CHAT,
-    channels = {
-      [Elephant.defaultConf.defaultindexes.instance] = -1,
-    }
-  },
-  ['CHAT_MSG_INSTANCE_CHAT_LEADER'] = {
-    type = "INSTANCE_CHAT",
-    desc = INSTANCE_CHAT_LEADER,
-    channels = {
-      [Elephant.defaultConf.defaultindexes.instance] = -1,
     }
   },
   ['CHAT_MSG_LOOT'] = {
@@ -280,7 +259,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
       [Elephant.defaultConf.defaultindexes.party] = 0,
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 0,
     }
   },
   ['CHAT_MSG_MONSTER_SAY'] = {
@@ -291,7 +269,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
       [Elephant.defaultConf.defaultindexes.party] = 0,
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 0,
     }
   },
   ['CHAT_MSG_MONSTER_WHISPER'] = {
@@ -302,7 +279,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.whisper] = 1,
       [Elephant.defaultConf.defaultindexes.party] = 1,
       [Elephant.defaultConf.defaultindexes.raid] = 1,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_MONSTER_YELL'] = {
@@ -314,7 +290,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.party] = 1,
       [Elephant.defaultConf.defaultindexes.yell] = 1,
       [Elephant.defaultConf.defaultindexes.raid] = 1,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_OFFICER'] = {
@@ -383,7 +358,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
       [Elephant.defaultConf.defaultindexes.party] = 0,
       [Elephant.defaultConf.defaultindexes.raid] = 0,
-      [Elephant.defaultConf.defaultindexes.instance] = 0,
     }
   },
   ['CHAT_MSG_WHISPER'] = {
@@ -416,7 +390,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.loot] = -1,
       [Elephant.defaultConf.defaultindexes.party] = 1,
       [Elephant.defaultConf.defaultindexes.raid] = 1,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   -- To be added: CHAT_MG_MONSTER_PARTY, CHAT_MSG_RAID_BOSS_EMOTE,

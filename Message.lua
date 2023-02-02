@@ -25,6 +25,10 @@ local function GetSenderWithClassColor(sender, classColor, withLink)
   end
 end
 
+local function GetBattleNetId(sender)
+  return string.sub(sender, 3, -3)
+end
+
 --[[
 Creates a hex color string from the given decimal
 red, green, blue and alpha values.
@@ -84,7 +88,16 @@ function Elephant:GetLiteralMessage(mStruct, useTimestamps)
       elseif mStruct['type'] == "MONSTER_WHISPER" then
         msg = msg .. mStruct['arg2']
       else
-        local pLink = GetSenderWithClassColor(mStruct['arg2'], mStruct['clColor'], true)
+        local withLink = true
+        local sender = mStruct['arg2']
+
+        if mStruct['type'] == "BN_WHISPER_INFORM" or mStruct['type'] == "BN_WHISPER" then
+          -- We can't track Battle.net names due to privacy reasons, so we remove links and name resolution.
+          withLink = false
+          sender = "[" .. Elephant.L['id'] .. ": " .. GetBattleNetId(mStruct['arg2']) .. "]"
+        end
+
+        local pLink = GetSenderWithClassColor(sender, mStruct['clColor'], withLink)
 
         if mStruct['type'] == "WHISPER_INFORM" or mStruct['type'] == "BN_WHISPER_INFORM" then
           msg = msg .. format(Elephant.L['whisperto'], pLink)

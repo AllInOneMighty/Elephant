@@ -1,44 +1,44 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
 <Frame name="ElephantFrame" parent="UIParent" enableMouse="true" movable="true" toplevel="true" hidden="true">
-	<Size x="600" y="580"/>
-	<Scripts>
-		<OnLoad>
-			self:SetPoint("TOP",
-				UIParent,
-				"TOP",
-				Elephant.defaultConf.position.x,
-				Elephant.defaultConf.position.y)
-			getglobal(self:GetName().."TitleFontString"):SetText("Elephant @project-version@")
-		</OnLoad>
-		<OnShow>
-			if ElephantCopyFrame then
-				ElephantCopyFrame:Hide()
-			end
-			PlaySound(SOUNDKIT.IG_SPELLBOOK_OPEN, "Master")
-		</OnShow>
-		<OnHide>
-			PlaySound(SOUNDKIT.IG_SPELLBOOK_CLOSE, "Master")
-			CloseDropDownMenus()
-		</OnHide>
-		<OnMouseDown>
-			if button == "LeftButton" or button == "RightButton" then
-				ElephantFrame:StartMoving()
-			end
-			if button == "MiddleButton" then
-				Elephant:ResetPosition()
-			end
-		</OnMouseDown>
-		<OnMouseUp>
-			ElephantFrame:StopMovingOrSizing()
-		</OnMouseUp>
-	</Scripts>
-	<Layers>
-    <Layer layer="BACKGROUND">
+    <Size x="600" y="580"/>
+    <Scripts>
+        <OnLoad>
+            self:SetPoint("TOP",
+                UIParent,
+                "TOP",
+                Elephant.defaultConf.position.x,
+                Elephant.defaultConf.position.y)
+            getglobal(self:GetName().."TitleFontString"):SetText("Elephant 10.0.5")
+        </OnLoad>
+        <OnShow>
+            if ElephantCopyFrame then
+                ElephantCopyFrame:Hide()
+            end
+            PlaySound(SOUNDKIT.IG_SPELLBOOK_OPEN, "Master")
+        </OnShow>
+        <OnHide>
+            PlaySound(SOUNDKIT.IG_SPELLBOOK_CLOSE, "Master")
+            CloseDropDownMenus()
+        </OnHide>
+        <OnMouseDown>
+            if button == "LeftButton" or button == "RightButton" then
+                ElephantFrame:StartMoving()
+            end
+            if button == "MiddleButton" then
+                Elephant:ResetPosition()
+            end
+        </OnMouseDown>
+        <OnMouseUp>
+            ElephantFrame:StopMovingOrSizing()
+        </OnMouseUp>
+    </Scripts>
+    <Layers>
+    <Layer level="BACKGROUND">
       <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.75">
         <Size x="64" y="64"/>
       </Texture>
     </Layer>
-    <Layer layer="BORDER">
+    <Layer level="BORDER">
       <Texture file="Interface\AddOns\Elephant\roth-TL" alpha="0.5">
         <Size x="8" y="8"/>
         <Anchors>
@@ -92,141 +92,141 @@
         </Anchors>
       </Texture>
     </Layer>
-    <Layer layer="ARTWORK">
-			<Texture name="$parentTitleTexture" file="Interface\BUTTONS\UI-DialogBox-Button-Up">
-				<Size x="128" y="42"/>
-				<Anchors>
-					<Anchor point="TOP" x="0" y="12"/>
-				</Anchors>
-				<Gradient orientation="HORIZONTAL">
-					<MinColor b="0.0" r="0.0" g="0.0"/>
-					<MaxColor b="1.0" r="1.0" g="1.0"/>
-				</Gradient>
-			</Texture>
-			<FontString name="$parentTitleFontString" inherits="GameFontNormal">
-				<Anchors>
-					<Anchor point="TOP" relativeTo="$parentTitleTexture" relativePoint="TOP">
-						<Offset x="0" y="-8"/>
-					</Anchor>
-				</Anchors>
-			</FontString>
-		</Layer>
-	</Layers>
-	<Frames>
-		<!-- Title -->
-		<Frame name="$parentTitleOverFrame" enableMouse="true">
-			<Size x="128" y="30"/>
-			<Anchors>
-				<Anchor point="TOP">
-					<Offset x="0" y="12"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['move2'][1],
-						Elephant.L['move2'][2],
-						{text=Elephant.L['move2'][3], r=0.2, g=1.0, b=0.2}
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnMouseDown>
-					if button == "LeftButton" or button == "RightButton" then
-						self:GetParent():StartMoving()
-					end
-					if button == "MiddleButton" then
-						Elephant:ResetPosition()
-					end
-				</OnMouseDown>
-				<OnMouseUp>
-					self:GetParent():StopMovingOrSizing()
-				</OnMouseUp>
-			</Scripts>
-		</Frame>
-		<Frame name="$parentTitleInfoFrame" setAllPoints="true">
-			<Layers>
-				<Layer>
-					<FontString name="$parentMaxLogFontString" inherits="GameFontNormal">
-						<Anchors>
-							<Anchor point="TOPRIGHT">
-								<Offset x="-40" y="-15"/>
-							</Anchor>
-						</Anchors>
-						<Color b="1.0" r="1.0" g="1.0"/>
-					</FontString>
-					<FontString name="$parentTabFontString" inherits="GameFontNormal">
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset x="28" y="-15"/>
-							</Anchor>
-						</Anchors>
-						<!-- No color here, will be set during OnEnable() -->
-					</FontString>
-					<FontString name="$parentCurrentLineFontString" text="0 / 0" inherits="GameFontNormalSmall">
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset x="170" y="-15"/>
-							</Anchor>
-						</Anchors>
-						<!-- No color here, will be set during OnEnable() -->
-					</FontString>
-				</Layer>
-			</Layers>
-		</Frame>
-		
-		<!-- Main scrolling message frame -->
-		<ScrollingMessageFrame name="$parentScrollingMessageFrame">
-			<Size x="523" y="498"/>
-			<Anchors>
-				<Anchor point="TOPLEFT">
-					<Offset x="31" y="-34"/>
-				</Anchor>
-			</Anchors>
+        <Layer level="ARTWORK">
+            <Texture name="$parentTitleTexture" file="Interface\BUTTONS\UI-DialogBox-Button-Up">
+                <Size x="128" y="42"/>
+                <Anchors>
+                    <Anchor point="TOP" x="0" y="12"/>
+                </Anchors>
+                <Gradient orientation="HORIZONTAL">
+                    <MinColor b="0.0" r="0.0" g="0.0"/>
+                    <MaxColor b="1.0" r="1.0" g="1.0"/>
+                </Gradient>
+            </Texture>
+            <FontString name="$parentTitleFontString" inherits="GameFontNormal">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTitleTexture" relativePoint="TOP">
+                        <Offset x="0" y="-8"/>
+                    </Anchor>
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+    <Frames>
+        <!-- Title -->
+        <Frame name="$parentTitleOverFrame" enableMouse="true">
+            <Size x="128" y="30"/>
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset x="0" y="12"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['move2'][1],
+                        Elephant.L['move2'][2],
+                        {text=Elephant.L['move2'][3], r=0.2, g=1.0, b=0.2}
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnMouseDown>
+                    if button == "LeftButton" or button == "RightButton" then
+                        self:GetParent():StartMoving()
+                    end
+                    if button == "MiddleButton" then
+                        Elephant:ResetPosition()
+                    end
+                </OnMouseDown>
+                <OnMouseUp>
+                    self:GetParent():StopMovingOrSizing()
+                </OnMouseUp>
+            </Scripts>
+        </Frame>
+        <Frame name="$parentTitleInfoFrame" setAllPoints="true">
+            <Layers>
+                <Layer>
+                    <FontString name="$parentMaxLogFontString" inherits="GameFontNormal">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset x="-40" y="-15"/>
+                            </Anchor>
+                        </Anchors>
+                        <Color b="1.0" r="1.0" g="1.0"/>
+                    </FontString>
+                    <FontString name="$parentTabFontString" inherits="GameFontNormal">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset x="28" y="-15"/>
+                            </Anchor>
+                        </Anchors>
+                        <!-- No color here, will be set during OnEnable() -->
+                    </FontString>
+                    <FontString name="$parentCurrentLineFontString" text="0 / 0" inherits="GameFontNormalSmall">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset x="170" y="-15"/>
+                            </Anchor>
+                        </Anchors>
+                        <!-- No color here, will be set during OnEnable() -->
+                    </FontString>
+                </Layer>
+            </Layers>
+        </Frame>
+
+        <!-- Main scrolling message frame -->
+        <ScrollingMessageFrame name="$parentScrollingMessageFrame">
+            <Size x="523" y="498"/>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset x="31" y="-34"/>
+                </Anchor>
+            </Anchors>
       <Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.7">
             <Size x="64" y="64"/>
           </Texture>
         </Layer>
       </Layers>
-			<Scripts>
-				<OnLoad>
+            <Scripts>
+                <OnLoad>
           self:SetFontObject(ChatFontNormal)
           self:SetJustifyH("LEFT")
-					self:SetMaxLines(Elephant.defaultConf.scrollmaxlines)
+                    self:SetMaxLines(Elephant.defaultConf.scrollmaxlines)
           self:SetFading(false)
-					self:EnableMouseWheel(true)
+                    self:EnableMouseWheel(true)
           self:SetHyperlinksEnabled(true)
-				</OnLoad>
-				<OnHyperlinkClick>
-					SetItemRef(link, text, button)
-				</OnHyperlinkClick>
-				<OnMouseWheel>
-					if delta &gt; 0 then
-						Elephant:Scroll(-Elephant.defaultConf.scrollmouse)
-					end
-					if delta &lt; 0 then
-						Elephant:Scroll(Elephant.defaultConf.scrollmouse)
-					end
-				</OnMouseWheel>
-			</Scripts>
-		</ScrollingMessageFrame>
-		
-		<!-- Buttons for scrolling -->
-		<Frame name="$parentScrollingMessageTextureFrame">
-			<Size x="535" y="510"/>
-			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-					<Offset x="25" y="-28"/>
-				</Anchor>
-			</Anchors>
+                </OnLoad>
+                <OnHyperlinkClick>
+                    SetItemRef(link, text, button)
+                </OnHyperlinkClick>
+                <OnMouseWheel>
+                    if delta &gt; 0 then
+                        Elephant:Scroll(-Elephant.defaultConf.scrollmouse)
+                    end
+                    if delta &lt; 0 then
+                        Elephant:Scroll(Elephant.defaultConf.scrollmouse)
+                    end
+                </OnMouseWheel>
+            </Scripts>
+        </ScrollingMessageFrame>
+
+        <!-- Buttons for scrolling -->
+        <Frame name="$parentScrollingMessageTextureFrame">
+            <Size x="535" y="510"/>
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+                    <Offset x="25" y="-28"/>
+                </Anchor>
+            </Anchors>
       <Layers>
-        <Layer layer="BACKGROUND">
+        <Layer level="BACKGROUND">
           <Texture file="Interface\DialogFrame\UI-DialogBox-Background" alpha="0.5"/>
         </Layer>
-        <Layer layer="BORDER">
+        <Layer level="BORDER">
           <Texture file="Interface\Tooltips\UI-Tooltip-TL" alpha="0.5">
             <Size x="8" y="8"/>
             <Anchors>
@@ -281,186 +281,186 @@
           </Texture>
         </Layer>
       </Layers>
-		</Frame>
-		<Button name="$parentScrollBottomButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="$parentScrollingMessageFrame" relativePoint="BOTTOMRIGHT">
-					<Offset x="4" y="0"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['bottom'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_BOTTOM, "Master")
-					Elephant:ScrollBottom()
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageDown-Up"/>
-			<PushedTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageDown-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentScrollPageDownButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOM" relativeTo="$parentScrollBottomButton" relativePoint="TOP">
-					<Offset x="1" y="-5"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['pagedown'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_SCROLL_DOWN, "Master")
-					Elephant:Scroll(Elephant.defaultConf.scrollpage)
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up"/>
-			<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentScrollDownButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOM" relativeTo="$parentScrollPageDownButton" relativePoint="TOP">
-					<Offset x="0" y="-5"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['linedown'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_SCROLL_DOWN, "Master")
-					Elephant:Scroll(1)
-				</OnClick>
-				<OnUpdate>
-					if self:GetButtonState() == "PUSHED" then
-						Elephant:Scroll(1)
-					end
-				</OnUpdate>
-			</Scripts>
-			<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Disabled"/>
-			<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentScrollUpButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOM" relativeTo="$parentScrollDownButton" relativePoint="TOP">
-					<Offset x="0" y="-5"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['lineup'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_SCROLL_UP, "Master")
-					Elephant:Scroll(-1)
-				</OnClick>
-				<OnUpdate>
-					if self:GetButtonState() == "PUSHED" then
-						Elephant:Scroll(-1)
-					end
-				</OnUpdate>
-			</Scripts>
-			<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Disabled"/>
-			<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentScrollPageUpButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOM" relativeTo="$parentScrollUpButton" relativePoint="TOP">
-					<Offset x="0" y="-5"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['pageup'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_SCROLL_UP, "Master")
-					Elephant:Scroll(-Elephant.defaultConf.scrollpage)
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Up"/>
-			<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentScrollTopButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="BOTTOM" relativeTo="$parentScrollPageUpButton" relativePoint="TOP">
-					<Offset x="-1" y="-5"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, Elephant.L['scroll']['top'])
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					PlaySound(SOUNDKIT.IG_CHAT_BOTTOM, "Master")
-					Elephant:ScrollTop()
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageUp-Up"/>
-			<PushedTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageUp-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-		</Button>
-		
-		<!-- Catcher options -->
-		<Button name="$parentCatchOptionsButton">
-			<Size x="32" y="32"/>
-			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="$parentScrollingMessageFrame" relativePoint="TOPRIGHT">
-					<Offset x="5" y="0"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['catchers'][1],
-						Elephant.L['catchers'][2],
-						{text=Elephant.L['catchers'][3], r=0.2, g=1.0, b=0.2}
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					ToggleDropDownMenu(1, nil, Elephant.dropdowns.catchOptions, self, 0, 0)
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Up"/>
-			<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/>
-			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-			<DisabledTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Disabled"/>
-		</Button>
-		
-		<!-- Default tabs (whisper, party, ...) -->
+        </Frame>
+        <Button name="$parentScrollBottomButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOMLEFT" relativeTo="$parentScrollingMessageFrame" relativePoint="BOTTOMRIGHT">
+                    <Offset x="4" y="0"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['bottom'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_BOTTOM, "Master")
+                    Elephant:ScrollBottom()
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageDown-Up"/>
+            <PushedTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageDown-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentScrollPageDownButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOM" relativeTo="$parentScrollBottomButton" relativePoint="TOP">
+                    <Offset x="1" y="-5"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['pagedown'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_SCROLL_DOWN, "Master")
+                    Elephant:Scroll(Elephant.defaultConf.scrollpage)
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up"/>
+            <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentScrollDownButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOM" relativeTo="$parentScrollPageDownButton" relativePoint="TOP">
+                    <Offset x="0" y="-5"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['linedown'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_SCROLL_DOWN, "Master")
+                    Elephant:Scroll(1)
+                </OnClick>
+                <OnUpdate>
+                    if self:GetButtonState() == "PUSHED" then
+                        Elephant:Scroll(1)
+                    end
+                </OnUpdate>
+            </Scripts>
+            <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Disabled"/>
+            <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentScrollUpButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOM" relativeTo="$parentScrollDownButton" relativePoint="TOP">
+                    <Offset x="0" y="-5"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['lineup'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_SCROLL_UP, "Master")
+                    Elephant:Scroll(-1)
+                </OnClick>
+                <OnUpdate>
+                    if self:GetButtonState() == "PUSHED" then
+                        Elephant:Scroll(-1)
+                    end
+                </OnUpdate>
+            </Scripts>
+            <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Disabled"/>
+            <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentScrollPageUpButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOM" relativeTo="$parentScrollUpButton" relativePoint="TOP">
+                    <Offset x="0" y="-5"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['pageup'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_SCROLL_UP, "Master")
+                    Elephant:Scroll(-Elephant.defaultConf.scrollpage)
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Up"/>
+            <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentScrollTopButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="BOTTOM" relativeTo="$parentScrollPageUpButton" relativePoint="TOP">
+                    <Offset x="-1" y="-5"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, Elephant.L['scroll']['top'])
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    PlaySound(SOUNDKIT.IG_CHAT_BOTTOM, "Master")
+                    Elephant:ScrollTop()
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageUp-Up"/>
+            <PushedTexture file="Interface\PaperDollInfoFrame\UI-Character-SkillsPageUp-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+        </Button>
+
+        <!-- Catcher options -->
+        <Button name="$parentCatchOptionsButton">
+            <Size x="32" y="32"/>
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentScrollingMessageFrame" relativePoint="TOPRIGHT">
+                    <Offset x="5" y="0"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['catchers'][1],
+                        Elephant.L['catchers'][2],
+                        {text=Elephant.L['catchers'][3], r=0.2, g=1.0, b=0.2}
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    ToggleDropDownMenu(1, nil, Elephant.dropdowns.catchOptions, self, 0, 0)
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Up"/>
+            <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+            <DisabledTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Disabled"/>
+        </Button>
+
+        <!-- Default tabs (whisper, party, ...) -->
     <Button name="$parentGuildTabButton">
       <Size x="23" y="23"/>
       <Anchors>
@@ -524,64 +524,64 @@
       <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
       <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
     </Button>
-		<Button name="$parentWhisperTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
+        <Button name="$parentWhisperTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
         <Anchor point="TOP" relativeTo="$parentOfficerTabButton" relativePoint="BOTTOM"/>
       </Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['chatnames']['whisper'],
-						{
-							text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled),
-							r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "r"),
-							g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "g"),
-							b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "b")
-						},
-						format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].logs)
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.whisper)
-				</OnClick>
-			</Scripts>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['chatnames']['whisper'],
+                        {
+                            text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled),
+                            r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].enabled, "b")
+                        },
+                        format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.whisper].logs)
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.whisper)
+                </OnClick>
+            </Scripts>
       <ButtonText name="$parentText"/>
-			<NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
-			<HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentPartyTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
-				<Anchor point="TOP" relativeTo="$parentWhisperTabButton" relativePoint="BOTTOM"/>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['chatnames']['party'],
-						{
-							text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled),
-							r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "r"),
-							g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "g"),
-							b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "b")
-						},
-						format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].logs)
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.party)
-				</OnClick>
-			</Scripts>
+            <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
+            <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentPartyTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
+                <Anchor point="TOP" relativeTo="$parentWhisperTabButton" relativePoint="BOTTOM"/>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['chatnames']['party'],
+                        {
+                            text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled),
+                            r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].enabled, "b")
+                        },
+                        format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.party].logs)
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.party)
+                </OnClick>
+            </Scripts>
       <ButtonText name="$parentText"/>
-			<NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
-			<HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
-		</Button>
+            <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
+            <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
+        </Button>
     <Button name="$parentRaidTabButton">
       <Size x="23" y="23"/>
       <Anchors>
@@ -611,135 +611,106 @@
       <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
       <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
     </Button>
-    <Button name="$parentInstanceTabButton">
-      <Size x="23" y="23"/>
-      <Anchors>
-        <Anchor point="TOP" relativeTo="$parentRaidTabButton" relativePoint="BOTTOM"/>
-      </Anchors>
-      <Scripts>
-        <OnEnter>
-          Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['instance'],
-            {
-              text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.instance].enabled),
-              r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.instance].enabled, "r"),
-              g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.instance].enabled, "g"),
-              b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.instance].enabled, "b")
-            },
-            format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.instance].logs)
-          })
-        </OnEnter>
-        <OnLeave>
-          Elephant:UnsetTooltip()
-        </OnLeave>
-        <OnClick>
-          Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.instance)
-        </OnClick>
-      </Scripts>
+        <Button name="$parentSayTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
+                <Anchor point="TOP" relativeTo="$parentRaidTabButton" relativePoint="BOTTOM"/>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['chatnames']['say'],
+                        {
+                            text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled),
+                            r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "b")
+                        },
+                        format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].logs)
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.say)
+                </OnClick>
+            </Scripts>
       <ButtonText name="$parentText"/>
-      <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
-      <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
-    </Button>
-		<Button name="$parentSayTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
-				<Anchor point="TOP" relativeTo="$parentInstanceTabButton" relativePoint="BOTTOM"/>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['chatnames']['say'],
-						{
-							text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled),
-							r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "r"),
-							g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "g"),
-							b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].enabled, "b")
-						},
-						format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.say].logs)
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.say)
-				</OnClick>
-			</Scripts>
+            <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
+            <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentYellTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
+                <Anchor point="TOP" relativeTo="$parentSayTabButton" relativePoint="BOTTOM"/>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['chatnames']['yell'],
+                        {
+                            text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled),
+                            r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "b")
+                        },
+                        format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].logs)
+                    })
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.yell)
+                </OnClick>
+            </Scripts>
       <ButtonText name="$parentText"/>
-			<NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
-			<HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentYellTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
-				<Anchor point="TOP" relativeTo="$parentSayTabButton" relativePoint="BOTTOM"/>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['chatnames']['yell'],
-						{
-							text = Elephant:GetStateMsg(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled),
-							r = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "r"),
-							g = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "g"),
-							b = Elephant:GetStateColor(Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].enabled, "b")
-						},
-						format(Elephant.L['nblines'], #Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.yell].logs)
-					})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					Elephant:ChangeLog(Elephant.defaultConf.defaultindexes.yell)
-				</OnClick>
-			</Scripts>
-      <ButtonText name="$parentText"/>
-			<NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
-			<HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
-		</Button>
-		
-		<!-- Other chats: custom, general, misc. -->
-		<Button name="$parentGeneralTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
-				<Anchor point="TOP" relativeTo="$parentYellTabButton" relativePoint="BOTTOM">
+            <NormalTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon"/>
+            <HighlightTexture file="Interface\CHATFRAME\UI-ChatWhisperIcon" alphaMode="ADD"/>
+        </Button>
+
+        <!-- Other chats: custom, general, misc. -->
+        <Button name="$parentGeneralTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
+                <Anchor point="TOP" relativeTo="$parentYellTabButton" relativePoint="BOTTOM">
           <Offset x="0" y="-25"/>
         </Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {Elephant.L['chatnames']['general']})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					ToggleDropDownMenu(1, nil, Elephant.dropdowns.generalChats, self, 0, 0)
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\Cursor\Speak"/>
-			<HighlightTexture file="Interface\Cursor\Speak" alphaMode="ADD"/>
-		</Button>
-		<Button name="$parentMiscTabButton">
-			<Size x="23" y="23"/>
-			<Anchors>
-				<Anchor point="TOP" relativeTo="$parentGeneralTabButton" relativePoint="BOTTOM"/>
-			</Anchors>
-			<Scripts>
-				<OnEnter>
-					Elephant:SetTooltip(self, {Elephant.L['chatnames']['misc']})
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-				<OnClick>
-					ToggleDropDownMenu(1, nil, Elephant.dropdowns.miscChats, self, 0, 0)
-				</OnClick>
-			</Scripts>
-			<NormalTexture file="Interface\Cursor\LootAll"/>
-			<HighlightTexture file="Interface\Cursor\LootAll" alphaMode="ADD"/>
-		</Button>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {Elephant.L['chatnames']['general']})
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    ToggleDropDownMenu(1, nil, Elephant.dropdowns.generalChats, self, 0, 0)
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\Cursor\Speak"/>
+            <HighlightTexture file="Interface\Cursor\Speak" alphaMode="ADD"/>
+        </Button>
+        <Button name="$parentMiscTabButton">
+            <Size x="23" y="23"/>
+            <Anchors>
+                <Anchor point="TOP" relativeTo="$parentGeneralTabButton" relativePoint="BOTTOM"/>
+            </Anchors>
+            <Scripts>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {Elephant.L['chatnames']['misc']})
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+                <OnClick>
+                    ToggleDropDownMenu(1, nil, Elephant.dropdowns.miscChats, self, 0, 0)
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\Cursor\LootAll"/>
+            <HighlightTexture file="Interface\Cursor\LootAll" alphaMode="ADD"/>
+        </Button>
     <Button name="$parentCustomTabButton">
       <Size x="23" y="23"/>
       <Anchors>
@@ -762,110 +733,115 @@
       <NormalTexture file="Interface\Cursor\Interact"/>
       <HighlightTexture file="Interface\Cursor\Interact" alphaMode="ADD"/>
     </Button>
-		
-		<!-- Action buttons: delete, enable, copy, close -->
-		<Button name="$parentDeleteButton" inherits="OptionsButtonTemplate">
-			<Anchors>
-				<Anchor point="BOTTOMLEFT">
-					<Offset x="20" y="15"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnLoad>
-					self:SetText(DELETE)
-				</OnLoad>
-				<OnClick>
-					Elephant:DeleteCurrentLog()
-					Elephant:ChangeLog(Elephant.defaultConf.defaultlogindex)
-					Elephant:ShowCurrentLog()
-				</OnClick>
-			</Scripts>
-			<ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
-				<Color b="1.0" r="1.0" g="1.0"/>
-			</ButtonText>
-		</Button>
-		<Button name="$parentEnableButton" inherits="OptionsButtonTemplate">
-			<Anchors>
-				<Anchor point="BOTTOM">
-					<Offset x="0" y="15"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnLoad>
-					self:SetText(ENABLE)
-				</OnLoad>
-				<OnClick>
-					Elephant:ToggleEnableCurrentLog()
-				</OnClick>
-			</Scripts>
-			<ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
-				<Color b="1.0" r="1.0" g="1.0"/>
-			</ButtonText>
-		</Button>
-		<Button name="$parentEmptyButton" inherits="OptionsButtonTemplate">
-			<Anchors>
-				<Anchor point="RIGHT" relativeTo="$parentEnableButton" relativePoint="LEFT"/>
-			</Anchors>
-			<Scripts>
-				<OnLoad>
-					self:SetText(Elephant.L['Empty'])
-				</OnLoad>
-				<OnClick>
-					StaticPopup_Show("ELEPHANT_EMPTY")
-				</OnClick>
-			</Scripts>
-			<ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
-				<Color b="1.0" r="1.0" g="1.0"/>
-			</ButtonText>
-		</Button>
-		<Button name="$parentCopyButton" inherits="OptionsButtonTemplate">
-			<Anchors>
-				<Anchor point="LEFT" relativeTo="$parentEnableButton" relativePoint="RIGHT"/>
-			</Anchors>
-			<Scripts>
-				<OnLoad>
-					self:SetText(Elephant.L['copy'])
-				</OnLoad>
-				<OnClick>
-					Elephant:ShowCopyWindow()
-				</OnClick>
-				<OnEnter>
-					Elephant:SetTooltip(self, {
-						Elephant.L['copy'],
-						format(Elephant.L['copyinfo'], Elephant.db.profile.maxcopyletters),
-						" ",
-						{
-							text = Elephant.L['copywarn'],
-							r = 1.0,
-							g = 0.2,
-							b = 0.2
-						}
-					}, "ANCHOR_TOPLEFT")
-				</OnEnter>
-				<OnLeave>
-					Elephant:UnsetTooltip()
-				</OnLeave>
-			</Scripts>
-			<ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
-				<Color b="1.0" r="1.0" g="1.0"/>
-			</ButtonText>
-		</Button>
-		<Button name="$parentCloseButton" inherits="OptionsButtonTemplate">
-			<Anchors>
-				<Anchor point="BOTTOMRIGHT">
-					<Offset x="-15" y="15"/>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnLoad>
-					self:SetText(CLOSE)
-				</OnLoad>
-				<OnClick>
-					Elephant:Toggle()
-				</OnClick>
-			</Scripts>
-			<ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE"/>
-		</Button>
-	</Frames>
+
+        <!-- Action buttons: delete, enable, copy, close -->
+        <Button name="$parentDeleteButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
+            <Anchors>
+                <Anchor point="BOTTOMLEFT">
+                    <Offset x="20" y="15"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnLoad>
+                    self:SetText(DELETE)
+                </OnLoad>
+                <OnClick>
+                    Elephant:DeleteCurrentLog()
+                    Elephant:ChangeLog(Elephant.defaultConf.defaultlogindex)
+                    Elephant:ShowCurrentLog()
+                </OnClick>
+            </Scripts>
+            <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
+                <Color b="1.0" r="1.0" g="1.0"/>
+            </ButtonText>
+        </Button>
+        <Button name="$parentEnableButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
+            <Anchors>
+                <Anchor point="BOTTOM">
+                    <Offset x="0" y="15"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnLoad>
+                    self:SetText(ENABLE)
+                </OnLoad>
+                <OnClick>
+                    Elephant:ToggleEnableCurrentLog()
+                </OnClick>
+            </Scripts>
+            <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
+                <Color b="1.0" r="1.0" g="1.0"/>
+            </ButtonText>
+        </Button>
+        <Button name="$parentEmptyButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
+            <Anchors>
+                <Anchor point="RIGHT" relativeTo="$parentEnableButton" relativePoint="LEFT"/>
+            </Anchors>
+            <Scripts>
+                <OnLoad>
+                    self:SetText(Elephant.L['Empty'])
+                </OnLoad>
+                <OnClick>
+                    StaticPopup_Show("ELEPHANT_EMPTY")
+                </OnClick>
+            </Scripts>
+            <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
+                <Color b="1.0" r="1.0" g="1.0"/>
+            </ButtonText>
+        </Button>
+        <Button name="$parentCopyButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
+            <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentEnableButton" relativePoint="RIGHT"/>
+            </Anchors>
+            <Scripts>
+                <OnLoad>
+                    self:SetText(Elephant.L['copy'])
+                </OnLoad>
+                <OnClick>
+                    Elephant:ShowCopyWindow()
+                </OnClick>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['copy'],
+                        format(Elephant.L['copyinfo'], Elephant.db.profile.maxcopyletters),
+                        " ",
+                        {
+                            text = Elephant.L['copywarn'],
+                            r = 1.0,
+                            g = 0.2,
+                            b = 0.2
+                        }
+                    }, "ANCHOR_TOPLEFT")
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
+            </Scripts>
+            <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
+                <Color b="1.0" r="1.0" g="1.0"/>
+            </ButtonText>
+        </Button>
+        <Button name="$parentCloseButton" inherits="UIPanelButtonTemplate">
+            <Size x="80" y="22"/>
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT">
+                    <Offset x="-15" y="15"/>
+                </Anchor>
+            </Anchors>
+            <Scripts>
+                <OnLoad>
+                    self:SetText(CLOSE)
+                </OnLoad>
+                <OnClick>
+                    Elephant:Toggle()
+                </OnClick>
+            </Scripts>
+            <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE"/>
+        </Button>
+    </Frames>
 </Frame>
 </Ui>
