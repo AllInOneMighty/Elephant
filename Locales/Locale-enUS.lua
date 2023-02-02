@@ -19,7 +19,7 @@ L['reset_header']    = {
   [1]      = "To reset the main window and the button positions, click on the Position button below.",
   [2]      = "To reset all settings and chats, click on the Settings button. This will: delete any log of a channel you have not joined, clear all other logs, disable WoW file logging for chat and combat, disable Prat integration, disable the chat button, reset the position of the main window and finally enable the minimap icon."
 }
-L['toggle']        = "Toggle"
+L['toggle']        = "Toggle Elephant"
 L['toggle_desc']      = "Shows or hides the main window."
 
 --[[ Options menu elements ]]
@@ -134,6 +134,7 @@ L['monstersay']    = "%s says"
 L['monsteryell']    = "%s yells"
 L['whisperfrom']    = "%s whispers"
 L['whisperto']    = "To %s"
+L['id'] = "id"
 
 --[[ Addon messages ]]
 L['clearallconfirm']    = "All chats cleared."
@@ -198,7 +199,7 @@ L['chatnames']  = {
   ['whisper']    = WHISPER,
   ['yell']    = YELL_MESSAGE,
   ['achievement']  = ACHIEVEMENTS,
-  ['instance'] = INSTANCE_CHAT
+  ['instance'] = INSTANCE
 }
 
 --[[ General chats (= that you cannot leave) names and strings that identify them ]]

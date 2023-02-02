@@ -155,7 +155,7 @@ L['chatnames']  = {
   ['whisper']  = WHISPER,
   ['yell']  = YELL_MESSAGE,
   ['achievement'] = ACHIEVEMENTS,
-  ['instance'] = INSTANCE_CHAT
+  ['instance'] = INSTANCE
 }
 
 --[[ General chats (= that you cannot leave) names and strings that identify them ]]

@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
+local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
 if not L then return end
 
 --[[ Common messages ]]
@@ -198,7 +198,7 @@ L['chatnames']  = {
   ['whisper']    = WHISPER,
   ['yell']    = YELL_MESSAGE,
   ['achievement']  = ACHIEVEMENTS,
-  ['instance'] = INSTANCE_CHAT
+  ['instance'] = INSTANCE
 }
 
 --[[ General chats (= that you cannot leave) names and strings that identify them ]]
