@@ -149,7 +149,6 @@ Elephant.tempConf = {
 Elephant.defaultConf.savedconfdefaults.events = {
   ['CHAT_MSG_ACHIEVEMENT'] = {
     type = "ACHIEVEMENT",
-    register_with_prat = true,
     desc = CHAT_MSG_ACHIEVEMENT,
     channels = {
       [Elephant.defaultConf.defaultindexes.achievement] = 0,
@@ -157,7 +156,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_BG_SYSTEM_ALLIANCE'] = {
     type = "BG_SYSTEM_ALLIANCE",
-    register_with_prat = true,
     desc = CHAT_MSG_BG_SYSTEM_ALLIANCE,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
@@ -165,7 +163,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_BG_SYSTEM_HORDE'] = {
     type = "BG_SYSTEM_HORDE",
-    register_with_prat = true,
     desc = CHAT_MSG_BG_SYSTEM_HORDE,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
@@ -173,7 +170,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_BG_SYSTEM_NEUTRAL'] = {
     type = "BG_SYSTEM_NEUTRAL",
-    register_with_prat = true,
     desc = CHAT_MSG_BG_SYSTEM_NEUTRAL,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 0,
@@ -198,11 +194,9 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_CHANNEL_NOTICE'] = {
     type = "CHANNEL_NOTICE",
-    register_with_prat = true
   },
   ['CHAT_MSG_EMOTE'] = {
     type = "EMOTE",
-    register_with_prat = true,
     desc = CHAT_MSG_EMOTE,
     channels = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
@@ -219,7 +213,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_GUILD_ACHIEVEMENT'] = {
     type = "GUILD_ACHIEVEMENT",
-    register_with_prat = true,
     desc = CHAT_MSG_GUILD_ACHIEVEMENT,
     channels = {
       [Elephant.defaultConf.defaultindexes.achievement] = -1,
@@ -253,7 +246,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_MONSTER_EMOTE'] = {
     type = "MONSTER_EMOTE",
-    register_with_prat = true,
     desc = CHAT_MSG_MONSTER_EMOTE,
     channels = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
@@ -263,7 +255,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_MONSTER_SAY'] = {
     type = "MONSTER_SAY",
-    register_with_prat = true,
     desc = CHAT_MSG_MONSTER_SAY,
     channels = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
@@ -273,7 +264,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_MONSTER_WHISPER'] = {
     type = "MONSTER_WHISPER",
-    register_with_prat = true,
     desc = CHAT_MSG_MONSTER_WHISPER,
     channels = {
       [Elephant.defaultConf.defaultindexes.whisper] = 1,
@@ -283,7 +273,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_MONSTER_YELL'] = {
     type = "MONSTER_YELL",
-    register_with_prat = true,
     desc = CHAT_MSG_MONSTER_YELL,
     channels = {
       [Elephant.defaultConf.defaultindexes.say] = 0,
@@ -336,6 +325,14 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.raid] = -1,
     }
   },
+  ['CHAT_MSG_RAID_BOSS_EMOTE'] = {
+    type = "RAID_BOSS_EMOTE",
+    desc = CHAT_MSG_RAID_BOSS_EMOTE,
+    channels = {
+      [Elephant.defaultConf.defaultindexes.raid] = 1,
+      [Elephant.defaultConf.defaultindexes.instance] = 1,
+    }
+  },
   ['CHAT_MSG_SAY'] = {
     type = "SAY",
     desc = CHAT_MSG_SAY,
@@ -352,7 +349,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
   },
   ['CHAT_MSG_TEXT_EMOTE'] = {
     type = "TEXT_EMOTE",
-    register_with_prat = true,
     desc = CHAT_MSG_TEXT_EMOTE,
     channels = {
       [Elephant.defaultConf.defaultindexes.say] = 1,
@@ -392,6 +388,4 @@ Elephant.defaultConf.savedconfdefaults.events = {
       [Elephant.defaultConf.defaultindexes.raid] = 1,
     }
   },
-  -- To be added: CHAT_MG_MONSTER_PARTY, CHAT_MSG_RAID_BOSS_EMOTE,
-  -- CHAT_MSG_RAID_BOSS_WHISPER, pet battles?
 }
