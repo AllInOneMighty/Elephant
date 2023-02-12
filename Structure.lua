@@ -297,6 +297,14 @@ line was displayed (otherwise, doesn't
 change it).
 ]]
 function Elephant:CaptureNewMessage(msg, index)
+  if msg.prat ~= nil and msg.lineid ~= nil then
+    local lastMsg = Elephant.dbpc.char.logs[index].logs[#Elephant.dbpc.char.logs[index].logs]
+    if msg.prat == lastMsg.prat and msg.lineid == lastMsg.lineid then
+      -- Duplicate message, nothing to do
+      return
+    end
+  end
+
   table.insert(Elephant.dbpc.char.logs[index].logs, #Elephant.dbpc.char.logs[index].logs+1, msg)
 
   if not Elephant.dbpc.char.logs[index].hasMessage then

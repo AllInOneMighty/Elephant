@@ -49,7 +49,7 @@ end
 Handles messages sent by the WoW engine
 as well as the ones sent by Prat.
 ]]
-local function HandleMessage(prat_msg, event, ...)
+local function HandleMessage(prat_msg, prat_lineid, event, ...)
   if not Elephant.db.profile.prat and prat_msg then
     return
   end
@@ -87,7 +87,8 @@ local function HandleMessage(prat_msg, event, ...)
       if prat_msg then
         msg = {
           ['time'] = time(),
-          ['prat'] = prat_msg
+          ['prat'] = prat_msg,
+          ['lineid'] = prat_lineid,
         }
       else
         msg = {
@@ -135,13 +136,14 @@ local function HandleMessage(prat_msg, event, ...)
       msg = {
         ['time'] = time(),
         ['prat'] = prat_msg,
-        ['type'] = Elephant.db.profile.events[event].type
+        ['lineid'] = prat_lineid,
+        ['type'] = Elephant.db.profile.events[event].type,
       }
     else
       msg = {
         ['time'] = time(),
         ['type'] = Elephant.db.profile.events[event].type,
-        ['arg1'] = message
+        ['arg1'] = message,
       }
 
       if  event == "CHAT_MSG_BATTLEGROUND" or
@@ -150,6 +152,7 @@ local function HandleMessage(prat_msg, event, ...)
         event == "CHAT_MSG_WHISPER_INFORM" or
         event == "CHAT_MSG_MONSTER_WHISPER" or
         event == "CHAT_MSG_RAID" or
+        event == "CHAT_MSG_RAID_BOSS_EMOTE" or
         event == "CHAT_MSG_RAID_LEADER" or
         event == "CHAT_MSG_RAID_WARNING" or
         event == "CHAT_MSG_PARTY" or
@@ -251,13 +254,13 @@ function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
 
   local event
-  if Prat  and Elephant.db.profile.prat then
+  if Prat and Elephant.db.profile.prat then
     Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
 
     -- Registering additional events not handled by Prat
-    for event,v in pairs(Elephant.db.profile.events) do
+    for event, v in pairs(Elephant.db.profile.events) do
       if v.register_with_prat then
-        Elephant:RegisterEvent(event, HandleMessage, nil)
+        Elephant:RegisterEvent(event, HandleMessage, nil, nil)
       end
     end
   else
@@ -265,8 +268,8 @@ function Elephant:RegisterEventsRefresh()
       Elephant:Print("|cffff0000" .. Elephant.L['noprat'] .. "|r")
     end
 
-    for event,v in pairs(Elephant.db.profile.events) do
-      Elephant:RegisterEvent(event, HandleMessage, nil)
+    for event, v in pairs(Elephant.db.profile.events) do
+      Elephant:RegisterEvent(event, HandleMessage, nil, nil)
     end
   end
 end
@@ -277,5 +280,5 @@ sending them to HandleMessage()
 ]]
 -- Cannot be local
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
-  HandleMessage(text, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
+  HandleMessage(text, message.ORG.LINE_ID, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
 end
