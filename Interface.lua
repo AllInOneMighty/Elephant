@@ -7,25 +7,25 @@ colors.
 local function SetObjectColorWithCurrentLogColor(obj)
   local type_info
 
-  if Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.whisper then
+  if Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.whisper then
     type_info = "WHISPER"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.raid then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.raid then
     type_info = "RAID"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.party then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.party then
     type_info = "PARTY"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.say then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.say then
     type_info = "SAY"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.yell then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.yell then
     type_info = "YELL"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.officer then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.officer then
     type_info = "OFFICER"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.guild then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.guild then
     type_info = "GUILD"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.system then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.system then
     type_info = "SYSTEM"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.loot then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.loot then
     type_info = "LOOT"
-  elseif Elephant:CharDb().currentlogindex == Elephant.defaultConf.defaultindexes.instance then
+  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.instance then
     type_info = "INSTANCE_CHAT"
   else
     type_info = "CHANNEL"
@@ -128,13 +128,13 @@ local function FillCopyWindow()
       Elephant.L['copywindowloglength'],
       Elephant:ProfileDb().maxcopyletters))
 
-  if not Elephant.tempConf.is_copywindow_bbcode then
+  if not Elephant.volatileConfiguration.is_copywindow_bbcode then
     ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['copywindowplaintext'])
 
     -- Normal text
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
     local total_chars = 0
-    for i = Elephant.tempConf.currentline, 0, -1 do
+    for i = Elephant.volatileConfiguration.currentline, 0, -1 do
       local message_struct = Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[i]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
@@ -160,7 +160,7 @@ local function FillCopyWindow()
     ElephantCopyFrameScrollFrameEditBox:SetTextColor(0.75, 0.75, 0.75, 1.0)
     local item_link_site = Elephant.L['itemLinkSite']
     local total_chars = 0
-    for line_index = Elephant.tempConf.currentline, 0, -1 do
+    for line_index = Elephant.volatileConfiguration.currentline, 0, -1 do
       local message_struct = Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
@@ -244,7 +244,7 @@ last one of the log, and finally shows the log.
 ]]
 function Elephant:ChangeLog(channel_index)
   Elephant:CharDb().currentlogindex = channel_index
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[channel_index].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[channel_index].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -271,7 +271,7 @@ function Elephant:ShowCurrentLog()
   Elephant:UpdateCurrentLogButtons()
 
   -- Populate the scrolling message frame
-  for line_index = Elephant.tempConf.currentline-Elephant.defaultConf.scrollmaxlines, Elephant.tempConf.currentline do
+  for line_index = Elephant.volatileConfiguration.currentline-Elephant:DefaultConfiguration().scrollmaxlines, Elephant.volatileConfiguration.currentline do
     if Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index] then
       ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index], true))
     end
@@ -297,7 +297,7 @@ end
 Updates the current line information of the current log.
 ]]
 function Elephant:SetTitleInfoCurrentLine()
-  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant.tempConf.currentline .. " / " .. #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs)
+  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant.volatileConfiguration.currentline .. " / " .. #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs)
 end
 
 --[[
@@ -335,7 +335,7 @@ normal text and BBCode. This method then
 triggers a refill of the copy window.
 ]]
 function Elephant:ToggleBetweenNormalTextAndBBCode()
-  Elephant.tempConf.is_copywindow_bbcode = not Elephant.tempConf.is_copywindow_bbcode
+  Elephant.volatileConfiguration.is_copywindow_bbcode = not Elephant.volatileConfiguration.is_copywindow_bbcode
 
   if ElephantCopyFrame:IsVisible() then
     FillCopyWindow()
@@ -394,18 +394,18 @@ corresponding limit, so you don't have to do
 it yourself.
 ]]
 function Elephant:Scroll(lines_count)
-  local old_index = Elephant.tempConf.currentline
+  local old_index = Elephant.volatileConfiguration.currentline
 
-  Elephant.tempConf.currentline = Elephant.tempConf.currentline + lines_count
-  if Elephant.tempConf.currentline < 1 then
-    Elephant.tempConf.currentline = 1
+  Elephant.volatileConfiguration.currentline = Elephant.volatileConfiguration.currentline + lines_count
+  if Elephant.volatileConfiguration.currentline < 1 then
+    Elephant.volatileConfiguration.currentline = 1
   end
-  if Elephant.tempConf.currentline > #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs then
-    Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant.volatileConfiguration.currentline > #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs then
+    Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   end
 
   -- Prevent too much processing
-  if old_index ~= Elephant.tempConf.currentline then
+  if old_index ~= Elephant.volatileConfiguration.currentline then
     Elephant:ShowCurrentLog()
   end
 end
@@ -414,7 +414,7 @@ end
 Scrolls the current log to its last line.
 ]]
 function Elephant:ScrollBottom()
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -422,9 +422,9 @@ end
 Scrolls the current log to its first line.
 ]]
 function Elephant:ScrollTop()
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
-  if Elephant.tempConf.currentline > 1 then
-    Elephant.tempConf.currentline = 1
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant.volatileConfiguration.currentline > 1 then
+    Elephant.volatileConfiguration.currentline = 1
   end
   Elephant:ShowCurrentLog()
 end
@@ -457,7 +457,7 @@ Resets the position of the main frame.
 ]]
 function Elephant:ResetPosition()
   ElephantFrame:ClearAllPoints()
-  ElephantFrame:SetPoint("TOP", Elephant.defaultConf.position.x, Elephant.defaultConf.position.y)
+  ElephantFrame:SetPoint("TOP", Elephant:DefaultConfiguration().position.x, Elephant:DefaultConfiguration().position.y)
 end
 
 --[[

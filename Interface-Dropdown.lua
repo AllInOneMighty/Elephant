@@ -94,8 +94,8 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L['chatnames']['achievement']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.achievement
-  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.achievement].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.achievement
+  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.achievement].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -105,8 +105,8 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L['chatnames']['loot']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.loot
-  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.loot].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.loot
+  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.loot].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -116,8 +116,8 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L['chatnames']['system']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.system
-  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.system].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.system
+  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.system].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end

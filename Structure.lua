@@ -136,10 +136,10 @@ replaces the current table by a new and
 known one.
 ]]
 local function ResetSavedVariables()
-  for key, value in pairs(Elephant:Clone(Elephant.defaultConf.savedconfdefaults)) do
+  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults)) do
     Elephant:ProfileDb()[key] = value
   end
-  for key, value in pairs(Elephant:Clone(Elephant.defaultConf.savedpercharconfdefaults)) do
+  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults)) do
     Elephant:CharDb()[key] = value
   end
 end
@@ -150,9 +150,9 @@ general chats (trade, worlddefense, ...) and creates a new log
 structure for them.
 ]]
 function Elephant:InitDefaultLogStructures()
-  for name_id, index in pairs(Elephant.defaultConf.defaultindexes) do
+  for name_id, index in pairs(Elephant:DefaultConfiguration().defaultindexes) do
     if not Elephant:CharDb().logs[index] then
-      CreateNewLogStructure(index, Elephant.defaultConf.defaultnames[name_id])
+      CreateNewLogStructure(index, Elephant:DefaultConfiguration().defaultnames[name_id])
     end
   end
 
@@ -216,8 +216,8 @@ new given value. It reduces the size of each
 log if required.
 ]]
 function Elephant:ChangeMaxLog(new_max_log)
-  if (new_max_log < Elephant.defaultConf.minlogsize) then return end
-  if (new_max_log > Elephant.defaultConf.maxlogsize) then return end
+  if (new_max_log < Elephant:DefaultConfiguration().minlogsize) then return end
+  if (new_max_log > Elephant:DefaultConfiguration().maxlogsize) then return end
 
   Elephant:ProfileDb().maxlog = new_max_log
 
@@ -225,8 +225,8 @@ function Elephant:ChangeMaxLog(new_max_log)
     CheckTableSize(index_or_name_id)
   end
 
-  if (new_max_log < Elephant.tempConf.currentline) then
-    Elephant.tempConf.currentline = new_max_log
+  if (new_max_log < Elephant.volatileConfiguration.currentline) then
+    Elephant.volatileConfiguration.currentline = new_max_log
   end
 
   Elephant:SetTitleInfoMaxLog()
@@ -246,7 +246,7 @@ function Elephant:EmptyCurrentLog()
 
   Elephant:Print( format(Elephant.L['emptyconfirm'], Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].name) )
 
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -265,7 +265,7 @@ function Elephant:ClearAllLogs()
 
   Elephant:Print(Elephant.L['clearallconfirm'])
 
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -303,8 +303,8 @@ function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
 
   if Elephant:CharDb().currentlogindex == index_or_name_id then
     -- Moves the current line if it was at the last line
-    if Elephant.tempConf.currentline == (#Elephant:CharDb().logs[index_or_name_id].logs-1) then
-      Elephant.tempConf.currentline = Elephant.tempConf.currentline + 1
+    if Elephant.volatileConfiguration.currentline == (#Elephant:CharDb().logs[index_or_name_id].logs-1) then
+      Elephant.volatileConfiguration.currentline = Elephant.volatileConfiguration.currentline + 1
     end
 
     -- Note: in case the log is reduced, we should redisplay it
@@ -316,12 +316,12 @@ function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
     -- currently seen by the user may not be found anymore
     -- after the user moves through the log, but we keep it like
     -- this since it covers most of the usage of the addon.
-    Elephant.tempConf.currentline = Elephant.tempConf.currentline - CheckTableSize(index_or_name_id)
-    if Elephant.tempConf.currentline < 1 then
-      Elephant.tempConf.currentline = 1
+    Elephant.volatileConfiguration.currentline = Elephant.volatileConfiguration.currentline - CheckTableSize(index_or_name_id)
+    if Elephant.volatileConfiguration.currentline < 1 then
+      Elephant.volatileConfiguration.currentline = 1
     end
 
-    if Elephant.tempConf.currentline == #Elephant:CharDb().logs[index_or_name_id].logs then
+    if Elephant.volatileConfiguration.currentline == #Elephant:CharDb().logs[index_or_name_id].logs then
       -- Adds the message to the screen
       ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(message_struct, true))
     end
@@ -443,7 +443,7 @@ function Elephant:AddFilter(new_filter)
         DeleteLog(index_or_name_id)
         -- If displayed log has just been deleted, display the default one instead
         if Elephant:CharDb().currentlogindex == index_or_name_id then
-          Elephant:ChangeLog(Elephant.defaultConf.savedpercharconfdefaults.currentlogindex)
+          Elephant:ChangeLog(Elephant:DefaultConfiguration().savedpercharconfdefaults.currentlogindex)
         end
       end
     end

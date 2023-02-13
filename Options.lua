@@ -103,8 +103,8 @@ function Elephant:SetupOptions()
             name = Elephant.L['maxlogwords'],
             desc = Elephant.L['maxlogwords_desc'] ..
                   "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['maxlogwords_desc_warning'] .. "|r",
-            min = Elephant.defaultConf.minlogsize,
-            max = Elephant.defaultConf.maxlogsize,
+            min = Elephant:DefaultConfiguration().minlogsize,
+            max = Elephant:DefaultConfiguration().maxlogsize,
             step = 1,
             get = function()
               return Elephant:ProfileDb().maxlog
@@ -119,8 +119,8 @@ function Elephant:SetupOptions()
             name = Elephant.L['maxcopycharacters'],
             desc = Elephant.L['maxcopycharacters_desc'] .. "\n\n|c" ..
               Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['maxcopycharacters_desc_warning'] .. "|r",
-            min = Elephant.defaultConf.copywindowminletters,
-            max = Elephant.defaultConf.copywindowmaxletters,
+            min = Elephant:DefaultConfiguration().copywindowminletters,
+            max = Elephant:DefaultConfiguration().copywindowmaxletters,
             step = 1000,
             get = function()
               return Elephant:ProfileDb().maxcopyletters

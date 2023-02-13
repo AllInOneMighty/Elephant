@@ -3,7 +3,7 @@
     <Size x="500" y="500"/>
     <Scripts>
         <OnLoad>
-            self:SetPoint("TOP", Elephant.defaultConf.copyposition.x, Elephant.defaultConf.copyposition.y)
+            self:SetPoint("TOP", Elephant:DefaultConfiguration().copyposition.x, Elephant:DefaultConfiguration().copyposition.y)
             getglobal(self:GetName().."TitleFontString"):SetText(Elephant.L['copywindow'])
         </OnLoad>
         <OnEnter>
@@ -239,7 +239,7 @@
                         Elephant.L['bbAndTextInfo'][1],
                         " ",
                         {
-                            text = format(Elephant.L['bbAndTextInfo'][2], Elephant.defaultConf.copywindowmaxlinesbb),
+                            text = format(Elephant.L['bbAndTextInfo'][2], Elephant:DefaultConfiguration().copywindowmaxlinesbb),
                             r = 1.0,
                             g = 0.2,
                             b = 0.2

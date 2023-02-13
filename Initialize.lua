@@ -7,10 +7,10 @@ logging, and initializes other useful data.
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
   Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
-    profile = Elephant:Clone(Elephant.defaultConf.savedconfdefaults)
+    profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults)
   })
   Elephant.dbpc = LibStub("AceDB-3.0"):New("ElephantDBPerChar", {
-    char = Elephant:Clone(Elephant.defaultConf.savedpercharconfdefaults)
+    char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults)
   })
 
   -- Options
@@ -36,7 +36,7 @@ function Elephant:OnInitialize()
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant.tempConf.lootmethod = GetLootMethod()
+  Elephant.volatileConfiguration.lootmethod = GetLootMethod()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
@@ -101,8 +101,8 @@ function Elephant:OnEnable()
 
   -- Displays default log
   if not Elephant:CharDb().logs[Elephant:CharDb().currentlogindex] then
-    Elephant:CharDb().currentlogindex = Elephant.defaultConf.defaultlogindex
+    Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
   end
-  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
