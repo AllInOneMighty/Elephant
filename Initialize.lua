@@ -7,10 +7,10 @@ logging, and initializes other useful data.
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
   Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
-    profile = Elephant:clone(Elephant.defaultConf.savedconfdefaults)
+    profile = Elephant:Clone(Elephant.defaultConf.savedconfdefaults)
   })
   Elephant.dbpc = LibStub("AceDB-3.0"):New("ElephantDBPerChar", {
-    char = Elephant:clone(Elephant.defaultConf.savedpercharconfdefaults)
+    char = Elephant:Clone(Elephant.defaultConf.savedpercharconfdefaults)
   })
 
   -- Options

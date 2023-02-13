@@ -44,17 +44,25 @@ StaticPopupDialogs['ELEPHANT_RESET'] = {
 }
 
 --[[ Cloning function, used for tables ]]
-function Elephant:clone(o)
+function Elephant:Clone(o)
   local new = {}
   local i, v = next(o, nil)
   while i do
     if type(v) == "table" then
-      v = Elephant:clone(v)
+      v = Elephant:Clone(v)
     end
     new[i] = v
     i, v = next(o, i)
   end
   return new
+end
+
+function Elephant:ProfileDb()
+  return Elephant.db.profile
+end
+
+function Elephant:CharDb()
+  return Elephant.dbpc.char
 end
 
 --[[ Default configuration, doesn't change at runtime ]]
@@ -415,11 +423,3 @@ Elephant.defaultConf.savedconfdefaults.events = {
     }
   },
 }
-
-function Elephant:ProfileDb()
-  return Elephant.db.profile
-end
-
-function Elephant:CharDb()
-  return Elephant.dbpc.char
-end

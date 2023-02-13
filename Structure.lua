@@ -136,10 +136,10 @@ replaces the current table by a new and
 known one.
 ]]
 local function ResetSavedVariables()
-  for key, value in pairs(Elephant:clone(Elephant.defaultConf.savedconfdefaults)) do
+  for key, value in pairs(Elephant:Clone(Elephant.defaultConf.savedconfdefaults)) do
     Elephant:ProfileDb()[key] = value
   end
-  for key, value in pairs(Elephant:clone(Elephant.defaultConf.savedpercharconfdefaults)) do
+  for key, value in pairs(Elephant:Clone(Elephant.defaultConf.savedpercharconfdefaults)) do
     Elephant:CharDb()[key] = value
   end
 end
