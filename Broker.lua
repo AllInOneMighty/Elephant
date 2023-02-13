@@ -9,7 +9,7 @@ local function OnBrokerTooltipShow(tt)
     tt:AddLine(Elephant.L['activefilters'])
 
     local filter
-    for _,filter in pairs(Elephant.db.profile.filters) do
+    for _, filter in pairs(Elephant.db.profile.filters) do
       tt:AddLine("  " .. filter, 1.0, 1.0, 1.0, 1.0)
     end
 

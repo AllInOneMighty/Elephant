@@ -3,7 +3,7 @@ Utility method to sort the dropdowns menu
 choices alphabetically.
 ]]
 local function SortTable(arg1, arg2)
-  local i=1
+  local i = 1
   local j
 
   repeat
@@ -28,7 +28,6 @@ end
 --[[ Dropdowns ]]
 -- See below local functions declaration for dropdown
 -- creation function associations
-
 local function DropdownCustomChatsInitialize()
   local info = {}
   info.text = Elephant.L['chatnames']['custom']
