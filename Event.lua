@@ -49,8 +49,8 @@ end
 Handles messages sent by the WoW engine
 as well as the ones sent by Prat.
 ]]
-local function HandleMessage(prat_msg, prat_lineid, event, ...)
-  if not Elephant.db.profile.prat and prat_msg then
+local function HandleMessage(prat_struct, event, ...)
+  if not Elephant.db.profile.prat and prat_struct then
     return
   end
   if not Elephant.db.profile.events[event] then
@@ -84,11 +84,11 @@ local function HandleMessage(prat_msg, prat_lineid, event, ...)
         return
       end
 
-      if prat_msg then
+      if prat_struct then
         msg = {
           ['time'] = time(),
-          ['prat'] = prat_msg,
-          ['lineid'] = prat_lineid,
+          ['prat'] = prat_struct.message,
+          ['lineid'] = prat_struct.line_id,
         }
       else
         msg = {
@@ -132,11 +132,11 @@ local function HandleMessage(prat_msg, prat_lineid, event, ...)
     end
   -- Not channel messages
   else
-    if prat_msg then
+    if prat_struct then
       msg = {
         ['time'] = time(),
-        ['prat'] = prat_msg,
-        ['lineid'] = prat_lineid,
+        ['prat'] = prat_struct.message,
+        ['lineid'] = prat_struct.line_id,
         ['type'] = Elephant.db.profile.events[event].type,
       }
     else
@@ -260,7 +260,7 @@ function Elephant:RegisterEventsRefresh()
     -- Registering additional events not handled by Prat
     for event, v in pairs(Elephant.db.profile.events) do
       if v.register_with_prat then
-        Elephant:RegisterEvent(event, HandleMessage, nil, nil)
+        Elephant:RegisterEvent(event, HandleMessage, nil)
       end
     end
   else
@@ -269,7 +269,7 @@ function Elephant:RegisterEventsRefresh()
     end
 
     for event, v in pairs(Elephant.db.profile.events) do
-      Elephant:RegisterEvent(event, HandleMessage, nil, nil)
+      Elephant:RegisterEvent(event, HandleMessage, nil)
     end
   end
 end
@@ -280,5 +280,9 @@ sending them to HandleMessage()
 ]]
 -- Cannot be local
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
-  HandleMessage(text, message.ORG.LINE_ID, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
+  prat_struct = {
+    ['message'] = text,
+    ['line_id'] = message.ORG.LINE_ID
+  }
+  HandleMessage(prat_struct, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
 end
