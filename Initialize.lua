@@ -20,13 +20,13 @@ function Elephant:OnInitialize()
   Elephant:SetTitleInfoMaxLog()
 
   -- Elephant button
-  if Elephant.db.profile.button == true then
+  if Elephant:ProfileDb().button == true then
     Elephant:CreateButton()
   end
 
   -- Enabling/disabling chat logging if required
-  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
-  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
+  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
+  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
 
   -- Checks & creates default log structures
   Elephant:InitDefaultLogStructures()
@@ -100,9 +100,9 @@ function Elephant:OnEnable()
     'YELL')
 
   -- Displays default log
-  if not Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex] then
-    Elephant.dbpc.char.currentlogindex = Elephant.defaultConf.defaultlogindex
+  if not Elephant:CharDb().logs[Elephant:CharDb().currentlogindex] then
+    Elephant:CharDb().currentlogindex = Elephant.defaultConf.defaultlogindex
   end
-  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
+  Elephant.tempConf.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end

@@ -15,7 +15,7 @@ function Elephant:SetupOptions()
         name = Elephant.L['showbutton'],
         desc = Elephant.L['showbutton_desc'],
         get = function()
-          return Elephant.db.profile.button
+          return Elephant:ProfileDb().button
         end,
         set = Elephant.ToggleButton
       },
@@ -25,7 +25,7 @@ function Elephant:SetupOptions()
         name = Elephant.L['minimapicon'],
         desc = Elephant.L['minimapicon_desc'],
         get = function()
-          return not Elephant.db.profile.minimap.hide
+          return not Elephant:ProfileDb().minimap.hide
         end,
         set = Elephant.ToggleLDBIcon,
         hidden = function()
@@ -70,11 +70,11 @@ function Elephant:SetupOptions()
               Elephant:DeleteFilter(filterindex)
             end,
             values = function()
-              return   Elephant.db.profile.filters
+              return   Elephant:ProfileDb().filters
             end,
             hidden = function()
-              return (not Elephant.db.profile.filters) or
-                (#Elephant.db.profile.filters == 0)
+              return (not Elephant:ProfileDb().filters) or
+                (#Elephant:ProfileDb().filters == 0)
             end
           }
         },
@@ -91,10 +91,10 @@ function Elephant:SetupOptions()
             name = Elephant.L['enableddefault'],
             desc = Elephant.L['enableddefault_desc'],
             get = function()
-              return Elephant.db.profile.defaultlog
+              return Elephant:ProfileDb().defaultlog
             end,
             set = function(_, isEnabled)
-              Elephant.db.profile.defaultlog = isEnabled
+              Elephant:ProfileDb().defaultlog = isEnabled
             end
           },
           max = {
@@ -107,7 +107,7 @@ function Elephant:SetupOptions()
             max = Elephant.defaultConf.maxlogsize,
             step = 1,
             get = function()
-              return Elephant.db.profile.maxlog
+              return Elephant:ProfileDb().maxlog
             end,
             set = function(_, nb)
               Elephant:ChangeMaxLog(nb)
@@ -123,10 +123,10 @@ function Elephant:SetupOptions()
             max = Elephant.defaultConf.copywindowmaxletters,
             step = 1000,
             get = function()
-              return Elephant.db.profile.maxcopyletters
+              return Elephant:ProfileDb().maxcopyletters
             end,
             set = function(_, v)
-              Elephant.db.profile.maxcopyletters = v
+              Elephant:ProfileDb().maxcopyletters = v
             end
           },
           classColors = {
@@ -136,10 +136,10 @@ function Elephant:SetupOptions()
             desc = Elephant.L['classcolors_desc'] .. "\n\n|c" ..
               Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['classcolors_desc2'] .. "|r",
             get = function()
-              return Elephant.db.profile.class_colors_in_log
+              return Elephant:ProfileDb().class_colors_in_log
             end,
             set = function(_, isEnabled)
-              Elephant.db.profile.class_colors_in_log = isEnabled
+              Elephant:ProfileDb().class_colors_in_log = isEnabled
               Elephant:ShowCurrentLog()
             end
           },
@@ -166,10 +166,10 @@ function Elephant:SetupOptions()
                   Elephant.L['prat2_desc2'] .. "\n\n|c" ..
                   Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['prat2_desc22'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.prat
+                  return Elephant:ProfileDb().prat
                 end,
                 set = function(_, v)
-                  Elephant.db.profile.prat = v
+                  Elephant:ProfileDb().prat = v
                   Elephant:RegisterEventsRefresh()
                 end
               }
@@ -189,12 +189,12 @@ function Elephant:SetupOptions()
                 desc = Elephant.L['activate_desc2'] ..
                   "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['activate_desc22'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.activate_log
+                  return Elephant:ProfileDb().activate_log
                 end,
                 set = function(_, nv)
-                  Elephant.db.profile.activate_log = nv
-                  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
-                  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
+                  Elephant:ProfileDb().activate_log = nv
+                  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
+                  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
                 end,
               },
               chatlog_limitation = {
@@ -202,7 +202,7 @@ function Elephant:SetupOptions()
                 name = Elephant.L['chatlog_limitation'],
                 order = 2,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
+                  return not Elephant:ProfileDb().activate_log
                 end
               },
               chat = {
@@ -212,14 +212,14 @@ function Elephant:SetupOptions()
                 desc = Elephant.L['chatlog2_desc'] .. "\n\n|c" ..
                   Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['chatlog2_desc2'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.chatlog
+                  return Elephant:ProfileDb().chatlog
                 end,
                 set = function(_, isEnabled)
-                  Elephant.db.profile.chatlog = isEnabled
+                  Elephant:ProfileDb().chatlog = isEnabled
                   Elephant:ChatLogEnable(isEnabled)
                 end,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
+                  return not Elephant:ProfileDb().activate_log
                 end,
               },
               combat = {
@@ -229,14 +229,14 @@ function Elephant:SetupOptions()
                 desc = Elephant.L['combatlog2_desc'] .. "\n\n|c" ..
                   Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['combatlog2_desc2'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.combatlog
+                  return Elephant:ProfileDb().combatlog
                 end,
                 set = function(_, isEnabled)
-                  Elephant.db.profile.combatlog = isEnabled
+                  Elephant:ProfileDb().combatlog = isEnabled
                   Elephant:CombatLogEnable(isEnabled)
                 end,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
+                  return not Elephant:ProfileDb().activate_log
                 end,
               },
             }

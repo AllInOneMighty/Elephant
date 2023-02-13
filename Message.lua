@@ -10,7 +10,7 @@ addon "Show class colors in logs" option
 is not enabled.
 ]]
 local function GetSenderWithClassColor(sender, class_color, with_link)
-  if sender and class_color and Elephant.db.profile.class_colors_in_log then
+  if sender and class_color and Elephant:ProfileDb().class_colors_in_log then
     if with_link then
       return "|Hplayer:" .. sender .. "|h[|c" .. class_color .. sender .. "|r]|h"
     else

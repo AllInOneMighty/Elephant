@@ -35,7 +35,7 @@ local function DropdownCustomChatsInitialize()
   UIDropDownMenu_AddButton(info, 1)
 
   local index, tindex, k, v
-  for index, tindex in pairs(Elephant.dbpc.char.logs) do
+  for index, tindex in pairs(Elephant:CharDb().logs) do
     if not (type(index) == "number") then
       if not Elephant.L['generalchats'][index] then
         info = {}
@@ -63,7 +63,7 @@ local function DropdownGeneralChatsInitialize()
   UIDropDownMenu_AddButton(info)
 
   local index, tindex
-  for index, tindex in pairs(Elephant.dbpc.char.logs) do
+  for index, tindex in pairs(Elephant:CharDb().logs) do
     if type(index) == "string" then
       if Elephant.L['generalchats'][index] then
         info = UIDropDownMenu_CreateInfo()
@@ -95,7 +95,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['achievement']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant.defaultConf.defaultindexes.achievement
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.achievement].enabled then
+  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.achievement].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -106,7 +106,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['loot']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant.defaultConf.defaultindexes.loot
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.loot].enabled then
+  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.loot].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -117,7 +117,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['system']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant.defaultConf.defaultindexes.system
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.system].enabled then
+  if not Elephant:CharDb().logs[Elephant.defaultConf.defaultindexes.system].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -129,9 +129,9 @@ local function DropdownCatchOptionsInitialize(frame, level)
 
   -- Getting events for current log
   local eventKey, eventTable, catcherValue
-  for eventID, eventTable in pairs(Elephant.db.profile.events) do
+  for eventID, eventTable in pairs(Elephant:ProfileDb().events) do
     if eventTable.channels and eventTable.desc then
-      catcherValue = eventTable.channels[Elephant.dbpc.char.currentlogindex]
+      catcherValue = eventTable.channels[Elephant:CharDb().currentlogindex]
       if catcherValue then
         table.insert(menu, {
           desc = eventTable.desc,
@@ -162,7 +162,7 @@ local function DropdownCatchOptionsInitialize(frame, level)
       info.checked = false
       info.func = Elephant.EnableCatcher
       info.arg1 = catcher.key
-      info.arg2 = Elephant.dbpc.char.currentlogindex
+      info.arg2 = Elephant:CharDb().currentlogindex
       info.isNotRadio = true
       info.keepShownOnClick = 1
       UIDropDownMenu_AddButton(info)
@@ -172,7 +172,7 @@ local function DropdownCatchOptionsInitialize(frame, level)
       info.checked = true
       info.func = Elephant.DisableCatcher
       info.arg1 = catcher.key
-      info.arg2 = Elephant.dbpc.char.currentlogindex
+      info.arg2 = Elephant:CharDb().currentlogindex
       info.isNotRadio = true
       info.keepShownOnClick = 1
       UIDropDownMenu_AddButton(info)

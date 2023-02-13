@@ -50,10 +50,10 @@ Handles messages sent by the WoW engine
 as well as the ones sent by Prat.
 ]]
 local function HandleMessage(prat_struct, event, ...)
-  if not Elephant.db.profile.prat and prat_struct then
+  if not Elephant:ProfileDb().prat and prat_struct then
     return
   end
-  if not Elephant.db.profile.events[event] then
+  if not Elephant:ProfileDb().events[event] then
     return
   end
 
@@ -80,7 +80,7 @@ local function HandleMessage(prat_struct, event, ...)
       -- displaying that log, so we don't have to update the buttons like
       -- when a YOU_JOINED event happens.
       Elephant:MaybeInitCustomStructure(channel_index, channel_name)
-      if not Elephant.dbpc.char.logs[channel_index].enabled then
+      if not Elephant:CharDb().logs[channel_index].enabled then
         return
       end
 
@@ -108,23 +108,23 @@ local function HandleMessage(prat_struct, event, ...)
     if event == "CHAT_MSG_CHANNEL_NOTICE" then
       if message == "YOU_JOINED" or message == "YOU_CHANGED" then
         Elephant:MaybeInitCustomStructure(channel_index, channel_name)
-        if not Elephant.dbpc.char.logs[channel_index].enabled then
+        if not Elephant:CharDb().logs[channel_index].enabled then
           return
         end
 
         Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['join'] } , channel_index)
-        if Elephant.dbpc.char.currentlogindex == channel_index then
+        if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
         end
       end
       if message == "YOU_LEFT" then
-        if not Elephant.dbpc.char.logs[channel_index] or Elephant.dbpc.char.logs[channel_index].enabled then
+        if not Elephant:CharDb().logs[channel_index] or Elephant:CharDb().logs[channel_index].enabled then
           return
         end
 
         Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['leave'] } , channel_index)
         Elephant:CaptureNewMessage( { ['arg1'] = " " } , channel_index)
-        if Elephant.dbpc.char.currentlogindex == channel_index then
+        if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
           Elephant:ForceCurrentLogDeleteButtonStatus(true)
         end
@@ -137,12 +137,12 @@ local function HandleMessage(prat_struct, event, ...)
         ['time'] = time(),
         ['prat'] = prat_struct.message,
         ['lineid'] = prat_struct.line_id,
-        ['type'] = Elephant.db.profile.events[event].type,
+        ['type'] = Elephant:ProfileDb().events[event].type,
       }
     else
       new_message_struct = {
         ['time'] = time(),
-        ['type'] = Elephant.db.profile.events[event].type,
+        ['type'] = Elephant:ProfileDb().events[event].type,
         ['arg1'] = message,
       }
 
@@ -197,7 +197,7 @@ local function HandleMessage(prat_struct, event, ...)
 
           new_message_struct_2 = {
             ['time'] = time(),
-            ['type'] = Elephant.db.profile.events[event].type
+            ['type'] = Elephant:ProfileDb().events[event].type
           }
 
           -- Name of player may be unknown here, if interface
@@ -227,8 +227,8 @@ local function HandleMessage(prat_struct, event, ...)
     -- Finally, capture the message if it is not nil
     if new_message_struct ~= nil then
       local channel_index
-      for channel_index in pairs(Elephant.db.profile.events[event].channels) do
-        if Elephant.db.profile.events[event].channels[channel_index] ~= 0 and Elephant.dbpc.char.logs[channel_index].enabled then
+      for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
+        if Elephant:ProfileDb().events[event].channels[channel_index] ~= 0 and Elephant:CharDb().logs[channel_index].enabled then
           Elephant:CaptureNewMessage(new_message_struct, channel_index)
           if new_message_struct_2 ~= nil then
             Elephant:CaptureNewMessage(new_message_struct_2, channel_index)
@@ -254,21 +254,21 @@ function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
 
   local event_type
-  if Prat and Elephant.db.profile.prat then
+  if Prat and Elephant:ProfileDb().prat then
     Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
 
     -- Registering additional events not handled by Prat
-    for event_type, event_struct in pairs(Elephant.db.profile.events) do
+    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
       if event_struct.register_with_prat then
         Elephant:RegisterEvent(event_type, HandleMessage, nil)
       end
     end
   else
-    if not Prat and Elephant.db.profile.prat then
+    if not Prat and Elephant:ProfileDb().prat then
       Elephant:Print("|cffff0000" .. Elephant.L['noprat'] .. "|r")
     end
 
-    for event_type, event_struct in pairs(Elephant.db.profile.events) do
+    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
       Elephant:RegisterEvent(event_type, HandleMessage, nil)
     end
   end
