@@ -330,7 +330,6 @@ Elephant.defaultConf.savedconfdefaults.events = {
     desc = CHAT_MSG_RAID_BOSS_EMOTE,
     channels = {
       [Elephant.defaultConf.defaultindexes.raid] = 1,
-      [Elephant.defaultConf.defaultindexes.instance] = 1,
     }
   },
   ['CHAT_MSG_SAY'] = {
