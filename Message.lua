@@ -140,7 +140,8 @@ log is started or stopped.
 ]]
 function Elephant:GetStateChangeActionMsg(is_enabled)
   if is_enabled then
-    return format(Elephant.L['logstartedon'], date("%m/%d/%Y"), date("%H:%M:%S"))
+    local name, _ = UnitName("player")
+    return format(Elephant.L['logstartedon'], name, date("%m/%d/%Y"), date("%H:%M:%S"))
   else
     return Elephant.L['logstopped']
   end

@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
+local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
 if not L then return end
 
 --[[ Common messages ]]
@@ -128,7 +128,7 @@ L['maxcopycharacters_desc'] = "Nombre maximum de caractères (et pas de lignes) 
 L['maxcopycharacters_desc_warning'] = "Attention: Plus cette valeur est grande et plus la fenêtre de copie prendra de temps pour s'afficher. Votre jeu se bloquera temporairement pendant que la fenêtre se remplit. Toute valeur supérieure à 15000 rendra le temps de chargement perceptible."
 
 --[[ Special log messages ]]
-L['logstartedon']  = "Log commencé le %s à %s."
+L['logstartedon']  = "Log commencé pour %s le %s à %s."
 L['logstopped']    = "Log arrêté."
 L['monstersay']    = "%s says"
 L['monsteryell']    = "%s crie"

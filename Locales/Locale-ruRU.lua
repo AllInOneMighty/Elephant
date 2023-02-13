@@ -92,7 +92,7 @@ L['showtimestamps']  = "Show timestamps"
 L['itemLinkSite'] = "http://ru.wowhead.com/?item="
 
 --[[ Special log messages ]]
-L['logstartedon']  = "Запись начинается на %s в %s."
+L['logstartedon']  = "Запись начинается для %s на %s в %s."
 L['logstopped']    = "Запись остановлена."
 L['monstersay']    = "%s сказать"
 L['monsteryell']    = "%s крикнуть"

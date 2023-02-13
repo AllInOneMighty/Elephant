@@ -128,7 +128,7 @@ L['maxcopycharacters_desc'] = "Maximum number of characters (not lines) to show 
 L['maxcopycharacters_desc_warning'] = "Warning: The higher this value, the longer the copy window will take to load. Your game will freeze until the window is filled. Any value over 15000 will make the loading time noticeable."
 
 --[[ Special log messages ]]
-L['logstartedon']  = "Logging started on %s at %s."
+L['logstartedon']  = "Logging started for %s on %s at %s."
 L['logstopped']    = "Logging stopped."
 L['monstersay']    = "%s says"
 L['monsteryell']    = "%s yells"
