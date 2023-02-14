@@ -111,7 +111,5 @@ L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE'] = "WeltVerteidigung"
 L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID'] = "weltverteidigung"
 
 --[[ Custom chats special log messages ]]
-L['customchat'] = {
-  ['join'] = "Channel beigetreten.",
-  ['leave'] = "Channel verlassen."
-}
+L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] = "Channel beigetreten."
+L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] = "Channel verlassen."
