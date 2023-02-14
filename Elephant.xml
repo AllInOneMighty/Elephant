@@ -124,9 +124,9 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['move2'][1],
-                        Elephant.L['move2'][2],
-                        {text=Elephant.L['move2'][3], r=0.2, g=1.0, b=0.2}
+                        Elephant.L['STRING_MAIN_WINDOW_TITLE_TOOLTIP'],
+                        Elephant.L['STRING_MAIN_WINDOW_TITLE_TOOLTIP_DESC_1'],
+                        {text=Elephant.L['STRING_MAIN_WINDOW_TITLE_TOOLTIP_DESC_2'], r=0.2, g=1.0, b=0.2}
                     })
                 </OnEnter>
                 <OnLeave>
@@ -291,7 +291,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['bottom'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_BOTTOM_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -314,7 +314,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['pagedown'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_DOWN_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -337,7 +337,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['linedown'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_DOWN_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -365,7 +365,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['lineup'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_UP_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -393,7 +393,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['pageup'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_UP_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -416,7 +416,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, Elephant.L['scroll']['top'])
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_MAIN_WINDOW_SCROLL_TOP_BUTTON_TOOLTIP']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -442,9 +442,9 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['catchers'][1],
-                        Elephant.L['catchers'][2],
-                        {text=Elephant.L['catchers'][3], r=0.2, g=1.0, b=0.2}
+                        Elephant.L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON'],
+                        Elephant.L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_1'],
+                        {text=Elephant.L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_2'], r=0.2, g=1.0, b=0.2}
                     })
                 </OnEnter>
                 <OnLeave>
@@ -474,14 +474,14 @@
         </OnLoad>
         <OnEnter>
           Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['guild'],
+            Elephant.L['STRING_CHAT_NAME_GUILD'],
             {
               text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled),
               r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "r"),
               g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "g"),
               b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].logs)
+            format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -503,14 +503,14 @@
       <Scripts>
         <OnEnter>
           Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['officer'],
+            Elephant.L['STRING_CHAT_NAME_OFFICER'],
             {
               text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled),
               r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "r"),
               g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "g"),
               b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].logs)
+            format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -532,14 +532,14 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['chatnames']['whisper'],
+                        Elephant.L['STRING_CHAT_NAME_WHISPER'],
                         {
                             text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled),
                             r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "r"),
                             g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "g"),
                             b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].logs)
+                        format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -561,14 +561,14 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['chatnames']['party'],
+                        Elephant.L['STRING_CHAT_NAME_PARTY'],
                         {
                             text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled),
                             r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "r"),
                             g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "g"),
                             b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].logs)
+                        format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -590,14 +590,14 @@
       <Scripts>
         <OnEnter>
           Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['raid'],
+            Elephant.L['STRING_CHAT_NAME_RAID'],
             {
               text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled),
               r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "r"),
               g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "g"),
               b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].logs)
+            format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -619,14 +619,14 @@
       <Scripts>
         <OnEnter>
           Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['instance'],
+            Elephant.L['STRING_CHAT_NAME_INSTANCE'],
             {
               text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled),
               r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "r"),
               g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "g"),
               b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].logs)
+            format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -648,14 +648,14 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['chatnames']['say'],
+                        Elephant.L['STRING_CHAT_NAME_SAY'],
                         {
                             text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled),
                             r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "r"),
                             g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "g"),
                             b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].logs)
+                        format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -677,14 +677,14 @@
             <Scripts>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['chatnames']['yell'],
+                        Elephant.L['STRING_CHAT_NAME_YELL'],
                         {
                             text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled),
                             r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "r"),
                             g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "g"),
                             b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].logs)
+                        format(Elephant.L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -709,7 +709,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, {Elephant.L['chatnames']['general']})
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_CHAT_NAME_GENERAL']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -728,7 +728,7 @@
             </Anchors>
             <Scripts>
                 <OnEnter>
-                    Elephant:SetTooltip(self, {Elephant.L['chatnames']['misc']})
+                    Elephant:SetTooltip(self, {Elephant.L['STRING_CHAT_NAME_MISC']})
                 </OnEnter>
                 <OnLeave>
                     Elephant:UnsetTooltip()
@@ -748,8 +748,8 @@
       <Scripts>
         <OnEnter>
           Elephant:SetTooltip(self, {
-            Elephant.L['chatnames']['custom'],
-            Elephant.L['customchatsinfo']
+            Elephant.L['STRING_CHAT_NAME_CUSTOM'],
+            Elephant.L['STRING_MAIN_WINDOW_CUSTOM_CHATS_BUTTON_DESC']
           })
         </OnEnter>
         <OnLeave>
@@ -811,18 +811,18 @@
             </Anchors>
             <Scripts>
                 <OnLoad>
-                    self:SetText(Elephant.L['Empty'])
+                    self:SetText(Elephant.L['STRING_EMPTY'])
                 </OnLoad>
                 <OnClick>
                     StaticPopup_Show("ELEPHANT_EMPTY")
                 </OnClick>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['Empty'],
-                        Elephant.L['Emptyinfo'],
+                        Elephant.L['STRING_EMPTY'],
+                        Elephant.L['STRING_MAIN_WINDOW_EMPTY_BUTTON_DESC_1'],
                         " ",
                         {
-                            text = Elephant.L['Emptywarn'],
+                            text = Elephant.L['STRING_MAIN_WINDOW_EMPTY_BUTTON_DESC_2'],
                             r = 1.0,
                             g = 0.2,
                             b = 0.2
@@ -844,18 +844,18 @@
             </Anchors>
             <Scripts>
                 <OnLoad>
-                    self:SetText(Elephant.L['copy'])
+                    self:SetText(Elephant.L['STRING_COPY'])
                 </OnLoad>
                 <OnClick>
                     Elephant:ShowCopyWindow()
                 </OnClick>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['copy'],
-                        format(Elephant.L['copyinfo'], Elephant:ProfileDb().maxcopyletters),
+                        Elephant.L['STRING_COPY'],
+                        format(Elephant.L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_1'], Elephant:ProfileDb().maxcopyletters),
                         " ",
                         {
-                            text = Elephant.L['copywarn'],
+                            text = Elephant.L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_2'],
                             r = 1.0,
                             g = 0.2,
                             b = 0.2

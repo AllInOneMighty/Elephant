@@ -32,7 +32,7 @@ local function GetChannelIndexFromChannelName(channel_name)
 
   channel_name = string.lower(channel_name)
   local channel_index
-  for general_chat_channel_name, _ in pairs(Elephant.L['generalchats']) do
+  for general_chat_channel_name, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
     if (channel_name == general_chat_channel_name) or string.find(channel_name, general_chat_channel_name .. " - ") then
       channel_index = general_chat_channel_name
       break
@@ -112,21 +112,21 @@ local function HandleMessage(prat_struct, event, ...)
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['join'] } , channel_index)
+        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_index)
         if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
         end
       end
       if message == "YOU_LEFT" then
-        if not Elephant:LogsDb().logs[channel_index] or Elephant:LogsDb().logs[channel_index].enabled then
+        if not Elephant:LogsDb().logs[channel_index] or not Elephant:LogsDb().logs[channel_index].enabled then
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['leave'] } , channel_index)
+        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] } , channel_index)
         Elephant:CaptureNewMessage( { ['arg1'] = " " } , channel_index)
         if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
-          Elephant:ForceCurrentLogDeleteButtonStatus(true)
+          Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]]true)
         end
       end
     end
@@ -203,11 +203,11 @@ local function HandleMessage(prat_struct, event, ...)
           -- Name of player may be unknown here, if interface
           -- has just been loaded
           if player == "Unknown" then
-            new_message_struct_2.arg1 = "<" .. Elephant.L['masterlooternameunknown'] .. ">"
+            new_message_struct_2.arg1 = "<" .. Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN'] .. ">"
           elseif player ~= Elephant.volatileConfiguration.masterlooter then
             Elephant.volatileConfiguration.masterlooter = player
 
-            new_message_struct_2.arg1 =  format(Elephant.L['masterlooterchanged'], player)
+            new_message_struct_2.arg1 =  format(Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'], player)
           end
         else
           Elephant.volatileConfiguration.masterlooter = nil
@@ -215,7 +215,7 @@ local function HandleMessage(prat_struct, event, ...)
 
         if method ~= Elephant.volatileConfiguration.lootmethod then
           Elephant.volatileConfiguration.lootmethod = method
-          new_message_struct.arg1 = Elephant.L['lootmethod'][method]
+          new_message_struct.arg1 = Elephant.L['STRING_LOOT_METHOD__' .. method]
         else
           -- Warning: new_message_struct_2 might also be nil
           new_message_struct = new_message_struct_2
@@ -265,7 +265,7 @@ function Elephant:RegisterEventsRefresh()
     end
   else
     if not Prat and Elephant:ProfileDb().prat then
-      Elephant:Print("|cffff0000" .. Elephant.L['noprat'] .. "|r")
+      Elephant:Print("|cffff0000" .. Elephant.L['STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT'] .. "|r")
     end
 
     for event_type, event_struct in pairs(Elephant:ProfileDb().events) do

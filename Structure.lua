@@ -96,7 +96,7 @@ the operation.
 ]]
 local function DeleteLog(index)
   -- Print must be done *before* deleting, obviously
-  Elephant:Print( format(Elephant.L['deleteconfirm'], Elephant:LogsDb().logs[index].name) )
+  Elephant:Print( format(Elephant.L['STRING_INFORM_CHAT_LOG_DELETED'], Elephant:LogsDb().logs[index].name) )
   Elephant:LogsDb().logs[index] = nil
 end
 
@@ -130,7 +130,7 @@ function Elephant:MaybeInitDefaultLogStructures()
     end
   end
 
-  for name_id, general_chat_struct in pairs(Elephant.L['generalchats']) do
+  for name_id, general_chat_struct in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
     if not Elephant:LogsDb().logs[name_id] then
       CreateNewLogStructure(name_id, general_chat_struct.name)
     end
@@ -152,7 +152,7 @@ function Elephant:MaybeInitCustomStructures()
       local channel_custom_id = string.lower(channel_name)
 
       local found = false
-      for general_chat_name, _ in pairs(Elephant.L['generalchats']) do
+      for general_chat_name, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
         if (channel_custom_id == general_chat_name) or string.find(channel_custom_id, general_chat_name .. " - ") then
           found = true
           break
@@ -202,7 +202,7 @@ function Elephant:AddHeaderToStructures(non_custom_channels_only)
         non_custom_channels_only == false or (
           non_custom_channels_only == true and (
             type(index_or_name_id) == "number" or
-            Elephant.L['generalchats'][index_or_name_id]
+            Elephant:DefaultConfiguration().generalchatchannelnames[index_or_name_id]
           )
         )
       then
@@ -247,7 +247,7 @@ function Elephant:EmptyCurrentLog()
     AddHeaderToTable(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex])
   end
 
-  Elephant:Print( format(Elephant.L['emptyconfirm'], Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) )
+  Elephant:Print( format(Elephant.L['STRING_INFORM_CHAT_LOG_EMPTIED'], Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) )
 
   Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
@@ -266,7 +266,7 @@ function Elephant:ClearAllLogs()
     end
   end
 
-  Elephant:Print(Elephant.L['clearallconfirm'])
+  Elephant:Print(Elephant.L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'])
 
   Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
@@ -368,7 +368,7 @@ function Elephant:Reset()
     if channel_name ~= nil then
       local channel_name_lowercase = string.lower(channel_name)
       local found = false
-      for name_id, _ in pairs(Elephant.L['generalchats']) do
+      for name_id, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
         if (channel_name_lowercase == name_id) or string.find(channel_name_lowercase, name_id .. " - ") then
           found = true
           break
@@ -376,7 +376,7 @@ function Elephant:Reset()
       end
       if not found then
         Elephant:MaybeInitCustomStructure(channel_name_lowercase, channel_name)
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['join'] } , channel_name_lowercase)
+        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_name_lowercase)
       end
     end
   end
@@ -390,7 +390,7 @@ function Elephant:Reset()
 
   Elephant:RefreshLDBIcon()
 
-  Elephant:Print(Elephant.L['resetconfirm'])
+  Elephant:Print(Elephant.L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'])
 
   -- Force refresh of options frame
   InterfaceOptionsFrame_OpenToCategory("Elephant")
@@ -438,7 +438,7 @@ function Elephant:AddFilter(new_filter)
   end
 
   table.insert(Elephant:ProfileDb().filters, new_filter)
-  Elephant:Print(format(Elephant.L['filteradded'], new_filter))
+  Elephant:Print(format(Elephant.L['STRING_INFORM_CHAT_FILTER_ADDED'], new_filter))
 
   for index_or_name_id, _ in pairs(Elephant:LogsDb().logs) do
     if type(index_or_name_id) ~= "number" and string.find(index_or_name_id, " ") == nil then
@@ -464,7 +464,7 @@ if a *general* chat is filtered.
 function Elephant:IsFiltered(index)
   for _, filter in pairs(Elephant:ProfileDb().filters) do
     filter = "^" .. string.gsub(string.lower(filter), "%*", "%.%*") .. "$"
-    if string.match(index, filter) ~= nil and not Elephant.L['generalchats'][index] then
+    if string.match(index, filter) ~= nil and not Elephant:DefaultConfiguration().generalchatchannelnames[index] then
       return true
     end
   end
@@ -482,7 +482,7 @@ function Elephant:DeleteFilter(filter_index)
     return
   end
   -- Must be displayed before deleting filter, obviously
-  Elephant:Print(format(Elephant.L['filterdeleted'], Elephant:ProfileDb().filters[filter_index]))
+  Elephant:Print(format(Elephant.L['STRING_INFORM_CHAT_FILTER_DELETED'], Elephant:ProfileDb().filters[filter_index]))
   Elephant:ProfileDb().filters[filter_index] = nil
 
   Elephant:MaybeInitCustomStructures()

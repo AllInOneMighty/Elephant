@@ -83,9 +83,9 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
     elseif (message_struct['type'] ~= "MONSTER_EMOTE" and message_struct['type'] ~= "ACHIEVEMENT" and
             message_struct['type'] ~= "GUILD_ACHIEVEMENT") then
       if message_struct['type'] == "MONSTER_SAY" then
-        literal_message = literal_message .. format(Elephant.L['monstersay'], message_struct['arg2'])
+        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_SAYS'], message_struct['arg2'])
       elseif message_struct['type'] == "MONSTER_YELL" then
-        literal_message = literal_message .. format(Elephant.L['monsteryell'], message_struct['arg2'])
+        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_YELLS'], message_struct['arg2'])
       elseif message_struct['type'] == "MONSTER_WHISPER" then
         literal_message = literal_message .. message_struct['arg2']
       else
@@ -95,20 +95,20 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
         if message_struct['type'] == "BN_WHISPER_INFORM" or message_struct['type'] == "BN_WHISPER" then
           -- We can't track Battle.net names due to privacy reasons, so we remove links and name resolution.
           with_link = false
-          sender = "[" .. Elephant.L['id'] .. ": " .. GetBattleNetId(message_struct['arg2']) .. "]"
+          sender = "[" .. Elephant.L['STRING_ID'] .. ": " .. GetBattleNetId(message_struct['arg2']) .. "]"
         end
 
         local player_link = GetSenderWithClassColor(sender, message_struct['clColor'], with_link)
 
         if message_struct['type'] == "WHISPER_INFORM" or message_struct['type'] == "BN_WHISPER_INFORM" then
-          literal_message = literal_message .. format(Elephant.L['whisperto'], player_link)
+          literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_TO'], player_link)
         else
           literal_message = literal_message .. player_link
         end
       end
 
       if message_struct['type'] == "WHISPER" or message_struct['type'] == "MONSTER_WHISPER" or message_struct['type'] == "BN_WHISPER" then
-        literal_message = format(Elephant.L['whisperfrom'], literal_message)
+        literal_message = format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_FROM'], literal_message)
       end
 
       literal_message = literal_message .. ": "
@@ -141,8 +141,8 @@ log is started or stopped.
 function Elephant:GetStateChangeActionMsg(is_enabled)
   if is_enabled then
     local name, _ = UnitName("player")
-    return format(Elephant.L['logstartedon'], name, date("%m/%d/%Y"), date("%H:%M:%S"))
+    return format(Elephant.L['STRING_SPECIAL_LOG_LOGGING_STARTED_ON'], name, date("%m/%d/%Y"), date("%H:%M:%S"))
   else
-    return Elephant.L['logstopped']
+    return Elephant.L['STRING_SPECIAL_LOG_LOGGING_STOPPED']
   end
 end

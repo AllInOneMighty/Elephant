@@ -77,35 +77,35 @@ function Elephant:OnEnable()
   -- Sets chat tab buttons color
   SetTabButtonProperties(
     ElephantFrameGuildTabButton,
-    Elephant.L['chatnames']['guild'],
+    Elephant.L['STRING_CHAT_NAME_GUILD'],
     'GUILD')
   SetTabButtonProperties(
     ElephantFrameOfficerTabButton,
-    Elephant.L['chatnames']['officer'],
+    Elephant.L['STRING_CHAT_NAME_OFFICER'],
     'OFFICER')
   SetTabButtonProperties(
     ElephantFrameWhisperTabButton,
-    Elephant.L['chatnames']['whisper'],
+    Elephant.L['STRING_CHAT_NAME_WHISPER'],
     'WHISPER')
   SetTabButtonProperties(
     ElephantFramePartyTabButton,
-    Elephant.L['chatnames']['party'],
+    Elephant.L['STRING_CHAT_NAME_PARTY'],
     'PARTY')
   SetTabButtonProperties(
     ElephantFrameRaidTabButton,
-    Elephant.L['chatnames']['raid'],
+    Elephant.L['STRING_CHAT_NAME_RAID'],
     'RAID')
   SetTabButtonProperties(
     ElephantFrameInstanceTabButton,
-    Elephant.L['chatnames']['instance'],
+    Elephant.L['STRING_CHAT_NAME_INSTANCE'],
     'INSTANCE_CHAT')
   SetTabButtonProperties(
     ElephantFrameSayTabButton,
-    Elephant.L['chatnames']['say'],
+    Elephant.L['STRING_CHAT_NAME_SAY'],
     'SAY')
   SetTabButtonProperties(
     ElephantFrameYellTabButton,
-    Elephant.L['chatnames']['yell'],
+    Elephant.L['STRING_CHAT_NAME_YELL'],
     'YELL')
 
   -- Displays default log

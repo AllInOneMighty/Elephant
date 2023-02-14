@@ -125,11 +125,11 @@ local function FillCopyWindow()
     Elephant:ProfileDb().maxcopyletters)
   ElephantCopyFrameTitleInfoFrameLogLengthFontString:SetText(
     format(
-      Elephant.L['copywindowloglength'],
+      Elephant.L['STRING_COPY_WINDOW_MAX_CHARACTERS'],
       Elephant:ProfileDb().maxcopyletters))
 
   if not Elephant.volatileConfiguration.is_copywindow_bbcode then
-    ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['copywindowplaintext'])
+    ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['STRING_COPY_WINDOW_PLAIN_TEXT'])
 
     -- Normal text
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
@@ -155,10 +155,10 @@ local function FillCopyWindow()
   else
     -- BBCode
     ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(
-      Elephant.L['copywindowbbcode'])
+      Elephant.L['STRING_COPY_WINDOW_BB_CODE'])
 
     ElephantCopyFrameScrollFrameEditBox:SetTextColor(0.75, 0.75, 0.75, 1.0)
-    local item_link_site = Elephant.L['itemLinkSite']
+    local item_link_site = Elephant.L['URL_ITEM_LINK']
     local total_chars = 0
     for line_index = Elephant.volatileConfiguration.currentline, 0, -1 do
       local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
@@ -304,7 +304,7 @@ end
 Updates the maximum log count information of the current log.
 ]]
 function Elephant:SetTitleInfoMaxLog()
-  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['maxlog'], Elephant:FactionRealmDb().maxlog))
+  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['STRING_MAIN_WINDOW_MAX_LOG'], Elephant:FactionRealmDb().maxlog))
 end
 
 --[[
@@ -353,16 +353,16 @@ required. The buttons are:
 ]]
 function Elephant:UpdateCurrentLogButtons()
   if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
-    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Disable'])
+    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['STRING_DISABLE'])
   else
-    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Enable'])
+    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['STRING_ENABLE'])
   end
   if #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs > 0 then
     ElephantFrameCopyButton:Enable()
   else
     ElephantFrameCopyButton:Disable()
   end
-  if Elephant.L['generalchats'][Elephant:CharDb().currentlogindex] or (type(Elephant:CharDb().currentlogindex) == "number") then
+  if Elephant:DefaultConfiguration().generalchatchannelnames[Elephant:CharDb().currentlogindex] or (type(Elephant:CharDb().currentlogindex) == "number") then
     ElephantFrameDeleteButton:Disable()
   elseif GetChannelName(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) > 0 then
     ElephantFrameDeleteButton:Disable()
@@ -579,9 +579,9 @@ parameter.
 ]]
 function Elephant:GetStateMsg(is_enabled)
   if is_enabled then
-    return Elephant.L['enabled']
+    return Elephant.L['STRING_ENABLED']
   else
-    return Elephant.L['disabled']
+    return Elephant.L['STRING_DISABLED']
   end
 end
 

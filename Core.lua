@@ -3,13 +3,13 @@ Elephant = LibStub("AceAddon-3.0"):NewAddon("Elephant", "AceConsole-3.0", "AceEv
 Elephant.L = LibStub("AceLocale-3.0"):GetLocale("Elephant")
 
 --[[ Bindings ]]
-_G['BINDING_NAME_ELEPHANT_TOGGLE'] = Elephant.L['toggle']
+_G['BINDING_NAME_ELEPHANT_TOGGLE'] = Elephant.L['STRING_KEYBIND_TOGGLE']
 
 --[[ Popup dialogs ]]
 StaticPopupDialogs['ELEPHANT_CLEARALL'] = {
-  text = Elephant.L['clearallpopup'][1],
-  button1 = Elephant.L['clearallpopup'][2],
-  button2 = Elephant.L['clearallpopup'][3],
+  text = Elephant.L['STRING_POPUP_CLEAR_LOGS'],
+  button1 = Elephant.L['STRING_OK'],
+  button2 = Elephant.L['STRING_CANCEL'],
   OnAccept = function ()
     Elephant:ClearAllLogs()
   end,
@@ -19,9 +19,9 @@ StaticPopupDialogs['ELEPHANT_CLEARALL'] = {
   showAlert = 1,
 }
 StaticPopupDialogs['ELEPHANT_EMPTY'] = {
-  text = Elephant.L['emptypopup'][1],
-  button1 = Elephant.L['emptypopup'][2],
-  button2 = Elephant.L['emptypopup'][3],
+  text = Elephant.L['STRING_POPUP_EMPTY_LOG'],
+  button1 = Elephant.L['STRING_OK'],
+  button2 = Elephant.L['STRING_CANCEL'],
   OnAccept = function ()
     Elephant:EmptyCurrentLog()
   end,
@@ -31,9 +31,9 @@ StaticPopupDialogs['ELEPHANT_EMPTY'] = {
   showAlert = 1,
 }
 StaticPopupDialogs['ELEPHANT_RESET'] = {
-  text = Elephant.L['resetpopup'][1],
-  button1 = Elephant.L['resetpopup'][2],
-  button2 = Elephant.L['resetpopup'][3],
+  text = Elephant.L['STRING_POPUP_RESET_SETTINGS'],
+  button1 = Elephant.L['STRING_OK'],
+  button2 = Elephant.L['STRING_CANCEL'],
   OnAccept = function ()
     Elephant:Reset()
   end,
@@ -128,17 +128,25 @@ local default_configuration = {
   -- (related to default chats defined by Blizzard)
   defaultindexes = Elephant:Clone(default_channel_indexes),
   defaultnames = {
-    whisper = Elephant.L['chatnames']['whisper'],
-    raid = Elephant.L['chatnames']['raid'],
-    party = Elephant.L['chatnames']['party'],
-    say = Elephant.L['chatnames']['say'],
-    yell = Elephant.L['chatnames']['yell'],
-    officer = Elephant.L['chatnames']['officer'],
-    guild = Elephant.L['chatnames']['guild'],
-    loot = Elephant.L['chatnames']['loot'],
-    system = Elephant.L['chatnames']['system'],
-    achievement = Elephant.L['chatnames']['achievement'],
-    instance = Elephant.L['chatnames']['instance'],
+    whisper = Elephant.L['STRING_CHAT_NAME_WHISPER'],
+    raid = Elephant.L['STRING_CHAT_NAME_RAID'],
+    party = Elephant.L['STRING_CHAT_NAME_PARTY'],
+    say = Elephant.L['STRING_CHAT_NAME_SAY'],
+    yell = Elephant.L['STRING_CHAT_NAME_YELL'],
+    officer = Elephant.L['STRING_CHAT_NAME_OFFICER'],
+    guild = Elephant.L['STRING_CHAT_NAME_GUILD'],
+    loot = Elephant.L['STRING_CHAT_NAME_LOOT'],
+    system = Elephant.L['STRING_CHAT_NAME_SYSTEM'],
+    achievement = Elephant.L['STRING_CHAT_NAME_ACHIEVEMENT'],
+    instance = Elephant.L['STRING_CHAT_NAME_INSTANCE'],
+  },
+  generalchatchannelnames = {
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE'],
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP'],
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL'],
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT'],
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE'],
+    [Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID']] = Elephant.L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE'],
   },
   defaultlogindex = 1,
 
