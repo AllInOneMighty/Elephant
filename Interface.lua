@@ -36,7 +36,7 @@ local function SetObjectColorWithCurrentLogColor(obj)
       channelId,channelName = GetChannelName(i)
 
       if channelName ~= nil and
-        string.lower(channelName) == string.lower(Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].name)
+        string.lower(channelName) == string.lower(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name)
       then
         type_info = "CHANNEL" .. channelId
         break
@@ -135,7 +135,7 @@ local function FillCopyWindow()
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
     local total_chars = 0
     for i = Elephant.volatileConfiguration.currentline, 0, -1 do
-      local message_struct = Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[i]
+      local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
         local message_text = AddColorStrings(
@@ -161,7 +161,7 @@ local function FillCopyWindow()
     local item_link_site = Elephant.L['itemLinkSite']
     local total_chars = 0
     for line_index = Elephant.volatileConfiguration.currentline, 0, -1 do
-      local message_struct = Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
+      local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
         local message_text = AddColorStrings(
@@ -244,7 +244,7 @@ last one of the log, and finally shows the log.
 ]]
 function Elephant:ChangeLog(channel_index)
   Elephant:CharDb().currentlogindex = channel_index
-  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[channel_index].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[channel_index].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -266,14 +266,14 @@ function Elephant:ShowCurrentLog()
   SetObjectColorWithCurrentLogColor(ElephantFrameTitleInfoFrameTabFontString)
   SetObjectColorWithCurrentLogColor(ElephantFrameTitleInfoFrameCurrentLineFontString)
   SetObjectColorWithCurrentLogColor(ElephantFrameScrollingMessageFrame)
-  ElephantFrameTitleInfoFrameTabFontString:SetText("< " .. Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].name .. " >")
+  ElephantFrameTitleInfoFrameTabFontString:SetText("< " .. Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name .. " >")
   Elephant:SetTitleInfoCurrentLine()
   Elephant:UpdateCurrentLogButtons()
 
   -- Populate the scrolling message frame
   for line_index = Elephant.volatileConfiguration.currentline-Elephant:DefaultConfiguration().scrollmaxlines, Elephant.volatileConfiguration.currentline do
-    if Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index] then
-      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs[line_index], true))
+    if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index] then
+      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index], true))
     end
   end
 
@@ -297,14 +297,14 @@ end
 Updates the current line information of the current log.
 ]]
 function Elephant:SetTitleInfoCurrentLine()
-  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant.volatileConfiguration.currentline .. " / " .. #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs)
+  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant.volatileConfiguration.currentline .. " / " .. #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs)
 end
 
 --[[
 Updates the maximum log count information of the current log.
 ]]
 function Elephant:SetTitleInfoMaxLog()
-  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['maxlog'], Elephant:ProfileDb().maxlog))
+  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['maxlog'], Elephant:FactionRealmDb().maxlog))
 end
 
 --[[
@@ -352,19 +352,19 @@ required. The buttons are:
 - Delete
 ]]
 function Elephant:UpdateCurrentLogButtons()
-  if Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].enabled then
+  if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
     ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Disable'])
   else
     ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Enable'])
   end
-  if #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs > 0 then
+  if #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs > 0 then
     ElephantFrameCopyButton:Enable()
   else
     ElephantFrameCopyButton:Disable()
   end
   if Elephant.L['generalchats'][Elephant:CharDb().currentlogindex] or (type(Elephant:CharDb().currentlogindex) == "number") then
     ElephantFrameDeleteButton:Disable()
-  elseif GetChannelName(Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].name) > 0 then
+  elseif GetChannelName(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) > 0 then
     ElephantFrameDeleteButton:Disable()
   else
     ElephantFrameDeleteButton:Enable()
@@ -400,8 +400,8 @@ function Elephant:Scroll(lines_count)
   if Elephant.volatileConfiguration.currentline < 1 then
     Elephant.volatileConfiguration.currentline = 1
   end
-  if Elephant.volatileConfiguration.currentline > #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs then
-    Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant.volatileConfiguration.currentline > #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs then
+    Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   end
 
   -- Prevent too much processing
@@ -414,7 +414,7 @@ end
 Scrolls the current log to its last line.
 ]]
 function Elephant:ScrollBottom()
-  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -422,7 +422,7 @@ end
 Scrolls the current log to its first line.
 ]]
 function Elephant:ScrollTop()
-  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   if Elephant.volatileConfiguration.currentline > 1 then
     Elephant.volatileConfiguration.currentline = 1
   end

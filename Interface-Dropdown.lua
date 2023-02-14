@@ -35,7 +35,7 @@ local function DropdownCustomChatsInitialize()
   UIDropDownMenu_AddButton(info, 1)
 
   local index, tindex, k, v
-  for index, tindex in pairs(Elephant:CharDb().logs) do
+  for index, tindex in pairs(Elephant:LogsDb().logs) do
     if not (type(index) == "number") then
       if not Elephant.L['generalchats'][index] then
         info = {}
@@ -63,7 +63,7 @@ local function DropdownGeneralChatsInitialize()
   UIDropDownMenu_AddButton(info)
 
   local index, tindex
-  for index, tindex in pairs(Elephant:CharDb().logs) do
+  for index, tindex in pairs(Elephant:LogsDb().logs) do
     if type(index) == "string" then
       if Elephant.L['generalchats'][index] then
         info = UIDropDownMenu_CreateInfo()
@@ -95,7 +95,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['achievement']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant:DefaultConfiguration().defaultindexes.achievement
-  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.achievement].enabled then
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.achievement].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -106,7 +106,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['loot']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant:DefaultConfiguration().defaultindexes.loot
-  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.loot].enabled then
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.loot].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end
@@ -117,7 +117,7 @@ local function DropdownMiscChatsInitialize()
   info.text = Elephant.L['chatnames']['system']
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant:DefaultConfiguration().defaultindexes.system
-  if not Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.system].enabled then
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.system].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
   end

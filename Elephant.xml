@@ -476,12 +476,12 @@
           Elephant:SetTooltip(self, {
             Elephant.L['chatnames']['guild'],
             {
-              text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled),
-              r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "r"),
-              g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "g"),
-              b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "b")
+              text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled),
+              r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "r"),
+              g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "g"),
+              b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].logs)
+            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -505,12 +505,12 @@
           Elephant:SetTooltip(self, {
             Elephant.L['chatnames']['officer'],
             {
-              text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled),
-              r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "r"),
-              g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "g"),
-              b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "b")
+              text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled),
+              r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "r"),
+              g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "g"),
+              b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].logs)
+            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -534,12 +534,12 @@
                     Elephant:SetTooltip(self, {
                         Elephant.L['chatnames']['whisper'],
                         {
-                            text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled),
-                            r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "r"),
-                            g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "g"),
-                            b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "b")
+                            text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled),
+                            r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].logs)
+                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -563,12 +563,12 @@
                     Elephant:SetTooltip(self, {
                         Elephant.L['chatnames']['party'],
                         {
-                            text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled),
-                            r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "r"),
-                            g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "g"),
-                            b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "b")
+                            text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled),
+                            r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].logs)
+                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -592,12 +592,12 @@
           Elephant:SetTooltip(self, {
             Elephant.L['chatnames']['raid'],
             {
-              text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled),
-              r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "r"),
-              g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "g"),
-              b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "b")
+              text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled),
+              r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "r"),
+              g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "g"),
+              b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].logs)
+            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -621,12 +621,12 @@
           Elephant:SetTooltip(self, {
             Elephant.L['chatnames']['instance'],
             {
-              text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled),
-              r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "r"),
-              g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "g"),
-              b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "b")
+              text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled),
+              r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "r"),
+              g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "g"),
+              b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled, "b")
             },
-            format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].logs)
+            format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].logs)
           })
         </OnEnter>
         <OnLeave>
@@ -650,12 +650,12 @@
                     Elephant:SetTooltip(self, {
                         Elephant.L['chatnames']['say'],
                         {
-                            text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled),
-                            r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "r"),
-                            g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "g"),
-                            b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "b")
+                            text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled),
+                            r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].logs)
+                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -679,12 +679,12 @@
                     Elephant:SetTooltip(self, {
                         Elephant.L['chatnames']['yell'],
                         {
-                            text = Elephant:GetStateMsg(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled),
-                            r = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "r"),
-                            g = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "g"),
-                            b = Elephant:GetStateColor(Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "b")
+                            text = Elephant:GetStateMsg(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled),
+                            r = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "r"),
+                            g = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "g"),
+                            b = Elephant:GetStateColor(Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled, "b")
                         },
-                        format(Elephant.L['nblines'], #Elephant:CharDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].logs)
+                        format(Elephant.L['nblines'], #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].logs)
                     })
                 </OnEnter>
                 <OnLeave>
@@ -816,6 +816,22 @@
                 <OnClick>
                     StaticPopup_Show("ELEPHANT_EMPTY")
                 </OnClick>
+                <OnEnter>
+                    Elephant:SetTooltip(self, {
+                        Elephant.L['Empty'],
+                        Elephant.L['Emptyinfo'],
+                        " ",
+                        {
+                            text = Elephant.L['Emptywarn'],
+                            r = 1.0,
+                            g = 0.2,
+                            b = 0.2
+                        }
+                    }, "ANCHOR_TOPLEFT")
+                </OnEnter>
+                <OnLeave>
+                    Elephant:UnsetTooltip()
+                </OnLeave>
             </Scripts>
             <ButtonText font="GameFontNormal" outline="NORMAL" justifyV="MIDDLE">
                 <Color b="1.0" r="1.0" g="1.0"/>

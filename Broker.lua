@@ -2,7 +2,7 @@
 Called when displaying tooltip on Broker source.
 ]]
 local function OnBrokerTooltipShow(tt)
-  tt:AddLine(Elephant.L['maxlogwords'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant:ProfileDb().maxlog .. "|r")
+  tt:AddLine(Elephant.L['maxlogwords'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant:FactionRealmDb().maxlog .. "|r")
 
   if Elephant:ProfileDb().filters and #Elephant:ProfileDb().filters > 0 then
     tt:AddLine(" ")

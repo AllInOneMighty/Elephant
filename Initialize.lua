@@ -7,11 +7,20 @@ logging, and initializes other useful data.
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
   Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
-    profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults)
+    profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults),
+    char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults),
+    factionrealm = Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults),
   })
-  Elephant.dbpc = LibStub("AceDB-3.0"):New("ElephantDBPerChar", {
-    char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults)
-  })
+
+  -- If old maxlog value exists...
+  if Elephant.db.profile.maxlog ~= nil then
+    -- Copy it to the factionrealm db if it is greater than the new default
+    if Elephant.db.profile.maxlog > Elephant.db.factionrealm.maxlog then
+      Elephant.db.factionrealm.maxlog = Elephant.db.profile.maxlog
+    end
+    -- Then, remove it.
+    Elephant.db.profile.maxlog = nil
+  end
 
   -- Options
   Elephant:SetupOptions()
@@ -29,7 +38,7 @@ function Elephant:OnInitialize()
   Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
 
   -- Checks & creates default log structures
-  Elephant:InitDefaultLogStructures()
+  Elephant:MaybeInitDefaultLogStructures()
   Elephant:AddHeaderToStructures()
 
   -- Getting current loot method to avoid displaying too many times
@@ -100,9 +109,9 @@ function Elephant:OnEnable()
     'YELL')
 
   -- Displays default log
-  if not Elephant:CharDb().logs[Elephant:CharDb().currentlogindex] then
+  if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then
     Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
   end
-  Elephant.volatileConfiguration.currentline = #Elephant:CharDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end

@@ -57,12 +57,41 @@ function Elephant:Clone(o)
   return new
 end
 
+--[[
+  Profile database. Can be changed when changing addon profile.
+  Initialized with DefaultConfiguration().savedconfdefaults
+]]
 function Elephant:ProfileDb()
   return Elephant.db.profile
 end
 
+--[[
+  Returns an appropriate database to save logs. The returned
+  database depends on the per-profile use_factionrealm_db
+  setting.
+]]
+function Elephant:LogsDb()
+  if Elephant:ProfileDb().use_factionrealm_db then
+    return Elephant:FactionRealmDb()
+  else
+    return Elephant:CharDb()
+  end
+end
+
+--[[
+  Character database. Proper to the character and only them.
+  Initialized with DefaultConfiguration().savedpercharconfdefaults
+]]
 function Elephant:CharDb()
-  return Elephant.dbpc.char
+  return Elephant.db.char
+end
+
+--[[
+  Faction realm database. Shared between all characters on the same realm AND faction.
+  Initialized with DefaultConfiguration().savedperfactionrealmconfdefaults
+]]
+function Elephant:FactionRealmDb()
+  return Elephant.db.factionrealm
 end
 
 --[[ Indexes used for default WoW channels ]]
@@ -114,12 +143,10 @@ local default_configuration = {
   defaultlogindex = 1,
 
   -- Used when registering addon databases
-  -- Warning: these tables are completed below
   savedconfdefaults  = {
     chatlog = false,
     combatlog = false,
     defaultlog = true,
-    maxlog = 250,
     maxcopyletters = 15000,
     button = false,
     events = {},
@@ -128,6 +155,9 @@ local default_configuration = {
     activate_log = false,
     class_colors_in_log = true,
     timestamps_in_copywindow = true,
+    -- By default, use a per-character database. It has historically been the
+    -- case with Elephant, so keep it as-is.
+    use_factionrealm_db = false,
     -- Minimap
     minimap = {
       hide = false
@@ -409,8 +439,13 @@ local default_configuration = {
   },
   savedpercharconfdefaults = {
     logs = {},
+    -- Current log displayed is a per character setting.
     currentlogindex = 1,
-  }
+  },
+  savedperfactionrealmconfdefaults = {
+    logs = {},
+    maxlog = 1000,
+  },
 }
 function Elephant:DefaultConfiguration()
   return default_configuration

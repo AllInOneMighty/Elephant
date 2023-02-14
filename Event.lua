@@ -80,7 +80,7 @@ local function HandleMessage(prat_struct, event, ...)
       -- displaying that log, so we don't have to update the buttons like
       -- when a YOU_JOINED event happens.
       Elephant:MaybeInitCustomStructure(channel_index, channel_name)
-      if not Elephant:CharDb().logs[channel_index].enabled then
+      if not Elephant:LogsDb().logs[channel_index].enabled then
         return
       end
 
@@ -108,7 +108,7 @@ local function HandleMessage(prat_struct, event, ...)
     if event == "CHAT_MSG_CHANNEL_NOTICE" then
       if message == "YOU_JOINED" or message == "YOU_CHANGED" then
         Elephant:MaybeInitCustomStructure(channel_index, channel_name)
-        if not Elephant:CharDb().logs[channel_index].enabled then
+        if not Elephant:LogsDb().logs[channel_index].enabled then
           return
         end
 
@@ -118,7 +118,7 @@ local function HandleMessage(prat_struct, event, ...)
         end
       end
       if message == "YOU_LEFT" then
-        if not Elephant:CharDb().logs[channel_index] or Elephant:CharDb().logs[channel_index].enabled then
+        if not Elephant:LogsDb().logs[channel_index] or Elephant:LogsDb().logs[channel_index].enabled then
           return
         end
 
@@ -228,7 +228,7 @@ local function HandleMessage(prat_struct, event, ...)
     if new_message_struct ~= nil then
       local channel_index
       for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
-        if Elephant:ProfileDb().events[event].channels[channel_index] ~= 0 and Elephant:CharDb().logs[channel_index].enabled then
+        if Elephant:ProfileDb().events[event].channels[channel_index] ~= 0 and Elephant:LogsDb().logs[channel_index].enabled then
           Elephant:CaptureNewMessage(new_message_struct, channel_index)
           if new_message_struct_2 ~= nil then
             Elephant:CaptureNewMessage(new_message_struct_2, channel_index)

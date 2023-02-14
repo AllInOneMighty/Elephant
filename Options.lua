@@ -1,3 +1,11 @@
+local function ToggleUseFactionRealmDb()
+  Elephant:ProfileDb().use_factionrealm_db = not Elephant:ProfileDb().use_factionrealm_db
+  Elephant:MaybeInitDefaultLogStructures()
+  Elephant:MaybeInitCustomStructures()
+  Elephant:AddHeaderToStructures(true)
+  Elephant:ChangeLog(Elephant:CharDb().currentlogindex)
+end
+
 --[[
 Registers the options of the addon and sets up
 any configuration window or slash command
@@ -9,15 +17,11 @@ function Elephant:SetupOptions()
     type = 'group',
     childGroups = "tab",
     args = {
-      togglebutton = {
-        type = 'toggle',
-        order = 2,
-        name = Elephant.L['showbutton'],
-        desc = Elephant.L['showbutton_desc'],
-        get = function()
-          return Elephant:ProfileDb().button
-        end,
-        set = Elephant.ToggleButton
+      optionsareperchar = {
+        type = 'description',
+        order = 0,
+        name = Elephant.L['options_are_per_character'],
+        fontSize = 'medium',
       },
       toggleicon = {
         type = 'toggle',
@@ -32,56 +36,33 @@ function Elephant:SetupOptions()
           return not Elephant:IsLDBIconAvailable()
         end
       },
-      filters = {
-        type = 'group',
-        order = 4,
-        name = Elephant.L['Filters'],
-        desc = Elephant.L['Filters_desc'],
-        args = {
-          desc = {
-            type = 'description',
-            order = 0,
-            name = Elephant.L['filters_header'][1] .. "\n\n" ..
-              format(Elephant.L['filters_header'][2], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
-              format(Elephant.L['filters_header'][3], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
-              Elephant.L['filters_header'][4],
-          },
-          add = {
-            type = 'input',
-            order = 1,
-            name = Elephant.L['filternew'],
-            desc = Elephant.L['newfilter_desc'],
-            get = false,
-            set = function(_, input)
-              if string.match(input, Elephant.L['filterregex']) == nil then
-                Elephant:Print(format(Elephant.L['filtererror'], input))
-              else
-                Elephant:AddFilter(input)
-              end
-            end,
-            usage = Elephant.L['filterusage'],
-          },
-          delete = {
-            type = 'select',
-            order = 2,
-            name = DELETE,
-            desc = Elephant.L['deletefilter_desc'],
-            set = function(_,filterindex)
-              Elephant:DeleteFilter(filterindex)
-            end,
-            values = function()
-              return   Elephant:ProfileDb().filters
-            end,
-            hidden = function()
-              return (not Elephant:ProfileDb().filters) or
-                (#Elephant:ProfileDb().filters == 0)
-            end
-          }
-        },
+      togglebutton = {
+        type = 'toggle',
+        order = 2,
+        name = Elephant.L['showbutton'],
+        desc = Elephant.L['showbutton_desc'],
+        get = function()
+          return Elephant:ProfileDb().button
+        end,
+        set = Elephant.ToggleButton
+      },
+      use_factionrealm_db = {
+        type = 'toggle',
+        order = 3,
+        name = Elephant.L['use_factionrealm_db'],
+        desc = (
+          Elephant.L['use_factionrealm_db_desc'] ..
+          "\n\n|c" .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2) ..
+          Elephant.L['use_factionrealm_db_desc2'] .. "|r"
+        ),
+        get = function()
+          return Elephant:ProfileDb().use_factionrealm_db
+        end,
+        set = ToggleUseFactionRealmDb
       },
       log = {
         type = 'group',
-        order = 3,
+        order = 4,
         name = Elephant.L['logs'],
         desc = Elephant.L['logs_desc'],
         args = {
@@ -101,13 +82,18 @@ function Elephant:SetupOptions()
             type = 'range',
             order = 2,
             name = Elephant.L['maxlogwords'],
-            desc = Elephant.L['maxlogwords_desc'] ..
-                  "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['maxlogwords_desc_warning'] .. "|r",
+            desc = (
+              Elephant.L['maxlogwords_desc'] ..
+              "\n\n|c" .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2) ..
+              Elephant.L['maxlogwords_desc2'] .. "|r" ..
+              "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) ..
+              Elephant.L['maxlogwords_desc_warning'] .. "|r"
+            ),
             min = Elephant:DefaultConfiguration().minlogsize,
             max = Elephant:DefaultConfiguration().maxlogsize,
             step = 1,
             get = function()
-              return Elephant:ProfileDb().maxlog
+              return Elephant:FactionRealmDb().maxlog
             end,
             set = function(_, nb)
               Elephant:ChangeMaxLog(nb)
@@ -243,16 +229,65 @@ function Elephant:SetupOptions()
           },
         },
       },
-      reset = {
+      filters = {
         type = 'group',
         order = 5,
+        name = Elephant.L['Filters'],
+        desc = Elephant.L['Filters_desc'],
+        args = {
+          desc = {
+            type = 'description',
+            order = 0,
+            name = Elephant.L['filters_header'][1] .. "\n\n" ..
+              format(Elephant.L['filters_header'][2], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
+              format(Elephant.L['filters_header'][3], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
+              Elephant.L['filters_header'][4],
+            fontSize = 'medium',
+          },
+          add = {
+            type = 'input',
+            order = 1,
+            name = Elephant.L['filternew'],
+            desc = Elephant.L['newfilter_desc'],
+            get = false,
+            set = function(_, input)
+              if string.match(input, Elephant.L['filterregex']) == nil then
+                Elephant:Print(format(Elephant.L['filtererror'], input))
+              else
+                Elephant:AddFilter(input)
+              end
+            end,
+            usage = Elephant.L['filterusage'],
+          },
+          delete = {
+            type = 'select',
+            order = 2,
+            name = DELETE,
+            desc = Elephant.L['deletefilter_desc'],
+            set = function(_,filterindex)
+              Elephant:DeleteFilter(filterindex)
+            end,
+            values = function()
+              return   Elephant:ProfileDb().filters
+            end,
+            hidden = function()
+              return (not Elephant:ProfileDb().filters) or
+                (#Elephant:ProfileDb().filters == 0)
+            end
+          }
+        },
+      },
+      reset = {
+        type = 'group',
+        order = 6,
         name = Elephant.L['reset'],
         desc = Elephant.L['reset_desc'],
         args = {
           desc = {
             type = 'description',
             order = 0,
-            name = Elephant.L['reset_header'][1] .. "\n\n" .. Elephant.L['reset_header'][2],
+            name = Elephant.L['reset_header'][1] .. "\n\n" .. Elephant.L['reset_header'][2] .. "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['reset_header'][3] .. "|r",
+            fontSize = 'medium',
           },
           resetall = {
             type = 'execute',
