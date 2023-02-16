@@ -47,18 +47,18 @@ local function AddHeaderToTable(log_struct)
     if not log_struct.hasMessage then
       -- If the log does not have a message since the last header
       -- then simply modify the last header
-      SaveMessageToTableAtPosition(actual_logs_struct, { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(true) } , #actual_logs_struct)
+      SaveMessageToTableAtPosition(actual_logs_struct, { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(true) } , #actual_logs_struct)
     else
       -- Otherwise add two lines
-      AddMsgToTable(actual_logs_struct, { ['arg1'] = " " } )
-      AddMsgToTable(actual_logs_struct, { ['arg1'] = " " } )
+      AddMsgToTable(actual_logs_struct, { arg1 = " " } )
+      AddMsgToTable(actual_logs_struct, { arg1 = " " } )
     end
   end
 
   -- If log did save a message since the last header
   -- or log is empty
   if log_struct.hasMessage or #actual_logs_struct == 0 then
-    AddMsgToTable(actual_logs_struct, { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(true) } )
+    AddMsgToTable(actual_logs_struct, { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(true) } )
   end
 
   -- Specify that no messages has been saved since the last header
@@ -376,7 +376,7 @@ function Elephant:Reset()
       end
       if not found then
         Elephant:MaybeInitCustomStructure(channel_name_lowercase, channel_name)
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_name_lowercase)
+        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_name_lowercase)
       end
     end
   end
@@ -410,10 +410,10 @@ function Elephant:ToggleEnableCurrentLog()
   Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled = not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled
 
   if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
-    Elephant:CaptureNewMessage( { ['arg1'] = " " } , Elephant:CharDb().currentlogindex)
-    Elephant:CaptureNewMessage( { ['arg1'] = " " } , Elephant:CharDb().currentlogindex)
+    Elephant:CaptureNewMessage( { arg1 = " " } , Elephant:CharDb().currentlogindex)
+    Elephant:CaptureNewMessage( { arg1 = " " } , Elephant:CharDb().currentlogindex)
   end
-  Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled) } , Elephant:CharDb().currentlogindex)
+  Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled) } , Elephant:CharDb().currentlogindex)
 
   Elephant:UpdateCurrentLogButtons()
 end

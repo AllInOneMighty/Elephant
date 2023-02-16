@@ -62,52 +62,52 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   local literal_message = ""
 
   -- Time if needed
-  if use_timestamps and message_struct['time'] then
-    literal_message = "|cff888888" .. date("%H:%M:%S", message_struct['time']) .. "|r " .. literal_message
+  if use_timestamps and message_struct.time then
+    literal_message = "|cff888888" .. date("%H:%M:%S", message_struct.time) .. "|r " .. literal_message
   end
 
   -- Handling Prat messages
-  if message_struct['prat'] then
-    literal_message = literal_message .. message_struct['prat']
+  if message_struct.prat then
+    literal_message = literal_message .. message_struct.prat
   end
 
   -- DND/Away tags; shouldn't be there if Prat message
-  if message_struct['arg6'] and message_struct['arg6'] ~= "" then
-    literal_message = literal_message .. "<" .. message_struct['arg6'] .. ">"
+  if message_struct.arg6 and message_struct.arg6 ~= "" then
+    literal_message = literal_message .. "<" .. message_struct.arg6 .. ">"
   end
 
   -- Sender name (could be monster, player, ...); shouldn't be there if Prat message
-  if message_struct['arg2'] then
-    if message_struct['type'] == "EMOTE" then
-      literal_message = literal_message .. GetSenderWithClassColor(message_struct['arg2'], message_struct['clColor']) .. " "
-    elseif (message_struct['type'] ~= "MONSTER_EMOTE" and message_struct['type'] ~= "ACHIEVEMENT" and
-            message_struct['type'] ~= "GUILD_ACHIEVEMENT" and message_struct['type'] ~= "RAID_BOSS_EMOTE") then
-      if message_struct['type'] == "MONSTER_SAY" then
-        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_SAYS'], message_struct['arg2'])
-      elseif message_struct['type'] == "MONSTER_YELL" then
-        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_YELLS'], message_struct['arg2'])
-      elseif message_struct['type'] == "MONSTER_WHISPER" then
-        literal_message = literal_message .. message_struct['arg2']
+  if message_struct.arg2 then
+    if message_struct.type == "EMOTE" then
+      literal_message = literal_message .. GetSenderWithClassColor(message_struct.arg2, message_struct.clColor) .. " "
+    elseif (message_struct.type ~= "MONSTER_EMOTE" and message_struct.type ~= "ACHIEVEMENT" and
+            message_struct.type ~= "GUILD_ACHIEVEMENT" and message_struct.type ~= "RAID_BOSS_EMOTE") then
+      if message_struct.type == "MONSTER_SAY" then
+        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_SAYS'], message_struct.arg2)
+      elseif message_struct.type == "MONSTER_YELL" then
+        literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_YELLS'], message_struct.arg2)
+      elseif message_struct.type == "MONSTER_WHISPER" then
+        literal_message = literal_message .. message_struct.arg2
       else
         local with_link = true
-        local sender = message_struct['arg2']
+        local sender = message_struct.arg2
 
-        if message_struct['type'] == "BN_WHISPER_INFORM" or message_struct['type'] == "BN_WHISPER" then
+        if message_struct.type == "BN_WHISPER_INFORM" or message_struct.type == "BN_WHISPER" then
           -- We can't track Battle.net names due to privacy reasons, so we remove links and name resolution.
           with_link = false
-          sender = "[" .. Elephant.L['STRING_ID'] .. ": " .. GetBattleNetId(message_struct['arg2']) .. "]"
+          sender = "[" .. Elephant.L['STRING_ID'] .. ": " .. GetBattleNetId(message_struct.arg2) .. "]"
         end
 
-        local player_link = GetSenderWithClassColor(sender, message_struct['clColor'], with_link)
+        local player_link = GetSenderWithClassColor(sender, message_struct.clColor, with_link)
 
-        if message_struct['type'] == "WHISPER_INFORM" or message_struct['type'] == "BN_WHISPER_INFORM" then
+        if message_struct.type == "WHISPER_INFORM" or message_struct.type == "BN_WHISPER_INFORM" then
           literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_TO'], player_link)
         else
           literal_message = literal_message .. player_link
         end
       end
 
-      if message_struct['type'] == "WHISPER" or message_struct['type'] == "MONSTER_WHISPER" or message_struct['type'] == "BN_WHISPER" then
+      if message_struct.type == "WHISPER" or message_struct.type == "MONSTER_WHISPER" or message_struct.type == "BN_WHISPER" then
         literal_message = format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_FROM'], literal_message)
       end
 
@@ -116,19 +116,19 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   end
 
   -- The message itself; shouldn't be there if Prat message
-  if message_struct['arg1'] then
-    if message_struct['type'] == "MONSTER_EMOTE" then
-      literal_message = literal_message .. format(message_struct['arg1'], message_struct['arg2'])
-    elseif message_struct['arg2'] and (message_struct['type'] == "ACHIEVEMENT" or message_struct['type'] == "GUILD_ACHIEVEMENT") then
-      literal_message = literal_message .. format(message_struct['arg1'], message_struct['arg2'])
+  if message_struct.arg1 then
+    if message_struct.type == "MONSTER_EMOTE" then
+      literal_message = literal_message .. format(message_struct.arg1, message_struct.arg2)
+    elseif message_struct.arg2 and (message_struct.type == "ACHIEVEMENT" or message_struct.type == "GUILD_ACHIEVEMENT") then
+      literal_message = literal_message .. format(message_struct.arg1, message_struct.arg2)
     else
-      literal_message = literal_message .. message_struct['arg1']
+      literal_message = literal_message .. message_struct.arg1
     end
   end
 
-  if message_struct['type'] then
+  if message_struct.type then
     -- Return line color if it is not the default
-    return literal_message, ChatTypeInfo[message_struct['type']].r, ChatTypeInfo[message_struct['type']].g, ChatTypeInfo[message_struct['type']].b
+    return literal_message, ChatTypeInfo[message_struct.type].r, ChatTypeInfo[message_struct.type].g, ChatTypeInfo[message_struct.type].b
   else
     return literal_message
   end

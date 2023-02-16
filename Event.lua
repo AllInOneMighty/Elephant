@@ -86,20 +86,20 @@ local function HandleMessage(prat_struct, event, ...)
 
       if prat_struct then
         new_message_struct = {
-          ['time'] = time(),
-          ['prat'] = prat_struct.message,
-          ['lineid'] = prat_struct.line_id,
+          time = time(),
+          prat = prat_struct.message,
+          lineid = prat_struct.lineid,
         }
       else
         new_message_struct = {
-          ['time'] = time(),
-          ['arg1'] = message,
-          ['arg6'] = flags,
-          ['arg9'] = channel_name,
-          ['clColor'] = GetClassColorByGUID(guid)
+          time = time(),
+          arg1 = message,
+          arg6 = flags,
+          arg9 = channel_name,
+          clColor = GetClassColorByGUID(guid)
         }
         if sender ~= "" then
-          new_message_struct['arg2'] = sender
+          new_message_struct.arg2 = sender
         end
       end
       Elephant:CaptureNewMessage(new_message_struct, channel_index)
@@ -112,7 +112,7 @@ local function HandleMessage(prat_struct, event, ...)
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_index)
+        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_index)
         if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
         end
@@ -122,8 +122,8 @@ local function HandleMessage(prat_struct, event, ...)
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] } , channel_index)
-        Elephant:CaptureNewMessage( { ['arg1'] = " " } , channel_index)
+        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] } , channel_index)
+        Elephant:CaptureNewMessage( { arg1 = " " } , channel_index)
         if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
           Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]]true)
@@ -134,16 +134,16 @@ local function HandleMessage(prat_struct, event, ...)
     -- Not channel messages
     if prat_struct then
       new_message_struct = {
-        ['time'] = time(),
-        ['prat'] = prat_struct.message,
-        ['lineid'] = prat_struct.line_id,
-        ['type'] = Elephant:ProfileDb().events[event].type,
+        time = time(),
+        prat = prat_struct.message,
+        lineid = prat_struct.lineid,
+        type = Elephant:ProfileDb().events[event].type,
       }
     else
       new_message_struct = {
-        ['time'] = time(),
-        ['type'] = Elephant:ProfileDb().events[event].type,
-        ['arg1'] = message,
+        time = time(),
+        type = Elephant:ProfileDb().events[event].type,
+        arg1 = message,
       }
 
       if event == "CHAT_MSG_BATTLEGROUND" or
@@ -196,8 +196,8 @@ local function HandleMessage(prat_struct, event, ...)
           end
 
           new_message_struct_2 = {
-            ['time'] = time(),
-            ['type'] = Elephant:ProfileDb().events[event].type
+            time = time(),
+            type = Elephant:ProfileDb().events[event].type
           }
 
           -- Name of player may be unknown here, if interface
@@ -281,8 +281,8 @@ sending them to HandleMessage()
 -- Cannot be local
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
   prat_struct = {
-    ['message'] = text,
-    ['line_id'] = message.ORG.LINE_ID
+    message = text,
+    lineid = message.ORG.LINE_ID
   }
   HandleMessage(prat_struct, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
 end
