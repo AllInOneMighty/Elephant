@@ -81,7 +81,7 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
     if message_struct['type'] == "EMOTE" then
       literal_message = literal_message .. GetSenderWithClassColor(message_struct['arg2'], message_struct['clColor']) .. " "
     elseif (message_struct['type'] ~= "MONSTER_EMOTE" and message_struct['type'] ~= "ACHIEVEMENT" and
-            message_struct['type'] ~= "GUILD_ACHIEVEMENT") then
+            message_struct['type'] ~= "GUILD_ACHIEVEMENT" and message_struct['type'] ~= "RAID_BOSS_EMOTE") then
       if message_struct['type'] == "MONSTER_SAY" then
         literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_MONSTER_SAYS'], message_struct['arg2'])
       elseif message_struct['type'] == "MONSTER_YELL" then
