@@ -130,9 +130,12 @@ function Elephant:MaybeInitDefaultLogStructures()
     end
   end
 
-  for name_id, general_chat_struct in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
+  for name_id, name in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
     if not Elephant:LogsDb().logs[name_id] then
-      CreateNewLogStructure(name_id, general_chat_struct.name)
+      CreateNewLogStructure(name_id, name)
+    elseif not Elephant:LogsDb().logs[name_id].name then
+      -- Fix for a bug where names would not be populated properly
+      Elephant:LogsDb().logs[name_id].name = name
     end
   end
 end
