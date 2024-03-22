@@ -31,9 +31,12 @@ local function GetChannelIndexFromChannelName(channel_name)
   end
 
   channel_name = string.lower(channel_name)
+  channel_name = channel_name:sub(0, channel_name:find("-", 0, true) - 1)
+  channel_name = string.gsub(channel_name, "^%s*(.-)%s*$", "%1")
+  
   local channel_index
   for general_chat_channel_name, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
-    if (channel_name == general_chat_channel_name) or string.find(channel_name, general_chat_channel_name .. " - ") then
+    if (channel_name == general_chat_channel_name) then
       channel_index = general_chat_channel_name
       break
     end
