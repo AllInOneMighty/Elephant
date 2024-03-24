@@ -1,4 +1,4 @@
-﻿## Interface: 100206
+## Interface: 100206
 ## Title: Elephant
 ## Title-zhCN: Elephant 聊天记录器
 ## Notes: A friendly companion that remembers the chat.
@@ -9,6 +9,7 @@
 ## Notes-ruRU: Друже твенный компаньон который запоминает чат.
 ## Author: AllInOneMighty
 ## Version: @project-version@
+## IconTexture: Interface\AddOns\Elephant\icon.tga
 ## SavedVariables: ElephantDB
 ## SavedVariablesPerCharacter: ElephantDBPerChar
 ## OptionalDeps: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0, Prat
