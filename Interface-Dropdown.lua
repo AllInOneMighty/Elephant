@@ -37,7 +37,7 @@ local function DropdownCustomChatsInitialize()
   local index, tindex, k, v
   for index, tindex in pairs(Elephant:LogsDb().logs) do
     if not (type(index) == "number") then
-      if not Elephant:DefaultConfiguration().generalchatchannelnames[index] then
+      if not Elephant:IsExactGeneralChatChannelId(index) then
         info = {}
         info.text = tindex.name
         info.func = Elephant.ChangeLog
@@ -62,21 +62,19 @@ local function DropdownGeneralChatsInitialize()
   info.notCheckable = true
   UIDropDownMenu_AddButton(info)
 
-  local index, tindex
-  for index, tindex in pairs(Elephant:LogsDb().logs) do
-    if type(index) == "string" then
-      if Elephant:DefaultConfiguration().generalchatchannelnames[index] then
-        info = UIDropDownMenu_CreateInfo()
-        info.notCheckable = true
-        info.text = tindex.name
-        info.func = Elephant.ChangeLog
-        info.arg1 = index
-        if not tindex.enabled then
-          info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-          info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
-        end
-        UIDropDownMenu_AddButton(info)
+  local general_chat_channel_metadata
+  for _, general_chat_channel_metadata in ipairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if Elephant:LogsDb().logs[general_chat_channel_metadata.id] then
+      info = UIDropDownMenu_CreateInfo()
+      info.notCheckable = true
+      info.text = general_chat_channel_metadata.name
+      info.func = Elephant.ChangeLog
+      info.arg1 = general_chat_channel_metadata.id
+      if not Elephant:LogsDb().logs[general_chat_channel_metadata.id].enabled then
+        info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
+        info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
       end
+      UIDropDownMenu_AddButton(info)
     end
   end
 end

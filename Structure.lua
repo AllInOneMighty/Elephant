@@ -119,6 +119,50 @@ local function ResetSavedVariables()
 end
 
 --[[
+Returns true if the given ID exactly corresponds to a
+general chat channel ID. Only channel IDs known to
+Elephant must be given to this method, e.g.
+"trading (services)" and not "trade (services) - Orgrimmar".
+]]
+function Elephant:IsExactGeneralChatChannelId(channel_id)
+  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if channel_id == general_chat_channel_metadata.id then
+      return true
+    end
+  end
+  return false
+end
+
+--[[
+Returns true if the channel ID partially matches the
+general chat channel ID. For example, if the parameters
+("trade (services) - Orgrimmar", "trade (services)") are
+given, this method will return true.
+
+This method supports common separators between channel IDs
+and locations, such as "-", ":", etc.
+]]
+function Elephant:ChannelIdPartiallyMatches(channel_id, general_chat_channel_id)
+  return (channel_id == general_chat_channel_id)
+      or string.find(channel_id, general_chat_channel_id .. " - ", 1, true)
+      or string.find(channel_id, general_chat_channel_id .. " – ", 1, true)
+      or string.find(channel_id, general_chat_channel_id .. ": ", 1, true)
+end
+
+--[[
+Returns true if the given channel ID partially corresponds to a
+general chat channel id, e.g. "trading (services) - Orgrimmar."
+]]
+function Elephant:IsPartialGeneralChatChannelId(channel_id)
+  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if Elephant:ChannelIdPartiallyMatches(channel_id, general_chat_channel_metadata.id) then
+      return true
+    end
+  end
+  return false
+end
+
+--[[
 Iterates over all Elephant default indexes (whisper, ...) and
 general chats (trade, worlddefense, ...) and creates a new log
 structure for them.
@@ -130,12 +174,12 @@ function Elephant:MaybeInitDefaultLogStructures()
     end
   end
 
-  for name_id, name in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
-    if not Elephant:LogsDb().logs[name_id] then
-      CreateNewLogStructure(name_id, name)
-    elseif not Elephant:LogsDb().logs[name_id].name then
+  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if not Elephant:LogsDb().logs[general_chat_channel_metadata.id] then
+      CreateNewLogStructure(general_chat_channel_metadata.id, general_chat_channel_metadata.name)
+    elseif not Elephant:LogsDb().logs[general_chat_channel_metadata.id].name then
       -- Fix for a bug where names would not be populated properly
-      Elephant:LogsDb().logs[name_id].name = name
+      Elephant:LogsDb().logs[general_chat_channel_metadata.id].name = general_chat_channel_metadata.name
     end
   end
 end
@@ -148,22 +192,14 @@ ones intact.
 ]]
 function Elephant:MaybeInitCustomStructures()
   -- Max: 20 channels
-  for channel_index=1, 20 do
+  for channel_index = 1, 20 do
     local _, channel_name = GetChannelName(channel_index)
 
     if channel_name ~= nil then
       local channel_custom_id = string.lower(channel_name)
 
-      local found = false
-      for general_chat_name, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
-        if (channel_custom_id == general_chat_name) or string.find(channel_custom_id, general_chat_name .. " - ") then
-          found = true
-          break
-        end
-      end
-
-      if not found and not Elephant:IsFiltered(channel_custom_id) then
-        Elephant:MaybeInitCustomStructure(string.lower(channel_name), channel_name)
+      if not Elephant:IsPartialGeneralChatChannelId(channel_custom_id) and not Elephant:IsFiltered(channel_custom_id) then
+        Elephant:MaybeInitCustomStructure(channel_custom_id, channel_name)
       end
     end
   end
@@ -205,7 +241,7 @@ function Elephant:AddHeaderToStructures(non_custom_channels_only)
         non_custom_channels_only == false or (
           non_custom_channels_only == true and (
             type(index_or_name_id) == "number" or
-            Elephant:DefaultConfiguration().generalchatchannelnames[index_or_name_id]
+            Elephant:IsExactGeneralChatChannelId(index_or_name_id)
           )
         )
       then
@@ -370,14 +406,7 @@ function Elephant:Reset()
 
     if channel_name ~= nil then
       local channel_name_lowercase = string.lower(channel_name)
-      local found = false
-      for name_id, _ in pairs(Elephant:DefaultConfiguration().generalchatchannelnames) do
-        if (channel_name_lowercase == name_id) or string.find(channel_name_lowercase, name_id .. " - ") then
-          found = true
-          break
-        end
-      end
-      if not found then
+      if not Elephant:IsPartialGeneralChatChannelId(channel_name_lowercase) then
         Elephant:MaybeInitCustomStructure(channel_name_lowercase, channel_name)
         Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_name_lowercase)
       end
@@ -467,7 +496,7 @@ if a *general* chat is filtered.
 function Elephant:IsFiltered(index)
   for _, filter in pairs(Elephant:ProfileDb().filters) do
     filter = "^" .. string.gsub(string.lower(filter), "%*", "%.%*") .. "$"
-    if string.match(index, filter) ~= nil and not Elephant:DefaultConfiguration().generalchatchannelnames[index] then
+    if string.match(index, filter) ~= nil and not Elephant:IsExactGeneralChatChannelId(index) then
       return true
     end
   end

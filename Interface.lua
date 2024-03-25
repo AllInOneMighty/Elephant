@@ -362,7 +362,7 @@ function Elephant:UpdateCurrentLogButtons()
   else
     ElephantFrameCopyButton:Disable()
   end
-  if Elephant:DefaultConfiguration().generalchatchannelnames[Elephant:CharDb().currentlogindex] or (type(Elephant:CharDb().currentlogindex) == "number") then
+  if Elephant:IsExactGeneralChatChannelId(Elephant:CharDb().currentlogindex) or (type(Elephant:CharDb().currentlogindex) == "number") then
     ElephantFrameDeleteButton:Disable()
   elseif GetChannelName(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) > 0 then
     ElephantFrameDeleteButton:Disable()
