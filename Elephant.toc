@@ -1,4 +1,4 @@
-## Interface: 100206
+## Interface: 110002
 ## Title: Elephant
 ## Title-zhCN: Elephant 聊天记录器
 ## Notes: A friendly companion that remembers the chat.
