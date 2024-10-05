@@ -3,7 +3,7 @@ Utility method to sort the dropdowns menu
 choices alphabetically.
 ]]
 local function SortTable(arg1, arg2)
-  local i=1
+  local i = 1
   local j
 
   repeat
@@ -28,17 +28,16 @@ end
 --[[ Dropdowns ]]
 -- See below local functions declaration for dropdown
 -- creation function associations
-
 local function DropdownCustomChatsInitialize()
   local info = {}
-  info.text = Elephant.L['chatnames']['custom']
+  info.text = Elephant.L['STRING_CHAT_NAME_CUSTOM']
   info.isTitle = true
   UIDropDownMenu_AddButton(info, 1)
 
   local index, tindex, k, v
-  for index, tindex in pairs(Elephant.dbpc.char.logs) do
+  for index, tindex in pairs(Elephant:LogsDb().logs) do
     if not (type(index) == "number") then
-      if not Elephant.L['generalchats'][index] then
+      if not Elephant:IsExactGeneralChatChannelId(index) then
         info = {}
         info.text = tindex.name
         info.func = Elephant.ChangeLog
@@ -46,7 +45,7 @@ local function DropdownCustomChatsInitialize()
         info.checked = GetChannelName(tindex.name) ~= 0
         if not tindex.enabled then
           info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-          info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
+          info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
         end
         UIDropDownMenu_AddButton(info)
       end
@@ -58,26 +57,24 @@ local function DropdownGeneralChatsInitialize()
   local info
 
   info = UIDropDownMenu_CreateInfo()
-  info.text = Elephant.L['chatnames']['general']
+  info.text = Elephant.L['STRING_CHAT_NAME_GENERAL']
   info.isTitle = true
   info.notCheckable = true
   UIDropDownMenu_AddButton(info)
 
-  local index, tindex
-  for index, tindex in pairs(Elephant.dbpc.char.logs) do
-    if type(index) == "string" then
-      if Elephant.L['generalchats'][index] then
-        info = UIDropDownMenu_CreateInfo()
-        info.notCheckable = true
-        info.text = tindex.name
-        info.func = Elephant.ChangeLog
-        info.arg1 = index
-        if not tindex.enabled then
-          info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-          info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
-        end
-        UIDropDownMenu_AddButton(info)
+  local general_chat_channel_metadata
+  for _, general_chat_channel_metadata in ipairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if Elephant:LogsDb().logs[general_chat_channel_metadata.id] then
+      info = UIDropDownMenu_CreateInfo()
+      info.notCheckable = true
+      info.text = general_chat_channel_metadata.name
+      info.func = Elephant.ChangeLog
+      info.arg1 = general_chat_channel_metadata.id
+      if not Elephant:LogsDb().logs[general_chat_channel_metadata.id].enabled then
+        info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
+        info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
       end
+      UIDropDownMenu_AddButton(info)
     end
   end
 end
@@ -86,41 +83,41 @@ local function DropdownMiscChatsInitialize()
   local info
 
   info = UIDropDownMenu_CreateInfo()
-  info.text = Elephant.L['chatnames']['misc']
+  info.text = Elephant.L['STRING_CHAT_NAME_MISC']
   info.isTitle = true
   info.notCheckable = true
   UIDropDownMenu_AddButton(info)
 
   info = UIDropDownMenu_CreateInfo()
   info.notCheckable = true
-  info.text = Elephant.L['chatnames']['achievement']
+  info.text = Elephant.L['STRING_CHAT_NAME_ACHIEVEMENT']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.achievement
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.achievement].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.achievement
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.achievement].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-    info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
+    info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
   end
   UIDropDownMenu_AddButton(info)
 
   info = UIDropDownMenu_CreateInfo()
   info.notCheckable = true
-  info.text = Elephant.L['chatnames']['loot']
+  info.text = Elephant.L['STRING_CHAT_NAME_LOOT']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.loot
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.loot].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.loot
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.loot].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-    info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
+    info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
   end
   UIDropDownMenu_AddButton(info)
 
   info = UIDropDownMenu_CreateInfo()
   info.notCheckable = true
-  info.text = Elephant.L['chatnames']['system']
+  info.text = Elephant.L['STRING_CHAT_NAME_SYSTEM']
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant.defaultConf.defaultindexes.system
-  if not Elephant.dbpc.char.logs[Elephant.defaultConf.defaultindexes.system].enabled then
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.system
+  if not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.system].enabled then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-    info.text = info.text .. " (" .. Elephant.L['disabled'] .. ")"
+    info.text = info.text .. " (" .. Elephant.L['STRING_DISABLED'] .. ")"
   end
   UIDropDownMenu_AddButton(info)
 end
@@ -130,9 +127,9 @@ local function DropdownCatchOptionsInitialize(frame, level)
 
   -- Getting events for current log
   local eventKey, eventTable, catcherValue
-  for eventID, eventTable in pairs(Elephant.db.profile.events) do
+  for eventID, eventTable in pairs(Elephant:ProfileDb().events) do
     if eventTable.channels and eventTable.desc then
-      catcherValue = eventTable.channels[Elephant.dbpc.char.currentlogindex]
+      catcherValue = eventTable.channels[Elephant:CharDb().currentlogindex]
       if catcherValue then
         table.insert(menu, {
           desc = eventTable.desc,
@@ -163,7 +160,7 @@ local function DropdownCatchOptionsInitialize(frame, level)
       info.checked = false
       info.func = Elephant.EnableCatcher
       info.arg1 = catcher.key
-      info.arg2 = Elephant.dbpc.char.currentlogindex
+      info.arg2 = Elephant:CharDb().currentlogindex
       info.isNotRadio = true
       info.keepShownOnClick = 1
       UIDropDownMenu_AddButton(info)
@@ -173,7 +170,7 @@ local function DropdownCatchOptionsInitialize(frame, level)
       info.checked = true
       info.func = Elephant.DisableCatcher
       info.arg1 = catcher.key
-      info.arg2 = Elephant.dbpc.char.currentlogindex
+      info.arg2 = Elephant:CharDb().currentlogindex
       info.isNotRadio = true
       info.keepShownOnClick = 1
       UIDropDownMenu_AddButton(info)

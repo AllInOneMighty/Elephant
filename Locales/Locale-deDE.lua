@@ -6,162 +6,88 @@ Umlautersetzung: Unicode for Gemrman Umlauts
 ä->\195\164; ö->\195\182; ü->\195\188; ß->\195\159
 ]]
 
---[[ Common messages ]]
-L['chatlog']        = "Chat in Datei speichern"
-L['combatlog']      = "Kampflog in Datei speichern"
-L['disabled']      = "Ausgeschaltet"
-L['enabled']        = "Eingeschaltet"
-L['enableddefault']    = "Logge neue Channels."
-L['reset']        = "Zur\195\188cksetzen"
-L['toggle']        = "Elephant \195\182ffnen/schlie\195\159en"
-
---[[ Options menu elements ]]
-L['clearallhelp']    = "L\195\182scht alle Logs"
-L['Filters']        = FILTERS
-L['filterregex']      = "^[%a%*]+$"
-L['logs']        = "Logs"
-L['logs_desc']      = "Logging options."
-L['maxlogwords']      = "Maximale Logl\195\164nge"
-L['resethelp']      = "Setzt alle Einstellungen und Chats zur\195\188ck"
-L['resethelp_desc']    = "Resets all settings and chats."
-L['resetloc']      = "Positionen der Fenster zur\195\188cksetzen"
-L['showbutton']      = "Zeige Schalter"
-
---[[ Main/Copy frame elements ]]
--- Main
-L['clearall']    = "Alle Leeren"
-L['copy']      = "Kopieren"
-L['Disable']      = DISABLE
-L['Empty']      = EMPTY
-L['Enable']      = ENABLE
-L['maxlog']      = "Maximal %s Zeilen."
-L['nblines']      = "Zeilen: %s"
-L['scroll']      = {
-  ['bottom']    = {
-    [1]  = "Zum Ende scrollen"
-  },
-  ['linedown']  = {
-    [1]  = "Eine Zeile runter scrollen"
-  },
-  ['lineup']    = {
-    [1]  = "Eine Zeile hoch scrollen"
-  },
-  ['pagedown']  = {
-    [1]  = "Eine Seite runter scrollen"
-  },
-  ['pageup']    = {
-    [1]  = "Eine Seite hoch scrollen"
-  },
-  ['top']      = {
-    [1]  = "Zum Anfang scrollen"
-  }
-}
-
--- Copy
-L['bbAndText']    = "BB/Text"
-L['bbAndTextInfo'] = {
-  [1] = "Switches between showing plain text and BBCode (e.g. when you want to paste the logs on a forum).",
-  [2] = "Due to UI length limitations, only %s lines of BBCode can be shown."
-}
-L['copywindow']  = "Chat Kopieren"
-L['copywindowloglength']    = "Log length: %s lines"
-L['copywindowplaintext']    = "Plain text"
-L['copywindowbbcode']    = "BBCode"
-L['itemLinkSite'] = "http://de.wowhead.com/?item="
-
---[[ Special log messages ]]
-L['logstartedon']  = "Log gestartet am %s um %s."
-L['logstopped']    = "Log gestoppt."
-L['monstersay']    = "%s sagt"
-L['monsteryell']    = "%s schreit"
-L['whisperfrom']    = "%s fl\195\188stert"
-L['whisperto']    = "Zu %s"
-
---[[ Addon messages ]]
-L['clearallconfirm']    = "Logs geleert."
-L['combatlogdisabled']  = "Diese Funktion ist deaktiviert."
-L['deleteconfirm']    = "Chat gel\195\182scht: %s"
-L['emptyconfirm']    = "Log geleert: %s"
-L['lootmethod']      = {
-  ['freeforall']    = ERR_SET_LOOT_FREEFORALL,
-  ['group']      = ERR_SET_LOOT_GROUP,
-  ['master']      = ERR_SET_LOOT_MASTER,
-  ['needbeforegreed']  = ERR_SET_LOOT_NBG,
-  ['roundrobin']    = ERR_SET_LOOT_ROUNDROBIN
-}
-L['masterlooterchanged']  =  ERR_NEW_LOOT_MASTER_S
-L['resetconfirm']    = "Alle Einstellungen und Chats zur\195\188ckgesetzt."
-
---[[ Tooltips ]]
-L['togglebuttontooltip']    = {
-  [1]  = "Linksklicken um Elephant ein-/auszuschalten.",
-  [2]  = "Mittelklicken um die Schalterposition zur\195\188ck zu setzten.",
-  [3]  = "Rechtsklicken um den Schalter zu bewegen."
-}
-L['toggletooltip']      = "Linksklick, um Elephant anzuzeigen/zu verstecken."
-
---[[ Popup windows ]]
-L['clearallpopup']  = {
-  [1]  = "Dies l\195\182scht alle Logs.",
-  [2]  = "Ok",
-  [3]  = "Abbruch"
-}
-L['emptypopup']    = {
-  [1]  = "Dies leert das aktuelle Log.",
-  [2]  = "Ok",
-  [3]  = "Abbruch"
-}
-L['resetpopup']    = {
-  [1]  = "Dies setzt alle Einstellungen und Chats zur\195\188ck.",
-  [2]  = "Ok",
-  [3]  = "Abbruch"
-}
-
---[[ Default chat names to be displayed ]]
-L['chatnames']  = {
-  ['combat']  = "Kampf",
-  ['custom']  = "Eigene Chats",
-  ['general']  = "Allgemeine Chats",
-  ['guild']  = CHAT_MSG_GUILD,
-  ['loot']  = CHAT_MSG_LOOT,
-  ['misc']  = "Misc.",
-  ['officer']  = CHAT_MSG_OFFICER,
-  ['party']  = CHAT_MSG_PARTY,
-  ['raid']  = CHAT_MSG_RAID,
-  ['say']    = CHAT_MSG_SAY,
-  ['system']  = SYSTEM_MESSAGES,
-  ['whisper']  = WHISPER,
-  ['yell']  = YELL_MESSAGE,
-  ['achievement'] = ACHIEVEMENTS,
-  ['instance'] = INSTANCE
-}
-
---[[ General chats (= that you cannot leave) names and strings that identify them ]]
-L['generalchats']  = {
-  ['allgemein']      = {
-    ['name']  = "Allgemein",
-    ['string']  = "allgemein"
-  },
-  ['gildenrekrutierung']  = {
-    ['name']  = "Gildenrekrutierung",
-    ['string']  = "gildenrekrutierung"
-  },
-  ['handel']        = {
-    ['name']  = "Handel",
-    ['string']  = "handel"
-  },
-  ['lokaleverteidigung']  = {
-    ['name']  = "LokaleVerteidigung",
-    ['string']  = "lokaleverteidigung"
-  },
-  ['weltverteidigung']  = {
-    ['name']  = "WeltVerteidigung",
-    ['string']  = "weltverteidigung"
-  }
-}
-
---[[ Custom chats special log messages ]]
-L['customchat']  = {
-  ['join']  = "Channel beigetreten.",
-  ['leave']  = "Channel verlassen."
-}
+L['STRING_CANCEL'] = CANCEL
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_1'] = "Mittelklicken um die Schalterposition zur\195\188ck zu setzten."
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_2'] = "Rechtsklicken um den Schalter zu bewegen."
+L['STRING_CHAT_BUTTON_TOOLTIP'] = "Linksklicken um Elephant ein-/auszuschalten."
+L['STRING_CHAT_NAME_ACHIEVEMENT'] = ACHIEVEMENTS
+L['STRING_CHAT_NAME_COMBAT'] = "Kampf"
+L['STRING_CHAT_NAME_CUSTOM'] = "Eigene Chats"
+L['STRING_CHAT_NAME_GENERAL'] = "Allgemeine Chats"
+L['STRING_CHAT_NAME_GUILD'] = CHAT_MSG_GUILD
+L['STRING_CHAT_NAME_INSTANCE'] = INSTANCE
+L['STRING_CHAT_NAME_LOOT'] = CHAT_MSG_LOOT
+L['STRING_CHAT_NAME_MISC'] = "Misc."
+L['STRING_CHAT_NAME_OFFICER'] = CHAT_MSG_OFFICER
+L['STRING_CHAT_NAME_PARTY'] = CHAT_MSG_PARTY
+L['STRING_CHAT_NAME_RAID'] = CHAT_MSG_RAID
+L['STRING_CHAT_NAME_SAY'] = CHAT_MSG_SAY
+L['STRING_CHAT_NAME_SYSTEM'] = SYSTEM_MESSAGES
+L['STRING_CHAT_NAME_WHISPER'] = WHISPER
+L['STRING_CHAT_NAME_YELL'] = YELL_MESSAGE
+L['STRING_COPY_WINDOW_BB_CODE'] = "BBCode"
+L['STRING_COPY_WINDOW_BB_TEXT_BUTTON'] = "BB/Text"
+L['STRING_COPY_WINDOW_MAX_CHARACTERS'] = "Log length: %s lines"
+L['STRING_COPY_WINDOW_PLAIN_TEXT'] = "Plain text"
+L['STRING_COPY_WINDOW'] = "Chat Kopieren"
+L['STRING_COPY'] = "Kopieren"
+L['STRING_DISABLE'] = DISABLE
+L['STRING_DISABLED'] = "Ausgeschaltet"
+L['STRING_EMPTY'] = EMPTY
+L['STRING_ENABLE'] = ENABLE
+L['STRING_ENABLED'] = "Eingeschaltet"
+L['STRING_FILTER_VALIDATION_REGEXP'] = "^[%a%*]+$"
+L['STRING_FILTERS'] = FILTERS
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL_ID'] = "allgemein"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL'] = "Allgemein"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT_ID'] = "gildenrekrutierung"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT'] = "Gildenrekrutierung"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE_ID'] = "lokaleverteidigung"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE'] = "LokaleVerteidigung"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_ID'] = "handel"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE'] = "Handel"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID'] = "weltverteidigung"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE'] = "WeltVerteidigung"
+L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'] = "Logs geleert."
+L['STRING_INFORM_CHAT_FUNCTION_IS_DISABLED'] = "Diese Funktion ist deaktiviert."
+L['STRING_INFORM_CHAT_LOG_DELETED'] = "Chat gel\195\182scht: %s"
+L['STRING_INFORM_CHAT_LOG_EMPTIED'] = "Log geleert: %s"
+L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'] =  ERR_NEW_LOOT_MASTER_S
+L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'] = "Alle Einstellungen und Chats zur\195\188ckgesetzt."
+L['STRING_KEYBIND_TOGGLE'] = "Elephant \195\182ffnen/schlie\195\159en"
+L['STRING_LOOT_METHOD_freeforall'] = ERR_SET_LOOT_FREEFORALL
+L['STRING_LOOT_METHOD_group'] = ERR_SET_LOOT_GROUP
+L['STRING_LOOT_METHOD_master'] = ERR_SET_LOOT_MASTER
+L['STRING_LOOT_METHOD_needbeforegreed'] = ERR_SET_LOOT_NBG
+L['STRING_LOOT_METHOD_roundrobin'] = ERR_SET_LOOT_ROUNDROBIN
+L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'] = "Zeilen: %s"
+L['STRING_MAIN_WINDOW_MAX_LOG'] = "Maximal %s Zeilen."
+L['STRING_MAIN_WINDOW_SCROLL_BOTTOM_BUTTON_TOOLTIP'] = "Zum Ende scrollen"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_DOWN_BUTTON_TOOLTIP'] = "Eine Zeile runter scrollen"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_UP_BUTTON_TOOLTIP'] = "Eine Zeile hoch scrollen"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_DOWN_BUTTON_TOOLTIP'] = "Eine Seite runter scrollen"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_UP_BUTTON_TOOLTIP'] = "Eine Seite hoch scrollen"
+L['STRING_MAIN_WINDOW_SCROLL_TOP_BUTTON_TOOLTIP'] = "Zum Anfang scrollen"
+L['STRING_OK'] = "OK"
+L['STRING_OPTIONS_CLEAR_LOGS'] = "L\195\182scht alle Logs"
+L['STRING_OPTIONS_FILE_LOGGING_CHAT'] = "Chat in Datei speichern"
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT'] = "Kampflog in Datei speichern"
+L['STRING_OPTIONS_LOG_NEW_CHANNELS'] = "Logge neue Channels."
+L['STRING_OPTIONS_LOGS_TAB_DESC'] = "Logging options."
+L['STRING_OPTIONS_LOGS_TAB'] = "Logs"
+L['STRING_OPTIONS_MAX_LOG_LINES'] = "Maximale Logl\195\164nge"
+L['STRING_OPTIONS_RESET_SETTINGS_DESC'] = "Resets all settings and chats."
+L['STRING_OPTIONS_SHOW_CHAT_BUTTON'] = "Zeige Schalter"
+L['STRING_POPUP_CLEAR_LOGS'] = "Dies l\195\182scht alle Logs."
+L['STRING_POSITION'] = "Positionen der Fenster zur\195\188cksetzen"
+L['STRING_RESET'] = "Zur\195\188cksetzen"
+L['STRING_SETTINGS'] = "Setzt alle Einstellungen und Chats zur\195\188ck"
+L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] = "Channel beigetreten."
+L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] = "Channel verlassen."
+L['STRING_SPECIAL_LOG_LOGGING_STARTED_ON'] = "Log gestartet am %s um %s."
+L['STRING_SPECIAL_LOG_LOGGING_STOPPED'] = "Log gestoppt."
+L['STRING_SPECIAL_LOG_MONSTER_SAYS'] = "%s sagt"
+L['STRING_SPECIAL_LOG_MONSTER_YELLS'] = "%s schreit"
+L['STRING_SPECIAL_LOG_WHISPER_FROM'] = "%s fl\195\188stert"
+L['STRING_SPECIAL_LOG_WHISPER_TO'] = "Zu %s"
+L['URL_ITEM_LINK'] = "http://de.wowhead.com/?item="

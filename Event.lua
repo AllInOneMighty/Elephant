@@ -7,11 +7,11 @@ color does not exist.
 ]]
 local function GetClassColorByGUID(guid)
   if guid and guid ~= "" then
-    local _, englishClass = GetPlayerInfoByGUID(guid)
-    if englishClass then
-      local classColorTable = RAID_CLASS_COLORS[englishClass];
-      if classColorTable then
-        return Elephant:MakeTextHexColor(classColorTable.r, classColorTable.g, classColorTable.b)
+    local _, english_class = GetPlayerInfoByGUID(guid)
+    if english_class then
+      local class_color_table = RAID_CLASS_COLORS[english_class];
+      if class_color_table then
+        return Elephant:MakeTextHexColor(class_color_table.r, class_color_table.g, class_color_table.b)
       end
     end
   end
@@ -25,24 +25,25 @@ integer for them.
 
 Returns nil if a channel cannot be found.
 ]]
-local function getCIndexFromChannelName(channelName)
-  if channelName == "" then
+local function GetChannelIndexFromChannelName(channel_name)
+  if channel_name == "" then
     return nil
   end
 
-  channelName = string.lower(channelName)
-  local cIndex
-  for k, v in pairs(Elephant.L['generalchats']) do
-    if (channelName == k) or string.find(channelName, k .. " - ") then
-      cIndex = k
+  channel_name = string.lower(channel_name)
+
+  local channel_index
+  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
+    if Elephant:ChannelIdPartiallyMatches(channel_name, general_chat_channel_metadata.id) then
+      channel_index = general_chat_channel_metadata.id
       break
     end
   end
-  if cIndex == nil then
+  if channel_index == nil then
     -- Custom channel name
-    cIndex = channelName
+    channel_index = channel_name
   end
-  return cIndex
+  return channel_index
 end
 
 --[[
@@ -50,27 +51,27 @@ Handles messages sent by the WoW engine
 as well as the ones sent by Prat.
 ]]
 local function HandleMessage(prat_struct, event, ...)
-  if not Elephant.db.profile.prat and prat_struct then
+  if not Elephant:ProfileDb().prat and prat_struct then
     return
   end
-  if not Elephant.db.profile.events[event] then
+  if not Elephant:ProfileDb().events[event] then
     return
   end
 
   -- Getting info from event args
-  local message, sender, _, _, _, flags, _, _, channelName, _, _, guid = ...
+  local message, sender, _, _, _, flags, _, _, channel_name, _, _, guid = ...
   if flags == "" then
     flags = nil
   end
 
   -- Sometimes we need to log two messages for the price of one.
-  local msg, msg2
+  local new_message_struct, new_message_struct_2
   -- Channels
   if event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_CHANNEL_NOTICE" then
-    cIndex = getCIndexFromChannelName(channelName)
+    local channel_index = GetChannelIndexFromChannelName(channel_name)
 
-    -- cIndex == nil should never happen, but better to ignore than crash.
-    if cIndex == nil or Elephant:IsFiltered(cIndex) then return end
+    -- channel_index == nil should never happen, but better to ignore than crash.
+    if channel_index == nil or Elephant:IsFiltered(channel_index) then return end
 
     if event == "CHAT_MSG_CHANNEL" then
       -- Fixing error where structure for channel does not exist
@@ -79,74 +80,74 @@ local function HandleMessage(prat_struct, event, ...)
       -- event for that channel. In this case though, the client cannot be
       -- displaying that log, so we don't have to update the buttons like
       -- when a YOU_JOINED event happens.
-      Elephant:InitCustomStructure(cIndex, channelName)
-      if not Elephant.dbpc.char.logs[cIndex].enabled then
+      Elephant:MaybeInitCustomStructure(channel_index, channel_name)
+      if not Elephant:LogsDb().logs[channel_index].enabled then
         return
       end
 
       if prat_struct then
-        msg = {
-          ['time'] = time(),
-          ['prat'] = prat_struct.message,
-          ['lineid'] = prat_struct.line_id,
+        new_message_struct = {
+          time = time(),
+          prat = prat_struct.message,
+          lineid = prat_struct.lineid,
         }
       else
-        msg = {
-          ['time'] = time(),
-          ['arg1'] = message,
-          ['arg6'] = flags,
-          ['arg9'] = channelName,
-          ['clColor'] = GetClassColorByGUID(guid)
+        new_message_struct = {
+          time = time(),
+          arg1 = message,
+          arg6 = flags,
+          arg9 = channel_name,
+          clColor = GetClassColorByGUID(guid)
         }
         if sender ~= "" then
-          msg['arg2'] = sender
+          new_message_struct.arg2 = sender
         end
       end
-      Elephant:CaptureNewMessage(msg, cIndex)
+      Elephant:CaptureNewMessage(new_message_struct, channel_index)
     end
 
     if event == "CHAT_MSG_CHANNEL_NOTICE" then
       if message == "YOU_JOINED" or message == "YOU_CHANGED" then
-        Elephant:InitCustomStructure(cIndex, channelName)
-        if not Elephant.dbpc.char.logs[cIndex].enabled then
+        Elephant:MaybeInitCustomStructure(channel_index, channel_name)
+        if not Elephant:LogsDb().logs[channel_index].enabled then
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['join'] } , cIndex)
-        if Elephant.dbpc.char.currentlogindex == cIndex then
+        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_index)
+        if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
         end
       end
       if message == "YOU_LEFT" then
-        if not Elephant.dbpc.char.logs[cIndex] or Elephant.dbpc.char.logs[cIndex].enabled then
+        if not Elephant:LogsDb().logs[channel_index] or not Elephant:LogsDb().logs[channel_index].enabled then
           return
         end
 
-        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['leave'] } , cIndex)
-        Elephant:CaptureNewMessage( { ['arg1'] = " " } , cIndex)
-        if Elephant.dbpc.char.currentlogindex == cIndex then
+        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] } , channel_index)
+        Elephant:CaptureNewMessage( { arg1 = " " } , channel_index)
+        if Elephant:CharDb().currentlogindex == channel_index then
           Elephant:UpdateCurrentLogButtons()
-          Elephant:ForceCurrentLogDeleteButtonStatus(true)
+          Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]]true)
         end
       end
     end
-  -- Not channel messages
   else
+    -- Not channel messages
     if prat_struct then
-      msg = {
-        ['time'] = time(),
-        ['prat'] = prat_struct.message,
-        ['lineid'] = prat_struct.line_id,
-        ['type'] = Elephant.db.profile.events[event].type,
+      new_message_struct = {
+        time = time(),
+        prat = prat_struct.message,
+        lineid = prat_struct.lineid,
+        type = Elephant:ProfileDb().events[event].type,
       }
     else
-      msg = {
-        ['time'] = time(),
-        ['type'] = Elephant.db.profile.events[event].type,
-        ['arg1'] = message,
+      new_message_struct = {
+        time = time(),
+        type = Elephant:ProfileDb().events[event].type,
+        arg1 = message,
       }
 
-      if  event == "CHAT_MSG_BATTLEGROUND" or
+      if event == "CHAT_MSG_BATTLEGROUND" or
         event == "CHAT_MSG_BATTLEGROUND_LEADER" or
         event == "CHAT_MSG_WHISPER" or
         event == "CHAT_MSG_WHISPER_INFORM" or
@@ -172,12 +173,12 @@ local function HandleMessage(prat_struct, event, ...)
         event == "CHAT_MSG_INSTANCE_CHAT" or
         event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
       then
-        msg.arg2 = sender
-        msg.clColor = GetClassColorByGUID(guid)
+        new_message_struct.arg2 = sender
+        new_message_struct.clColor = GetClassColorByGUID(guid)
       end
 
       if event == "CHAT_MSG_WHISPER" then
-        msg.arg6 = flags
+        new_message_struct.arg6 = flags
       end
 
       if event == "PARTY_LOOT_METHOD_CHANGED" then
@@ -195,43 +196,43 @@ local function HandleMessage(prat_struct, event, ...)
             end
           end
 
-          msg2 = {
-            ['time'] = time(),
-            ['type'] = Elephant.db.profile.events[event].type
+          new_message_struct_2 = {
+            time = time(),
+            type = Elephant:ProfileDb().events[event].type
           }
 
           -- Name of player may be unknown here, if interface
           -- has just been loaded
           if player == "Unknown" then
-            msg2.arg1 = "<" .. Elephant.L['masterlooternameunknown'] .. ">"
-          elseif player ~= Elephant.tempConf.masterlooter then
-            Elephant.tempConf.masterlooter = player
+            new_message_struct_2.arg1 = "<" .. Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN'] .. ">"
+          elseif player ~= Elephant.volatileConfiguration.masterlooter then
+            Elephant.volatileConfiguration.masterlooter = player
 
-            msg2.arg1 =  format(Elephant.L['masterlooterchanged'], player)
+            new_message_struct_2.arg1 =  format(Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'], player)
           end
         else
-          Elephant.tempConf.masterlooter = nil
+          Elephant.volatileConfiguration.masterlooter = nil
         end
 
-        if method ~= Elephant.tempConf.lootmethod then
-          Elephant.tempConf.lootmethod = method
-          msg.arg1 = Elephant.L['lootmethod'][method]
+        if method ~= Elephant.volatileConfiguration.lootmethod then
+          Elephant.volatileConfiguration.lootmethod = method
+          new_message_struct.arg1 = Elephant.L['STRING_LOOT_METHOD__' .. method]
         else
-          -- Warning: msg2 might also be nil
-          msg = msg2
-          msg2 = nil
+          -- Warning: new_message_struct_2 might also be nil
+          new_message_struct = new_message_struct_2
+          new_message_struct_2 = nil
         end
       end
     end
 
     -- Finally, capture the message if it is not nil
-    if msg ~= nil then
-      local k
-      for k in pairs(Elephant.db.profile.events[event].channels) do
-        if Elephant.db.profile.events[event].channels[k] ~= 0 and Elephant.dbpc.char.logs[k].enabled then
-          Elephant:CaptureNewMessage(msg, k)
-          if msg2 ~= nil then
-            Elephant:CaptureNewMessage(msg2, k)
+    if new_message_struct ~= nil then
+      local channel_index
+      for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
+        if Elephant:ProfileDb().events[event].channels[channel_index] ~= 0 and Elephant:LogsDb().logs[channel_index].enabled then
+          Elephant:CaptureNewMessage(new_message_struct, channel_index)
+          if new_message_struct_2 ~= nil then
+            Elephant:CaptureNewMessage(new_message_struct_2, channel_index)
           end
         end
       end
@@ -253,23 +254,23 @@ loaded.
 function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
 
-  local event
-  if Prat and Elephant.db.profile.prat then
+  local event_type
+  if Prat and Elephant:ProfileDb().prat then
     Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
 
     -- Registering additional events not handled by Prat
-    for event, v in pairs(Elephant.db.profile.events) do
-      if v.register_with_prat then
-        Elephant:RegisterEvent(event, HandleMessage, nil)
+    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
+      if event_struct.register_with_prat then
+        Elephant:RegisterEvent(event_type, HandleMessage, nil)
       end
     end
   else
-    if not Prat and Elephant.db.profile.prat then
-      Elephant:Print("|cffff0000" .. Elephant.L['noprat'] .. "|r")
+    if not Prat and Elephant:ProfileDb().prat then
+      Elephant:Print("|cffff0000" .. Elephant.L['STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT'] .. "|r")
     end
 
-    for event, v in pairs(Elephant.db.profile.events) do
-      Elephant:RegisterEvent(event, HandleMessage, nil)
+    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
+      Elephant:RegisterEvent(event_type, HandleMessage, nil)
     end
   end
 end
@@ -281,8 +282,8 @@ sending them to HandleMessage()
 -- Cannot be local
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
   prat_struct = {
-    ['message'] = text,
-    ['line_id'] = message.ORG.LINE_ID
+    message = text,
+    lineid = message.ORG.LINE_ID
   }
   HandleMessage(prat_struct, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
 end

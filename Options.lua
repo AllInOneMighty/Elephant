@@ -1,3 +1,11 @@
+local function ToggleUseFactionRealmDb()
+  Elephant:ProfileDb().use_factionrealm_db = not Elephant:ProfileDb().use_factionrealm_db
+  Elephant:MaybeInitDefaultLogStructures()
+  Elephant:MaybeInitCustomStructures()
+  Elephant:AddHeaderToStructures(true)
+  Elephant:ChangeLog(Elephant:CharDb().currentlogindex)
+end
+
 --[[
 Registers the options of the addon and sets up
 any configuration window or slash command
@@ -9,105 +17,83 @@ function Elephant:SetupOptions()
     type = 'group',
     childGroups = "tab",
     args = {
-      togglebutton = {
-        type = 'toggle',
-        order = 2,
-        name = Elephant.L['showbutton'],
-        desc = Elephant.L['showbutton_desc'],
-        get = function()
-          return Elephant.db.profile.button
-        end,
-        set = Elephant.ToggleButton
+      optionsareperchar = {
+        type = 'description',
+        order = 0,
+        name = Elephant.L['STRING_OPTIONS_DESC'],
+        fontSize = 'medium',
       },
       toggleicon = {
         type = 'toggle',
         order = 1,
-        name = Elephant.L['minimapicon'],
-        desc = Elephant.L['minimapicon_desc'],
+        name = Elephant.L['STRING_OPTIONS_MINIMAP_ICON'],
+        desc = Elephant.L['STRING_OPTIONS_MINIMAP_ICON_DESC'],
         get = function()
-          return not Elephant.db.profile.minimap.hide
+          return not Elephant:ProfileDb().minimap.hide
         end,
         set = Elephant.ToggleLDBIcon,
         hidden = function()
           return not Elephant:IsLDBIconAvailable()
         end
       },
-      filters = {
-        type = 'group',
-        order = 4,
-        name = Elephant.L['Filters'],
-        desc = Elephant.L['Filters_desc'],
-        args = {
-          desc = {
-            type = 'description',
-            order = 0,
-            name = Elephant.L['filters_header'][1] .. "\n\n" ..
-              format(Elephant.L['filters_header'][2], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
-              format(Elephant.L['filters_header'][3], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
-              Elephant.L['filters_header'][4],
-          },
-          add = {
-            type = 'input',
-            order = 1,
-            name = Elephant.L['filternew'],
-            desc = Elephant.L['newfilter_desc'],
-            get = false,
-            set = function(_, input)
-              if string.match(input, Elephant.L['filterregex']) == nil then
-                Elephant:Print(format(Elephant.L['filtererror'], input))
-              else
-                Elephant:AddFilter(input)
-              end
-            end,
-            usage = Elephant.L['filterusage'],
-          },
-          delete = {
-            type = 'select',
-            order = 2,
-            name = DELETE,
-            desc = Elephant.L['deletefilter_desc'],
-            set = function(_,filterindex)
-              Elephant:DeleteFilter(filterindex)
-            end,
-            values = function()
-              return   Elephant.db.profile.filters
-            end,
-            hidden = function()
-              return (not Elephant.db.profile.filters) or
-                (#Elephant.db.profile.filters == 0)
-            end
-          }
-        },
+      togglebutton = {
+        type = 'toggle',
+        order = 2,
+        name = Elephant.L['STRING_OPTIONS_SHOW_CHAT_BUTTON'],
+        desc = Elephant.L['STRING_OPTIONS_SHOW_CHAT_BUTTON_DESC'],
+        get = function()
+          return Elephant:ProfileDb().button
+        end,
+        set = Elephant.ToggleButton
+      },
+      use_factionrealm_db = {
+        type = 'toggle',
+        order = 3,
+        name = Elephant.L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS'],
+        desc = (
+          Elephant.L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1'] ..
+          "\n\n|c" .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2) ..
+          Elephant.L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2'] .. "|r"
+        ),
+        get = function()
+          return Elephant:ProfileDb().use_factionrealm_db
+        end,
+        set = ToggleUseFactionRealmDb
       },
       log = {
         type = 'group',
-        order = 3,
-        name = Elephant.L['logs'],
-        desc = Elephant.L['logs_desc'],
+        order = 4,
+        name = Elephant.L['STRING_OPTIONS_LOGS_TAB'],
+        desc = Elephant.L['STRING_OPTIONS_LOGS_TAB_DESC'],
         args = {
           default = {
             type = 'toggle',
             order = 1,
-            name = Elephant.L['enableddefault'],
-            desc = Elephant.L['enableddefault_desc'],
+            name = Elephant.L['STRING_OPTIONS_LOG_NEW_CHANNELS'],
+            desc = Elephant.L['STRING_OPTIONS_LOG_NEW_CHANNELS_DESC'],
             get = function()
-              return Elephant.db.profile.defaultlog
+              return Elephant:ProfileDb().defaultlog
             end,
             set = function(_, isEnabled)
-              Elephant.db.profile.defaultlog = isEnabled
+              Elephant:ProfileDb().defaultlog = isEnabled
             end
           },
           max = {
             type = 'range',
             order = 2,
-            name = Elephant.L['maxlogwords'],
-            desc = Elephant.L['maxlogwords_desc'] ..
-                  "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['maxlogwords_desc_warning'] .. "|r",
-            min = Elephant.defaultConf.minlogsize,
-            max = Elephant.defaultConf.maxlogsize,
+            name = Elephant.L['STRING_OPTIONS_MAX_LOG_LINES'],
+            desc = (
+              Elephant.L['STRING_OPTIONS_MAX_LOG_LINES_DESC_1'] ..
+              "\n\n|c" .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2) ..
+              Elephant.L['STRING_OPTIONS_MAX_LOG_LINES_DESC_2'] .. "|r" ..
+              "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) ..
+              Elephant.L['STRING_OPTIONS_MAX_LOG_LINES_DESC_3'] .. "|r"
+            ),
+            min = Elephant:DefaultConfiguration().minlogsize,
+            max = Elephant:DefaultConfiguration().maxlogsize,
             step = 1,
             get = function()
-              return Elephant.db.profile.maxlog
+              return Elephant:FactionRealmDb().maxlog
             end,
             set = function(_, nb)
               Elephant:ChangeMaxLog(nb)
@@ -116,60 +102,60 @@ function Elephant:SetupOptions()
           maxcopycharacters = {
             type = 'range',
             order = 3,
-            name = Elephant.L['maxcopycharacters'],
-            desc = Elephant.L['maxcopycharacters_desc'] .. "\n\n|c" ..
-              Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['maxcopycharacters_desc_warning'] .. "|r",
-            min = Elephant.defaultConf.copywindowminletters,
-            max = Elephant.defaultConf.copywindowmaxletters,
+            name = Elephant.L['STRING_OPTIONS_MAX_COPY_CHARACTERS'],
+            desc = Elephant.L['STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_1'] .. "\n\n|c" ..
+              Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_2'] .. "|r",
+            min = Elephant:DefaultConfiguration().copywindowminletters,
+            max = Elephant:DefaultConfiguration().copywindowmaxletters,
             step = 1000,
             get = function()
-              return Elephant.db.profile.maxcopyletters
+              return Elephant:ProfileDb().maxcopyletters
             end,
             set = function(_, v)
-              Elephant.db.profile.maxcopyletters = v
+              Elephant:ProfileDb().maxcopyletters = v
             end
           },
           classColors = {
             type = 'toggle',
             order = 4,
-            name = Elephant.L['classcolors'],
-            desc = Elephant.L['classcolors_desc'] .. "\n\n|c" ..
-              Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['classcolors_desc2'] .. "|r",
+            name = Elephant.L['STRING_OPTIONS_USE_CLASS_COLORS'],
+            desc = Elephant.L['STRING_OPTIONS_USE_CLASS_COLORS_DESC_1'] .. "\n\n|c" ..
+              Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['STRING_OPTIONS_USE_CLASS_COLORS_DESC_2'] .. "|r",
             get = function()
-              return Elephant.db.profile.class_colors_in_log
+              return Elephant:ProfileDb().class_colors_in_log
             end,
             set = function(_, isEnabled)
-              Elephant.db.profile.class_colors_in_log = isEnabled
+              Elephant:ProfileDb().class_colors_in_log = isEnabled
               Elephant:ShowCurrentLog()
             end
           },
           clearall = {
             type = 'execute',
             order = 5,
-            name = Elephant.L['clearallhelp'],
-            desc = Elephant.L['clearallhelp_desc'],
+            name = Elephant.L['STRING_OPTIONS_CLEAR_LOGS'],
+            desc = Elephant.L['STRING_OPTIONS_CLEAR_LOGS_DESC'],
             func = function()
               StaticPopup_Show("ELEPHANT_CLEARALL")
             end,
           },
           prat_opt = {
             type = 'group',
-            name = Elephant.L['prat_integration'],
+            name = Elephant.L['STRING_OPTIONS_PRAT_INTEGRATION_GROUP'],
             order = 6,
             inline = true,
             args = {
               prat = {
                 type = 'toggle',
                 order = 1,
-                name = Elephant.L['prat'],
-                desc = Elephant.L['prat2_desc'] .. "\n\n" ..
-                  Elephant.L['prat2_desc2'] .. "\n\n|c" ..
-                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['prat2_desc22'] .. "|r",
+                name = Elephant.L['STRING_OPTIONS_PRAT_FORMATTING'],
+                desc = Elephant.L['STRING_OPTIONS_PRAT_FORMATTING_DESC_1'] .. "\n\n" ..
+                  Elephant.L['STRING_OPTIONS_PRAT_FORMATTING_DESC_2'] .. "\n\n|c" ..
+                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['STRING_OPTIONS_PRAT_FORMATTING_DESC_3'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.prat
+                  return Elephant:ProfileDb().prat
                 end,
                 set = function(_, v)
-                  Elephant.db.profile.prat = v
+                  Elephant:ProfileDb().prat = v
                   Elephant:RegisterEventsRefresh()
                 end
               }
@@ -178,87 +164,142 @@ function Elephant:SetupOptions()
           files = {
             type = 'group',
             order = 7,
-            name = Elephant.L['files'],
-            desc = Elephant.L['files_desc'],
+            name = Elephant.L['STRING_OPTIONS_FILE_LOGGING_GROUP'],
+            desc = Elephant.L['STRING_OPTIONS_FILE_LOGGING_GROUP_DESC'],
             inline = true,
             args = {
               activate = {
                 type = 'toggle',
                 order = 1,
-                name = Elephant.L['activate'],
-                desc = Elephant.L['activate_desc2'] ..
-                  "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['activate_desc22'] .. "|r",
+                name = Elephant.L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE'],
+                desc = Elephant.L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_1'] ..
+                  "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) .. Elephant.L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_2'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.activate_log
+                  return Elephant:ProfileDb().activate_log
                 end,
                 set = function(_, nv)
-                  Elephant.db.profile.activate_log = nv
-                  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
-                  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
+                  Elephant:ProfileDb().activate_log = nv
+                  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
+                  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
                 end,
               },
               chatlog_limitation = {
                 type = 'description',
-                name = Elephant.L['chatlog_limitation'],
+                name = Elephant.L['STRING_OPTIONS_FILE_LOGGING_LIMITATIONS'],
                 order = 2,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
-                end
+                  return not Elephant:ProfileDb().activate_log
+                end,
+                fontSize = "medium",
               },
               chat = {
                 type = 'toggle',
                 order = 3,
-                name = Elephant.L['chatlog'],
-                desc = Elephant.L['chatlog2_desc'] .. "\n\n|c" ..
-                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['chatlog2_desc2'] .. "|r",
+                name = Elephant.L['STRING_OPTIONS_FILE_LOGGING_CHAT'],
+                desc = Elephant.L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_1'] .. "\n\n|c" ..
+                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_2'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.chatlog
+                  return Elephant:ProfileDb().chatlog
                 end,
                 set = function(_, isEnabled)
-                  Elephant.db.profile.chatlog = isEnabled
+                  Elephant:ProfileDb().chatlog = isEnabled
                   Elephant:ChatLogEnable(isEnabled)
                 end,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
+                  return not Elephant:ProfileDb().activate_log
                 end,
               },
               combat = {
                 type = 'toggle',
                 order = 4,
-                name = Elephant.L['combatlog'],
-                desc = Elephant.L['combatlog2_desc'] .. "\n\n|c" ..
-                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['combatlog2_desc2'] .. "|r",
+                name = Elephant.L['STRING_OPTIONS_FILE_LOGGING_COMBAT'],
+                desc = Elephant.L['STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_1'] .. "\n\n|c" ..
+                  Elephant:MakeTextHexColor(0.2, 1.0, 0.2) .. Elephant.L['STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_2'] .. "|r",
                 get = function()
-                  return Elephant.db.profile.combatlog
+                  return Elephant:ProfileDb().combatlog
                 end,
                 set = function(_, isEnabled)
-                  Elephant.db.profile.combatlog = isEnabled
+                  Elephant:ProfileDb().combatlog = isEnabled
                   Elephant:CombatLogEnable(isEnabled)
                 end,
                 hidden = function()
-                  return not Elephant.db.profile.activate_log
+                  return not Elephant:ProfileDb().activate_log
                 end,
               },
             }
           },
         },
       },
-      reset = {
+      filters = {
         type = 'group',
         order = 5,
-        name = Elephant.L['reset'],
-        desc = Elephant.L['reset_desc'],
+        name = Elephant.L['STRING_FILTERS'],
+        desc = Elephant.L['STRING_OPTIONS_FILTERS_TAB_DESC'],
         args = {
           desc = {
             type = 'description',
             order = 0,
-            name = Elephant.L['reset_header'][1] .. "\n\n" .. Elephant.L['reset_header'][2],
+            name = Elephant.L['STRING_OPTIONS_FILTERS_TAB_HEADER_1'] .. "\n\n" ..
+              format(Elephant.L['STRING_OPTIONS_FILTERS_TAB_HEADER_2'], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
+              format(Elephant.L['STRING_OPTIONS_FILTERS_TAB_HEADER_3'], Elephant:MakeTextHexColor(0.2, 1.0, 0.2)) .. "\n\n" ..
+              Elephant.L['STRING_OPTIONS_FILTERS_TAB_HEADER_4'],
+            fontSize = 'medium',
+          },
+          add = {
+            type = 'input',
+            order = 1,
+            name = Elephant.L['STRING_NEW'],
+            desc = Elephant.L['STRING_OPTIONS_FILTER_NEW_DESC_1'],
+            get = false,
+            set = function(_, input)
+              if string.match(input, Elephant.L['STRING_FILTER_VALIDATION_REGEXP']) == nil then
+                Elephant:Print(format(Elephant.L['STRING_INFORM_CHAT_FILTER_INVALID'], input))
+              else
+                Elephant:AddFilter(input)
+              end
+            end,
+            usage = Elephant.L['STRING_OPTIONS_FILTER_NEW_DESC_2'],
+          },
+          delete = {
+            type = 'select',
+            order = 2,
+            name = DELETE,
+            desc = Elephant.L['STRING_OPTIONS_FILTER_DELETE_DESC'],
+            set = function(_,filterindex)
+              Elephant:DeleteFilter(filterindex)
+            end,
+            values = function()
+              return   Elephant:ProfileDb().filters
+            end,
+            hidden = function()
+              return (not Elephant:ProfileDb().filters) or
+                (#Elephant:ProfileDb().filters == 0)
+            end
+          }
+        },
+      },
+      reset = {
+        type = 'group',
+        order = 6,
+        name = Elephant.L['STRING_RESET'],
+        desc = Elephant.L['STRING_OPTIONS_RESET_TAB_DESC'],
+        args = {
+          desc = {
+            type = 'description',
+            order = 0,
+            name = (
+              Elephant.L['STRING_OPTIONS_RESET_TAB_HEADER_1'] ..
+              "\n\n" .. Elephant.L['STRING_OPTIONS_RESET_TAB_HEADER_2'] ..
+              "\n\n|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2) ..
+              Elephant.L['STRING_OPTIONS_RESET_TAB_HEADER_3'] .. "|r"
+            ),
+            fontSize = 'medium',
           },
           resetall = {
             type = 'execute',
             order = 2,
-            name = Elephant.L['resethelp'],
-            desc = Elephant.L['resethelp_desc'],
+            name = Elephant.L['STRING_SETTINGS'],
+            desc = Elephant.L['STRING_OPTIONS_RESET_SETTINGS_DESC'],
             func = function()
               StaticPopup_Show("ELEPHANT_RESET")
             end,
@@ -266,8 +307,8 @@ function Elephant:SetupOptions()
           resetposition = {
             type = 'execute',
             order = 1,
-            name = Elephant.L['resetloc'],
-            desc = Elephant.L['resetloc_desc2'],
+            name = Elephant.L['STRING_POSITION'],
+            desc = Elephant.L['STRING_OPTIONS_RESET_POSITION_DESC'],
             func = function()
               Elephant:ResetPosition()
               Elephant:ResetButtonPosition()
