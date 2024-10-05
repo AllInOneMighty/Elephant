@@ -7,11 +7,20 @@ logging, and initializes other useful data.
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
   Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
-    profile = Elephant:clone(Elephant.defaultConf.savedconfdefaults)
+    profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults),
+    char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults),
+    factionrealm = Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults),
   })
-  Elephant.dbpc = LibStub("AceDB-3.0"):New("ElephantDBPerChar", {
-    char = Elephant:clone(Elephant.defaultConf.savedpercharconfdefaults)
-  })
+
+  -- If old maxlog value exists...
+  if Elephant.db.profile.maxlog ~= nil then
+    -- Copy it to the factionrealm db if it is greater than the new default
+    if Elephant.db.profile.maxlog > Elephant.db.factionrealm.maxlog then
+      Elephant.db.factionrealm.maxlog = Elephant.db.profile.maxlog
+    end
+    -- Then, remove it.
+    Elephant.db.profile.maxlog = nil
+  end
 
   -- Options
   Elephant:SetupOptions()
@@ -20,23 +29,23 @@ function Elephant:OnInitialize()
   Elephant:SetTitleInfoMaxLog()
 
   -- Elephant button
-  if Elephant.db.profile.button == true then
+  if Elephant:ProfileDb().button == true then
     Elephant:CreateButton()
   end
 
   -- Enabling/disabling chat logging if required
-  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
-  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
+  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
+  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
 
   -- Checks & creates default log structures
-  Elephant:InitDefaultLogStructures()
+  Elephant:MaybeInitDefaultLogStructures()
   Elephant:AddHeaderToStructures()
 
   -- Getting current loot method to avoid displaying too many times
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant.tempConf.lootmethod = GetLootMethod()
+  Elephant.volatileConfiguration.lootmethod = GetLootMethod()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
@@ -68,37 +77,41 @@ function Elephant:OnEnable()
   -- Sets chat tab buttons color
   SetTabButtonProperties(
     ElephantFrameGuildTabButton,
-    Elephant.L['chatnames']['guild'],
+    Elephant.L['STRING_CHAT_NAME_GUILD'],
     'GUILD')
   SetTabButtonProperties(
     ElephantFrameOfficerTabButton,
-    Elephant.L['chatnames']['officer'],
+    Elephant.L['STRING_CHAT_NAME_OFFICER'],
     'OFFICER')
   SetTabButtonProperties(
     ElephantFrameWhisperTabButton,
-    Elephant.L['chatnames']['whisper'],
+    Elephant.L['STRING_CHAT_NAME_WHISPER'],
     'WHISPER')
   SetTabButtonProperties(
     ElephantFramePartyTabButton,
-    Elephant.L['chatnames']['party'],
+    Elephant.L['STRING_CHAT_NAME_PARTY'],
     'PARTY')
   SetTabButtonProperties(
     ElephantFrameRaidTabButton,
-    Elephant.L['chatnames']['raid'],
+    Elephant.L['STRING_CHAT_NAME_RAID'],
     'RAID')
   SetTabButtonProperties(
+    ElephantFrameInstanceTabButton,
+    Elephant.L['STRING_CHAT_NAME_INSTANCE'],
+    'INSTANCE_CHAT')
+  SetTabButtonProperties(
     ElephantFrameSayTabButton,
-    Elephant.L['chatnames']['say'],
+    Elephant.L['STRING_CHAT_NAME_SAY'],
     'SAY')
   SetTabButtonProperties(
     ElephantFrameYellTabButton,
-    Elephant.L['chatnames']['yell'],
+    Elephant.L['STRING_CHAT_NAME_YELL'],
     'YELL')
 
   -- Displays default log
-  if not Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex] then
-    Elephant.dbpc.char.currentlogindex = Elephant.defaultConf.defaultlogindex
+  if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then
+    Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
   end
-  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
+  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end

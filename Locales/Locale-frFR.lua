@@ -1,236 +1,166 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
+local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "frFR")
 if not L then return end
 
---[[ Common messages ]]
-L['chatlog']        = "Enreg. le chat"
-L['chatlog2_desc']    = "Enregistre le chat (pas le journal de combat) vers Logs\\WoWChatLog.txt."
-L['chatlog2_desc2']    = "Si cette option est activée, l'enregistrement vers le fichier sera automatiquement rétabli à l'entrée en jeu."
-L['combatlog']      = "Enreg. le journal de combat"
-L['combatlog2_desc']    = "Enregistre le journal de combat vers Logs\\WoWCombatLog.txt."
-L['combatlog2_desc2']    = "Si cette option est activée, l'enregistrement vers le fichier sera automatiquement rétabli à l'entrée en jeu."
-L['disabled']      = "Désactivé"
-L['enabled']        = "Activé"
-L['enableddefault']    = "Logger nouv. chats"
-L['enableddefault_desc']  = "Débute automatiquelent le log quand vous rejoignez un nouveau canal de discussion."
-L['noprat']        = "Vous avez choisi d'utiliser le formatage de Prat pour les logs mais Prat n'est pas chargé. Les messages seront enregistrés au format d'Elephant."
-L['reset']        = "Réinitialisation"
-L['reset_desc']      = "Options de réinitialisation."
-L['reset_header']    = {
-  [1]      = "Pour réinitialiser la fenêtre principale, cliquez sur le bouton Position ci-dessous.",
-  [2]      = "Pour réinitialiser la configuration et les canaux de discussion, cliquez sur le bouton Configuration ci-dessous. Cela: supprimera les logs de tous les canaux que vous n'avez pas rejoint, videra tous les autres, désactivera l'enregistrement des discussions et du combat dans un fichier, désactivera l'intégration avec Prat, désactivera le bouton d'Elephant, réinitialisera la position de la fenêtre principale, et enfin activera l'icône de minicarte."
-}
-L['toggle']        = "Afficher/Cacher Elephant"
-L['toggle_desc']      = "Affiche ou cache la fenêtre principale."
+local empty_info = "Ceci videra le log courant."
+local empty_warn = "Si vous partagez les logs, cela videra ce log de tous les autres personnages qui le partagent."
 
---[[ Options menu elements ]]
-L['activate']      = "Activer"
-L['activate_desc2']    = "Autorise Elephant à contrôler l'enregistrement vers des fichiers. En désactivant cette option, vous laisserez le statut d'enregistrement actuel intact."
-L['activate_desc22']    = "Attention: vous ne devriez pas laisser deux addons différents contrôler l'enregistrement vers des fichiers."
-L['chatlog_limitation']    = "En raison des limitations de l'interface, il n'est pas possible de filter ce qui est envoyé aux fichiers de log. Lorsque vous activez une de ces options, tous les messages du type choisi (i.e. chat ou journal de combat) seront sauvegardés, ignorant vos filtres actuels."
-L['clearallhelp']    = "Vider tous les logs"
-L['clearallhelp_desc']  = "Supprimer tous les logs enregistrés."
-L['files']        = "Enregistrement vers fichier"
-L['files_desc']      = "Options pour enregistrer les logs vers des fichiers."
-L['Filters']        = FILTERS
-L['Filters_desc']    = "Les filtres sont utilisés pour éviter l'enregistrement de canaux spécifiques."
-L['filters_header']    = {
-  [1]      = "Vous pouvez utilisez les filtres pour éviter d'enregistrer certains canaux de discussion personnalisés que vous ou l'un de vos addons rejoint.",
-  [2]      = "Par exemple, si l'un de vos addons rejoint de nombreaux canaux nommés 'AddonComm1', AddonComm2', ... ce peut être une bonne idée de rajouter le filtre '|c%sAddonComm*|r' pour qu'Elephant les ignore automatiquement.",
-  [3]      = "Il est possible d'ignorer tous les canaux personnalisés que vous rejoignez en ajoutant le filtre '|c%s*|r'. Attention néanmoins, car lorsqu'un nouveau filtre est créé, les logs de tous les canaux dont le nom correspond au filtre sont immédiatement supprimés.",
-  [4]      = "Enfin, vous pouvez obtenir la liste de tous les filtres actifs en passant la souris au-dessus de l'icône d'Elephant si elle est affichée."
-}
-L['filternew']      = "Nouveau"
-L['filterusage']      = "Nom exact du canal. Vous pouvez aussi utiliser des jokers (*). Ex: <AceComm*>"
-L['filtererror']      = "Filtre erroné: '%s'. Les filtres ne peuvent contenir que des lettres et des jokers (*)."
-L['filterregex']      = "^[%a%*]+$"
-L['filternotfound']    = "Filtre introuvable"
-L['filteradded']    = "Filtre '%s' ajout?."
-L['filterdeleted']    = "Filtre '%s' supprim? avec succ?s."
-L['newfilter_desc']    = "Créer un nouveau filtre."
-L['deletefilter_desc']  = "Supprime un filtre précédemment créé."
-L['logs']        = "Logs"
-L['logs_desc']      = "Options des logs."
-L['maxlogwords']      = "Taille de log max (lignes)"
-L['maxlogwords_desc']  = "Taille maximale de chaque log en nombre de lignes. Une ligne peut contenir n'importe quel nombre de caractères."
-L['maxlogwords_desc_warning'] = "Attention: Toute valeur supérieure à 1000 entraînera une consommation de mémoire importante."
-L['prat']        = "Formatage de Prat"
-L['prat_integration']    = "Intégration avec Prat"
-L['prat2_desc']      = "Enregistre les logs de la même façon que Prat. Les logs enregistrés de cette façon ne peuvent pas être rétablis vers le style d'Elephant."
-L['prat2_desc2']    = "Note: tous les messages ne sont pas gérés par Prat, certains garderont le style d'Elephant."
-L['prat2_desc22']    = "Cette option ne fonctionnera que si vous avez Prat d'activé."
-L['resethelp']      = "Configuration"
-L['resethelp_desc']    = "Réinitialise la configuration et les canaux de discussion."
-L['resetloc']      = "Position"
-L['resetloc_desc2']    = "Réinitialise la position de la fenêtre principale et du bouton d'Elephant."
-L['showbutton']      = "Afficher boutton"
-L['showbutton_desc']    = "Affiche un bouton au-dessus des boutons par défaut de la fenêtre de discussion, qui permet de basculer l'affichage d'Elephant."
-L['classcolors']    = "Couleurs de classe"
-L['classcolors_desc']    = "Affiche la couleur de classe des joueurs dans les logs."
-L['classcolors_desc2']    = "Cela s'applique également aux messages non gérés par Prat lorsque l'option Formatage de Prat est cochée."
-
---[[ Main/Copy frame elements ]]
--- Main
-L['catchers']  = {
-  [1]  = "Messages à enregistrer",
-  [2]  = "Que faut-il sauver dans ce log?",
-  [3]  = "Les types de messages en gris ne peuvent être désactivés."
-}
-L['clearall']  = "Tout vider"
-L['copy']  = "Copier"
-L['copyinfo']  = "Vous permet de copier %s caractères du log, en terminant par la dernière ligne affichée ci-dessus."
-L['copywarn']  = "Les messages envoyés par Battle.net sont automatiquement enlevés pour protéger votre vie privée."
-L['Disable']  = DISABLE
-L['Empty']  = "Vider"
-L['Enable']  = ENABLE
-L['maxlog']  = "Log max: %s lignes."
-L['move2']  = {
-  [1]  = "Déplacer la fenêtre",
-  [2]  = "Clic central pour réinitialiser la position d'Elephant.",
-  [3]  = "Fonctionne aussi sur la fenêtre principale."
-}
-L['nblines']    = "Lignes: %s"
-L['scroll']  = {
-  ['bottom']    = {
-    [1]  = "Atteindre le bas"
-  },
-  ['linedown']  = {
-    [1]  = "Descendre d'une ligne"
-  },
-  ['lineup']    = {
-    [1]  = "Monter d'une ligne"
-  },
-  ['pagedown']  = {
-    [1]  = "Descendre d'une page"
-  },
-  ['pageup']    = {
-    [1]  = "Monter d'une page"
-  },
-  ['top']      = {
-    [1]  = "Atteindre le haut"
-  }
-}
-L['customchatsinfo']  = "Les canaux non cochés sont ceux que vous avez quittés."
-
--- Copy
-L['bbAndText']    = "BB/Texte"
-L['bbAndTextInfo'] = {
-  [1] = "Change l'affichage entre le texte et le BBCode (quand vous voulez coller les logs sur un forum par exemple).",
-  [2] = "Le BBCode étant plus verbeux, moins de lignes peuvent être affichées dans ce mode."
-}
-L['copywindow']    = "Fenêtre de copie"
-L['copywindowloglength']    = "Caractères max: %s"
-L['copywindowplaintext']    = "Texte"
-L['copywindowbbcode']    = "BBCode"
-L['showtimestamps']  = "Montrer les heures"
-L['itemLinkSite']  = "http://fr.wowhead.com/?item="
-L['maxcopycharacters'] = "Max. caractères de copie"
-L['maxcopycharacters_desc'] = "Nombre maximum de caractères (et pas de lignes) affichés dans la fenêtre de copie."
-L['maxcopycharacters_desc_warning'] = "Attention: Plus cette valeur est grande et plus la fenêtre de copie prendra de temps pour s'afficher. Votre jeu se bloquera temporairement pendant que la fenêtre se remplit. Toute valeur supérieure à 15000 rendra le temps de chargement perceptible."
-
---[[ Special log messages ]]
-L['logstartedon']  = "Log commencé le %s à %s."
-L['logstopped']    = "Log arrêté."
-L['monstersay']    = "%s says"
-L['monsteryell']    = "%s crie"
-L['whisperfrom']    = "%s chuchote"
-L['whisperto']    = "A %s"
-
---[[ Addon messages ]]
-L['clearallconfirm']    = "Tous les logs ont été vidé"
-L['combatlogdisabled']  = "Cette fonction est désactivée"
-L['deleteconfirm']    = "Chat supprimé: %s"
-L['emptyconfirm']    = "Chat vidé: %s"
-L['lootmethod']      = {
-  ['freeforall']    = ERR_SET_LOOT_FREEFORALL,
-  ['group']      = ERR_SET_LOOT_GROUP,
-  ['master']      = ERR_SET_LOOT_MASTER,
-  ['needbeforegreed']  = ERR_SET_LOOT_NBG,
-  ['roundrobin']    = ERR_SET_LOOT_ROUNDROBIN
-}
-L['masterlooterchanged']  =  ERR_NEW_LOOT_MASTER_S
-L['masterlooternameunknown']  = "Impossible de déterminer le nom du maître du butin"
-L['resetconfirm']    = "Paramètres et chats réinitialisés"
-
---[[ Tooltips ]]
-L['togglebuttontooltip']    = {
-  [1]  = "Clic gauche pour afficher/cacher Elephant",
-  [2]  = "Clic central pour réinit. le bouton.",
-  [3]  = "Clic droit pour bouger le bouton."
-}
-L['activefilters'] = "Filtres actifs"
-L['toggletooltiphint1'] = "|c%sClic|r pour ouvrir/fermer Elephant"
-L['toggletooltiphint2'] = "|c%sClic-Droit|r pour ouvrir la fen?tre des options"
-
---[[ Popup windows ]]
-L['clearallpopup']  = {
-  [1]  = "Ceci va vider tous les logs.",
-  [2]  = "Ok",
-  [3]  = "Annuler"
-}
-L['emptypopup']    = {
-  [1]  = "Ceci videra le log en cours.",
-  [2]  = "Ok",
-  [3]  = "Annuler"
-}
-L['resetpopup']    = {
-  [1]  = "Ceci réinitialisera tous les paramêtres et chats.",
-  [2]  = "Ok",
-  [3]  = "Annuler"
-}
-
---[[ Minimap icon ]]
-L['minimapicon']  = "Icône de minicarte"
-L['minimapicon_desc']  = "Affiche une icône sur la minicarte"
-
---[[ Default chat names to be displayed ]]
-L['chatnames']  = {
-  ['combat']    = "Combat",
-  ['custom']    = "Chats personnalisés",
-  ['general']    = "Chats généraux",
-  ['guild']    = CHAT_MSG_GUILD,
-  ['loot']    = CHAT_MSG_LOOT,
-  ['misc']    = "Divers",
-  ['officer']    = CHAT_MSG_OFFICER,
-  ['party']    = CHAT_MSG_PARTY,
-  ['raid']    = CHAT_MSG_RAID,
-  ['say']      = CHAT_MSG_SAY,
-  ['system']    = SYSTEM_MESSAGES,
-  ['whisper']    = WHISPER,
-  ['yell']    = YELL_MESSAGE,
-  ['achievement']  = ACHIEVEMENTS,
-  ['instance'] = INSTANCE_CHAT
-}
-
---[[ General chats (= that you cannot leave) names and strings that identify them ]]
-L['generalchats']  = {
-  ['commerce']  = {
-    ['name']  = "Commerce",
-    ['string']  = "commerce"
-  },
-  ['défenselocale']    = {
-    ['name']  = "DéfenseLocale",
-    ['string']  = "défenselocale"
-  },
-  ['défenseuniverselle']  = {
-    ['name']  = "DéfenseUniverselle",
-    ['string']  = "défenseuniverselle"
-  },
-  ['général']        = {
-    ['name']  = "Général",
-    ['string']  = "général"
-  },
-  ['recherchedegroupe']    = {
-    ['name']  = "Recherche de groupe",
-    ['string']  = "recherchedegroupe"
-  },
-  ['recrutementdeguilde']  = {
-    ['name']  = "RecrutementDeGuilde",
-    ['string']  = "recrutementdeguilde"
-  }
-}
-
---[[ Custom chats special log messages ]]
-L['customchat']  = {
-  ['join']  = "Vous rejoignez un canal.",
-  ['leave']  = "Vous quittez un canal."
-}
+L['STRING_CANCEL'] = CANCEL
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_1'] = "Clic central pour réinit. le bouton."
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_2'] = "Clic droit pour bouger le bouton."
+L['STRING_CHAT_BUTTON_TOOLTIP'] = "Clic gauche pour afficher/cacher Elephant"
+L['STRING_CHAT_NAME_ACHIEVEMENT'] = ACHIEVEMENTS
+L['STRING_CHAT_NAME_COMBAT'] = "Combat"
+L['STRING_CHAT_NAME_CUSTOM'] = "Chats personnalisés"
+L['STRING_CHAT_NAME_GENERAL'] = "Chats généraux"
+L['STRING_CHAT_NAME_GUILD'] = CHAT_MSG_GUILD
+L['STRING_CHAT_NAME_INSTANCE'] = INSTANCE
+L['STRING_CHAT_NAME_LOOT'] = CHAT_MSG_LOOT
+L['STRING_CHAT_NAME_MISC'] = "Divers"
+L['STRING_CHAT_NAME_OFFICER'] = CHAT_MSG_OFFICER
+L['STRING_CHAT_NAME_PARTY'] = CHAT_MSG_PARTY
+L['STRING_CHAT_NAME_RAID'] = CHAT_MSG_RAID
+L['STRING_CHAT_NAME_SAY'] = CHAT_MSG_SAY
+L['STRING_CHAT_NAME_SYSTEM'] = SYSTEM_MESSAGES
+L['STRING_CHAT_NAME_WHISPER'] = WHISPER
+L['STRING_CHAT_NAME_YELL'] = YELL_MESSAGE
+L['STRING_COPY_WINDOW_BB_CODE'] = "BBCode"
+L['STRING_COPY_WINDOW_BB_TEXT_BUTTON_DESC_1'] = "Change l'affichage entre le texte et le BBCode (quand vous voulez coller les logs sur un forum par exemple)."
+L['STRING_COPY_WINDOW_BB_TEXT_BUTTON_DESC_2'] = "Le BBCode étant plus verbeux, moins de lignes peuvent être affichées dans ce mode."
+L['STRING_COPY_WINDOW_BB_TEXT_BUTTON'] = "BB/Texte"
+L['STRING_COPY_WINDOW_MAX_CHARACTERS'] = "Caractères max: %s"
+L['STRING_COPY_WINDOW_PLAIN_TEXT'] = "Texte"
+L['STRING_COPY_WINDOW_SHOW_TIMESTAMPS_CHECKBOX'] = "Montrer les heures"
+L['STRING_COPY_WINDOW'] = "Fenêtre de copie"
+L['STRING_COPY'] = "Copier"
+L['STRING_DISABLE'] = DISABLE
+L['STRING_DISABLED'] = "Désactivé"
+L['STRING_EMPTY'] = "Vider"
+L['STRING_ENABLE'] = ENABLE
+L['STRING_ENABLED'] = "Activé"
+L['STRING_FILTER_VALIDATION_REGEXP'] = "^[%a%*]+$"
+L['STRING_FILTERS'] = FILTERS
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL_ID'] = "général"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL'] = "Général"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT_ID'] = "recrutementdeguilde"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT'] = "RecrutementDeGuilde"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE_ID'] = "défenselocale"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE'] = "DéfenseLocale"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP_ID'] = "recherchedegroupe"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP'] = "Recherche de groupe"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_ID'] = "commerce"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE'] = "Commerce"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID'] = "défenseuniverselle"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE'] = "DéfenseUniverselle"
+L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'] = "Tous les logs ont été vidé"
+L['STRING_INFORM_CHAT_FILTER_ADDED'] = "Filtre '%s' ajout?."
+L['STRING_INFORM_CHAT_FILTER_DELETED'] = "Filtre '%s' supprim? avec succ?s."
+L['STRING_INFORM_CHAT_FILTER_INVALID'] = "Filtre erroné: '%s'. Les filtres ne peuvent contenir que des lettres et des jokers (*)."
+L['STRING_INFORM_CHAT_FILTER_NOT_FOUND'] = "Filtre introuvable"
+L['STRING_INFORM_CHAT_FUNCTION_IS_DISABLED'] = "Cette fonction est désactivée"
+L['STRING_INFORM_CHAT_LOG_DELETED'] = "Chat supprimé: %s"
+L['STRING_INFORM_CHAT_LOG_EMPTIED'] = "Chat vidé: %s"
+L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'] =  ERR_NEW_LOOT_MASTER_S
+L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN'] = "Impossible de déterminer le nom du maître du butin"
+L['STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT'] = "Vous avez choisi d'utiliser le formatage de Prat pour les logs mais Prat n'est pas chargé. Les messages seront enregistrés au format d'Elephant."
+L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'] = "Paramètres et chats réinitialisés"
+L['STRING_KEYBIND_TOGGLE_DESC'] = "Affiche ou cache la fenêtre principale."
+L['STRING_KEYBIND_TOGGLE'] = "Afficher/Cacher Elephant"
+L['STRING_LOOT_METHOD_freeforall'] = ERR_SET_LOOT_FREEFORALL
+L['STRING_LOOT_METHOD_group'] = ERR_SET_LOOT_GROUP
+L['STRING_LOOT_METHOD_master'] = ERR_SET_LOOT_MASTER
+L['STRING_LOOT_METHOD_needbeforegreed'] = ERR_SET_LOOT_NBG
+L['STRING_LOOT_METHOD_roundrobin'] = ERR_SET_LOOT_ROUNDROBIN
+L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'] = "Lignes: %s"
+L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_1'] = "Vous permet de copier %s caractères du log, en terminant par la dernière ligne affichée ci-dessus."
+L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_2'] = "Les messages envoyés par Battle.net sont automatiquement enlevés pour protéger votre vie privée."
+L['STRING_MAIN_WINDOW_CUSTOM_CHATS_BUTTON_DESC'] = "Les canaux non cochés sont ceux que vous avez quittés."
+L['STRING_MAIN_WINDOW_EMPTY_BUTTON_DESC_1'] = empty_info
+L['STRING_MAIN_WINDOW_EMPTY_BUTTON_DESC_2'] = empty_warn
+L['STRING_MAIN_WINDOW_MAX_LOG'] = "Log max: %s lignes."
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_1'] = "Que faut-il sauver dans ce log?"
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_2'] = "Les types de messages en gris ne peuvent être désactivés."
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON'] = "Messages à enregistrer"
+L['STRING_MAIN_WINDOW_SCROLL_BOTTOM_BUTTON_TOOLTIP'] = "Atteindre le bas"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_DOWN_BUTTON_TOOLTIP'] = "Descendre d'une ligne"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_UP_BUTTON_TOOLTIP'] = "Monter d'une ligne"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_DOWN_BUTTON_TOOLTIP'] = "Descendre d'une page"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_UP_BUTTON_TOOLTIP'] = "Monter d'une page"
+L['STRING_MAIN_WINDOW_SCROLL_TOP_BUTTON_TOOLTIP'] = "Atteindre le haut"
+L['STRING_MAIN_WINDOW_TITLE_TOOLTIP_DESC_1'] = "Clic central pour réinitialiser la position d'Elephant."
+L['STRING_MAIN_WINDOW_TITLE_TOOLTIP_DESC_2'] = "Fonctionne aussi sur la fenêtre principale."
+L['STRING_MAIN_WINDOW_TITLE_TOOLTIP'] = "Déplacer la fenêtre"
+L['STRING_MINIMAP_TOOLTIP_ACTIVE_FILTERS'] = "Filtres actifs"
+L['STRING_MINIMAP_TOOLTIP_HINT_SETTINGS'] = "|c%sClic-Droit|r pour ouvrir la fen?tre des options"
+L['STRING_MINIMAP_TOOLTIP_HINT_TOGGLE'] = "|c%sClic|r pour ouvrir/fermer Elephant"
+L['STRING_NEW'] = "Nouveau"
+L['STRING_OK'] = "OK"
+L['STRING_OPTIONS_CLEAR_LOGS_DESC'] = "Supprimer tous les logs enregistrés."
+L['STRING_OPTIONS_CLEAR_LOGS'] = "Vider tous les logs"
+L['STRING_OPTIONS_DESC'] = "Ces options sont configurées par personage, à l'exception de la taille de log maximum qui est partagée par tous les personnages du même serveur et de la même faction."
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_1'] = "Autorise Elephant à contrôler l'enregistrement vers des fichiers. En désactivant cette option, vous laisserez le statut d'enregistrement actuel intact."
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_2'] = "Attention: vous ne devriez pas laisser deux addons différents contrôler l'enregistrement vers des fichiers."
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE'] = "Activer"
+L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_1'] = "Enregistre le chat (pas le journal de combat) vers Logs\\WoWChatLog.txt."
+L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_2'] = "Si cette option est activée, l'enregistrement vers le fichier sera automatiquement rétabli à l'entrée en jeu."
+L['STRING_OPTIONS_FILE_LOGGING_CHAT'] = "Enreg. le chat"
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_1'] = "Enregistre le journal de combat vers Logs\\WoWCombatLog.txt."
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_2'] = "Si cette option est activée, l'enregistrement vers le fichier sera automatiquement rétabli à l'entrée en jeu."
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT'] = "Enreg. le journal de combat"
+L['STRING_OPTIONS_FILE_LOGGING_GROUP_DESC'] = "Options pour enregistrer les logs vers des fichiers."
+L['STRING_OPTIONS_FILE_LOGGING_GROUP'] = "Enregistrement vers fichier"
+L['STRING_OPTIONS_FILE_LOGGING_LIMITATIONS'] = "En raison des limitations de l'interface, il n'est pas possible de filter ce qui est envoyé aux fichiers de log. Lorsque vous activez une de ces options, tous les messages du type choisi (i.e. chat ou journal de combat) seront sauvegardés, ignorant vos filtres actuels."
+L['STRING_OPTIONS_FILTER_DELETE_DESC'] = "Supprime un filtre précédemment créé."
+L['STRING_OPTIONS_FILTER_NEW_DESC_1'] = "Créer un nouveau filtre."
+L['STRING_OPTIONS_FILTER_NEW_DESC_2'] = "Nom exact du canal. Vous pouvez aussi utiliser des jokers (*). Ex: <AceComm*>"
+L['STRING_OPTIONS_FILTERS_TAB_DESC'] = "Les filtres sont utilisés pour éviter l'enregistrement de canaux spécifiques."
+L['STRING_OPTIONS_FILTERS_TAB_HEADER_1'] = "Vous pouvez utilisez les filtres pour éviter d'enregistrer certains canaux de discussion personnalisés que vous ou l'un de vos addons rejoint."
+L['STRING_OPTIONS_FILTERS_TAB_HEADER_2'] = "Par exemple, si l'un de vos addons rejoint de nombreaux canaux nommés 'AddonComm1', AddonComm2', ... ce peut être une bonne idée de rajouter le filtre '|c%sAddonComm*|r' pour qu'Elephant les ignore automatiquement."
+L['STRING_OPTIONS_FILTERS_TAB_HEADER_3'] = "Il est possible d'ignorer tous les canaux personnalisés que vous rejoignez en ajoutant le filtre '|c%s*|r'. Attention néanmoins, car lorsqu'un nouveau filtre est créé, les logs de tous les canaux dont le nom correspond au filtre sont immédiatement supprimés."
+L['STRING_OPTIONS_FILTERS_TAB_HEADER_4'] = "Enfin, vous pouvez obtenir la liste de tous les filtres actifs en passant la souris au-dessus de l'icône d'Elephant si elle est affichée."
+L['STRING_OPTIONS_LOG_NEW_CHANNELS_DESC'] = "Débute automatiquelent le log quand vous rejoignez un nouveau canal de discussion."
+L['STRING_OPTIONS_LOG_NEW_CHANNELS'] = "Logger nouv. chats"
+L['STRING_OPTIONS_LOGS_TAB_DESC'] = "Options des logs."
+L['STRING_OPTIONS_LOGS_TAB'] = "Logs"
+L['STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_1'] = "Nombre maximum de caractères (et pas de lignes) affichés dans la fenêtre de copie."
+L['STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_2'] = "Attention: Plus cette valeur est grande et plus la fenêtre de copie prendra de temps pour s'afficher. Votre jeu se bloquera temporairement pendant que la fenêtre se remplit. Toute valeur supérieure à 15000 rendra le temps de chargement perceptible."
+L['STRING_OPTIONS_MAX_COPY_CHARACTERS'] = "Max. caractères de copie"
+L['STRING_OPTIONS_MAX_LOG_LINES_DESC_1'] = "Taille maximale de chaque log en nombre de lignes. Une ligne peut contenir n'importe quel nombre de caractères."
+L['STRING_OPTIONS_MAX_LOG_LINES_DESC_2'] = "Cette option est partagée avec tous les personages de ce serveur et cette faction."
+L['STRING_OPTIONS_MAX_LOG_LINES_DESC_3'] = "Attention: Toute valeur supérieure à 1000 entraînera une consommation de mémoire importante."
+L['STRING_OPTIONS_MAX_LOG_LINES'] = "Taille de log max (lignes)"
+L['STRING_OPTIONS_MINIMAP_ICON_DESC'] = "Affiche une icône sur la minicarte"
+L['STRING_OPTIONS_MINIMAP_ICON'] = "Icône de minicarte"
+L['STRING_OPTIONS_PRAT_FORMATTING_DESC_1'] = "Enregistre les logs de la même façon que Prat. Les logs enregistrés de cette façon ne peuvent pas être rétablis vers le style d'Elephant."
+L['STRING_OPTIONS_PRAT_FORMATTING_DESC_2'] = "Note: tous les messages ne sont pas gérés par Prat, certains garderont le style d'Elephant."
+L['STRING_OPTIONS_PRAT_FORMATTING_DESC_3'] = "Cette option ne fonctionnera que si vous avez Prat d'activé."
+L['STRING_OPTIONS_PRAT_FORMATTING'] = "Formatage de Prat"
+L['STRING_OPTIONS_PRAT_INTEGRATION_GROUP'] = "Intégration avec Prat"
+L['STRING_OPTIONS_RESET_POSITION_DESC'] = "Réinitialise la position de la fenêtre principale et du bouton d'Elephant."
+L['STRING_OPTIONS_RESET_SETTINGS_DESC'] = "Réinitialise la configuration et les canaux de discussion."
+L['STRING_OPTIONS_RESET_TAB_DESC'] = "Options de réinitialisation."
+L['STRING_OPTIONS_RESET_TAB_HEADER_1'] = "Pour réinitialiser la fenêtre principale, cliquez sur le bouton Position ci-dessous."
+L['STRING_OPTIONS_RESET_TAB_HEADER_2'] = "Pour réinitialiser la configuration et les canaux de discussion, cliquez sur le bouton Configuration ci-dessous. Cela: supprimera les logs de tous les canaux que vous n'avez pas rejoint, videra tous les autres, désactivera l'enregistrement des discussions et du combat dans un fichier, désactivera l'intégration avec Prat, désactivera le bouton d'Elephant, réinitialisera la position de la fenêtre principale, et enfin activera l'icône de minicarte."
+L['STRING_OPTIONS_RESET_TAB_HEADER_3'] = "Attention: La réinitialisation de la configuration supprimera également les logs partagés, que l'option soit activée ou non."
+L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1'] = "Partages les logs vus par ce personnage avec tous les autres personnages de ce serveur et cette faction où cette option est activée."
+L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2'] = "Activer cette option échangera les logs de ce personnage avec les logs partagés. Désactiver cette option rétablira les logs de ce personnage seulement, mais ne copiera pas les logs partagés."
+L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS'] = "Partager les logs"
+L['STRING_OPTIONS_SHOW_CHAT_BUTTON_DESC'] = "Affiche un bouton au-dessus des boutons par défaut de la fenêtre de discussion, qui permet de basculer l'affichage d'Elephant."
+L['STRING_OPTIONS_SHOW_CHAT_BUTTON'] = "Afficher boutton"
+L['STRING_OPTIONS_USE_CLASS_COLORS_DESC_1'] = "Affiche la couleur de classe des joueurs dans les logs."
+L['STRING_OPTIONS_USE_CLASS_COLORS_DESC_2'] = "Cela s'applique également aux messages non gérés par Prat lorsque l'option Formatage de Prat est cochée."
+L['STRING_OPTIONS_USE_CLASS_COLORS'] = "Couleurs de classe"
+L['STRING_POPUP_CLEAR_LOGS'] = "Ceci va vider tous les logs."
+L['STRING_POPUP_EMPTY_LOG'] = empty_info .. "\n\n" .. empty_warn
+L['STRING_POPUP_RESET_SETTINGS'] = "Ceci réinitialisera tous les paramêtres et chats.\n\nCELA AUSSI SUPPRIME TOUS LES LOGS PARTAGÉS."
+L['STRING_POSITION'] = "Position"
+L['STRING_RESET'] = "Réinitialisation"
+L['STRING_SETTINGS'] = "Configuration"
+L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] = "Vous rejoignez un canal."
+L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] = "Vous quittez un canal."
+L['STRING_SPECIAL_LOG_LOGGING_STARTED_ON'] = "Log commencé pour %s le %s à %s."
+L['STRING_SPECIAL_LOG_LOGGING_STOPPED'] = "Log arrêté."
+L['STRING_SPECIAL_LOG_MONSTER_SAYS'] = "%s says"
+L['STRING_SPECIAL_LOG_MONSTER_YELLS'] = "%s crie"
+L['STRING_SPECIAL_LOG_WHISPER_FROM'] = "%s chuchote"
+L['STRING_SPECIAL_LOG_WHISPER_TO'] = "A %s"
+L['URL_ITEM_LINK'] = "http://fr.wowhead.com/?item="

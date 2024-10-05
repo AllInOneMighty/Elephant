@@ -1,189 +1,118 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Elephant", "ruRU")
 if not L then return end
 
---[[ Common messages ]]
-L['chatlog']        = "Регистрировать чат в файл"
-L['chatlog_desc']    = "Регистрирует чат (не лог боя) как Логи \\WoWChatLog.txt.\n\nЗамечу: Если опция активна,то запись лога происходит автоматически."
-L['combatlog']      = "Регистрировать лог боя в чат"
-L['combatlog_desc']    = "Регистрирует чат (не лог боя) как Логи \\WoWCombatLog.txt.\n\nЗамечу: Если опция активна,то запись лога происходит автоматически."
-L['disabled']      = "Включено"
-L['enabled']        = "Выключено"
-L['enableddefault']    = "Регистрировать новый канал"
-L['enableddefault_desc']  = "Автоматически начинать регистрацию вновом канале."
-L['noprat']        = "Вы можете использовать  Prat'sформатирование для логов когда Prat не загружен. Сообщения будут форматироваться с помощью Elephant's."
-L['reset']        = "Обновить"
-L['reset_desc']      = "Обновить опции."
-L['toggle']        = "Показать"
-L['toggle_desc']      = "Показывает или скрывает главное окно."
-
---[[ Options menu elements ]]
-L['activate']      = "Активировано"
-L['activate_desc']    = "Позволяет Elephant контролировать запись в файл. Отключении опции оставить текущий статус лога неизменным.\n\nВнимание: Вы не должны разрешать контролировать двум разным аддонам файл лога."
-L['clearallhelp']    = "Очистить"
-L['clearallhelp_desc']  = "Очищает все сохраненные логи."
-L['files']        = "Файл логов"
-L['files_desc']      = "Опции для сохранения лога в файл."
-L['Filters']        = FILTERS
-L['Filters_desc']    = "Фильтры для не использования лога в определенных каналах."
-L['filterusage']      = "Точное название  канала. Вы также можете использовать (*). Ex: <AceComm*>"
-L['filtererror']      = "Не может добавить фильтр '%s'. Фильтр должен содержать (*)."
-L['filterregex']      = "^[%a%*]+$"
-L['newfilter_desc']    = "Создает новый фильтр."
-L['deletefilter_desc']  = "Удаляяет ранее созданый фильтр."
-L['logs']        = "Логи"
-L['logs_desc']      = "Опции Логов."
-L['maxlogwords']      = "Max Лог"
-L['maxlogwords_desc']  = "Максимальный размер каждого лога."
-L['prat']        = "Prat форматирование"
-L['prat_desc']      = "Сохраняет логи так же как и  Prat. Сохраненные опции логов разрешают в дальнейшем o Elephant's использовать его стиль по умолчанию.\n\nЭто опция возможна если у вас стоит и работает Prat."
-L['resethelp']      = "Настройки"
-L['resethelp_desc']    = "Обновить все настройки и чаты."
-L['resetloc']      = "Position"
-L['resetloc_desc']    = "Обновляет Elephant's позицию главного окна."
-L['showbutton']      = "Показать кнопки"
-L['showbutton_desc']    = "Показывает кнопки нормального чата как кнопки Elephant."
-
---[[ Main/Copy frame elements ]]
--- Main
-L['catchers']  = {
-  [1]  = "Ловить сообщения",
-  [2]  = "Что должно быть сохранено в этом логе?",
-  [3]  = "Сообщения серые они отключены."
-}
-L['clearall']  = "очистить все"
-L['copy']    = "Копировать"
-L['Disable']    = DISABLE
-L['Empty']    = EMPTY
-L['Enable']    = ENABLE
-L['maxlog']    = "Max Лог: %s Линии."
-L['nblines']    = "Линии: %s"
-L['scroll']    = {
-  ['bottom']    = {
-    [1]  = "Листать по Кнопке"
-  },
-  ['linedown']  = {
-    [1]  = "Листать по Линии вниз"
-  },
-  ['lineup']    = {
-    [1]  = "Листать по Линии вверх"
-  },
-  ['pagedown']  = {
-    [1]  = "Листать по Странице Вперед"
-  },
-  ['pageup']    = {
-    [1]  = "Листать по Странице Назад"
-  },
-  ['top']      = {
-    [1]  = "Листать по Верху"
-  }
-}
-
--- Copy
-L['bbAndText']    = "BB/Text"
-L['bbAndTextInfo'] = {
-  [1] = "Switches between showing plain text and BBCode (e.g. when you want to paste the logs on a forum).",
-  [2] = "Due to UI length limitations, only %s lines of BBCode can be shown."
-}
-L['copywindow']  = "Copy window"
-L['copywindowloglength']    = "Log length: %s lines"
-L['copywindowplaintext']    = "Plain text"
-L['copywindowbbcode']    = "BBCode"
-L['showtimestamps']  = "Show timestamps"
-L['itemLinkSite'] = "http://ru.wowhead.com/?item="
-
---[[ Special log messages ]]
-L['logstartedon']  = "Запись начинается на %s в %s."
-L['logstopped']    = "Запись остановлена."
-L['monstersay']    = "%s сказать"
-L['monsteryell']    = "%s крикнуть"
-L['whisperfrom']    = "%s шепнуть"
-L['whisperto']    = "К %s"
-
---[[ Addon messages ]]
-L['clearallconfirm']    = "Все чаты очищены."
-L['combatlogdisabled']  = "Эта функция отключена."
-L['deleteconfirm']    = "Чат удален: %s"
-L['emptyconfirm']    = "Чат Создан: %s"
-L['lootmethod']      = {
-  ['freeforall']    = ERR_SET_LOOT_FREEFORALL,
-  ['group']      = ERR_SET_LOOT_GROUP,
-  ['master']      = ERR_SET_LOOT_MASTER,
-  ['needbeforegreed']  = ERR_SET_LOOT_NBG,
-  ['roundrobin']    = ERR_SET_LOOT_ROUNDROBIN
-}
-L['masterlooterchanged']  =  ERR_NEW_LOOT_MASTER_S
-L['resetconfirm']    = "Обновить все настройки и чаты."
-
---[[ Tooltips ]]
-L['togglebuttontooltip']    = {
-  [1]  = "Left-Click для показа Elephant",
-  [2]  = "Центр-Click для обновления позиции  кнопки.",
-  [3]  = "Right-Click для того чтобы двигать кнопки."
-}
-L['toggletooltip']      = "Left-Click для показа Elephant."
-
---[[ Popup windows ]]
-L['clearallpopup']  = {
-  [1]  = "Это очистит все логи.",
-  [2]  = "Ok",
-  [3]  = "Отмена"
-}
-L['emptypopup']    = {
-  [1]  = "Это очистит все текущие логи.",
-  [2]  = "Ok",
-  [3]  = "Cancel"
-}
-L['resetpopup']    = {
-  [1]  = "Это обновит все настройки и чаты.",
-  [2]  = "Ok",
-  [3]  = "Отмена"
-}
-
---[[ Default chat names to be displayed ]]
-L['chatnames']  = {
-  ['combat']  = "Бой",
-  ['custom']  = "Обычный чат",
-  ['general']  = "Главный чат",
-  ['guild']  = CHAT_MSG_GUILD,
-  ['loot']  = CHAT_MSG_LOOT,
-  ['misc']  = "Скрытый.",
-  ['officer']  = CHAT_MSG_OFFICER,
-  ['party']  = CHAT_MSG_PARTY,
-  ['raid']  = CHAT_MSG_RAID,
-  ['say']    = CHAT_MSG_SAY,
-  ['system']  = SYSTEM_MESSAGES,
-  ['whisper']  = WHISPER,
-  ['yell']  = YELL_MESSAGE,
-  ['achievement'] = ACHIEVEMENTS,
-  ['instance'] = INSTANCE_CHAT
-}
-
---[[ General chats (= that you cannot leave) names and strings that identify them ]]
-L['generalchats']  = {
-  ['localdefense']    = {
-    ['name']  = "Местная оборона",
-    ['string']  = "Местная оборона"
-  },
-  ['general']        = {
-    ['name']  = "Главный",
-    ['string']  = "Главный"
-  },
-  ['guildrecruitment']  = {
-    ['name']  = "Канал Гильдии",
-    ['string']  = "Канал Гильдии"
-  },
-  ['trade']        = {
-    ['name']  = "Торговля",
-    ['string']  = "Торговля"
-  },
-  ['worlddefense']    = {
-    ['name']  = "Оборона Мира",
-    ['string']  = "Оборона Мира"
-  }
-}
-
---[[ Custom chats special log messages ]]
-L['customchat']  = {
-  ['join']  = "Вы покинули канал.",
-  ['leave']  = "Вы покинули канал."
-}
+L['STRING_CANCEL'] = CANCEL
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_1'] = "Центр-Click для обновления позиции  кнопки."
+L['STRING_CHAT_BUTTON_TOOLTIP_DESC_2'] = "Right-Click для того чтобы двигать кнопки."
+L['STRING_CHAT_BUTTON_TOOLTIP'] = "Left-Click для показа Elephant"
+L['STRING_CHAT_NAME_ACHIEVEMENT'] = ACHIEVEMENTS
+L['STRING_CHAT_NAME_COMBAT'] = "Бой"
+L['STRING_CHAT_NAME_CUSTOM'] = "Обычный чат"
+L['STRING_CHAT_NAME_GENERAL'] = "Главный чат"
+L['STRING_CHAT_NAME_GUILD'] = CHAT_MSG_GUILD
+L['STRING_CHAT_NAME_INSTANCE'] = INSTANCE
+L['STRING_CHAT_NAME_LOOT'] = CHAT_MSG_LOOT
+L['STRING_CHAT_NAME_MISC'] = "Скрытый."
+L['STRING_CHAT_NAME_OFFICER'] = CHAT_MSG_OFFICER
+L['STRING_CHAT_NAME_PARTY'] = CHAT_MSG_PARTY
+L['STRING_CHAT_NAME_RAID'] = CHAT_MSG_RAID
+L['STRING_CHAT_NAME_SAY'] = CHAT_MSG_SAY
+L['STRING_CHAT_NAME_SYSTEM'] = SYSTEM_MESSAGES
+L['STRING_CHAT_NAME_WHISPER'] = WHISPER
+L['STRING_CHAT_NAME_YELL'] = YELL_MESSAGE
+L['STRING_COPY_WINDOW_BB_CODE'] = "BBCode"
+L['STRING_COPY_WINDOW_BB_TEXT_BUTTON'] = "BB/Text"
+L['STRING_COPY_WINDOW_MAX_CHARACTERS'] = "Log length: %s lines"
+L['STRING_COPY_WINDOW_PLAIN_TEXT'] = "Plain text"
+L['STRING_COPY_WINDOW_SHOW_TIMESTAMPS_CHECKBOX'] = "Show timestamps"
+L['STRING_COPY_WINDOW'] = "Copy window"
+L['STRING_COPY'] = "Копировать"
+L['STRING_DISABLE'] = DISABLE
+L['STRING_DISABLED'] = "Включено"
+L['STRING_EMPTY'] = EMPTY
+L['STRING_ENABLE'] = ENABLE
+L['STRING_ENABLED'] = "Выключено"
+L['STRING_FILTER_VALIDATION_REGEXP'] = "^[%a%*]+$"
+L['STRING_FILTERS'] = FILTERS
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL_ID'] = "Главный"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL'] = "Главный"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT_ID'] = "Канал Гильдии"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT'] = "Канал Гильдии"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE_ID'] = "Местная оборона"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE'] = "Местная оборона"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP_ID'] = "lookingforgroup"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP'] = "Looking for group"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_ID'] = "торговля"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE'] = "торговля"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID'] = "Оборона Мира"
+L['STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE'] = "Оборона Мира"
+L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'] = "Все чаты очищены."
+L['STRING_INFORM_CHAT_FILTER_INVALID'] = "Не может добавить фильтр '%s'. Фильтр должен содержать (*)."
+L['STRING_INFORM_CHAT_FUNCTION_IS_DISABLED'] = "Эта функция отключена."
+L['STRING_INFORM_CHAT_LOG_DELETED'] = "Чат удален: %s"
+L['STRING_INFORM_CHAT_LOG_EMPTIED'] = "Чат Создан: %s"
+L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'] =  ERR_NEW_LOOT_MASTER_S
+L['STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT'] = "Вы можете использовать  Prat'sформатирование для логов когда Prat не загружен. Сообщения будут форматироваться с помощью Elephant's."
+L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'] = "Обновить все настройки и чаты."
+L['STRING_KEYBIND_TOGGLE_DESC'] = "Показывает или скрывает главное окно."
+L['STRING_KEYBIND_TOGGLE'] = "Показать"
+L['STRING_LOOT_METHOD_freeforall'] = ERR_SET_LOOT_FREEFORALL
+L['STRING_LOOT_METHOD_group'] = ERR_SET_LOOT_GROUP
+L['STRING_LOOT_METHOD_master'] = ERR_SET_LOOT_MASTER
+L['STRING_LOOT_METHOD_needbeforegreed'] = ERR_SET_LOOT_NBG
+L['STRING_LOOT_METHOD_roundrobin'] = ERR_SET_LOOT_ROUNDROBIN
+L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'] = "Линии: %s"
+L['STRING_MAIN_WINDOW_MAX_LOG'] = "Max Лог: %s Линии."
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_1'] = "Что должно быть сохранено в этом логе?"
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON_DESC_2'] = "Сообщения серые они отключены."
+L['STRING_MAIN_WINDOW_MESSAGE_CATCHERS_BUTTON'] = "Ловить сообщения"
+L['STRING_MAIN_WINDOW_SCROLL_BOTTOM_BUTTON_TOOLTIP'] = "Листать по Кнопке"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_DOWN_BUTTON_TOOLTIP'] = "Листать по Линии вниз"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_LINE_UP_BUTTON_TOOLTIP'] = "Листать по Линии вверх"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_DOWN_BUTTON_TOOLTIP'] = "Листать по Странице Вперед"
+L['STRING_MAIN_WINDOW_SCROLL_ONE_PAGE_UP_BUTTON_TOOLTIP'] = "Листать по Странице Назад"
+L['STRING_MAIN_WINDOW_SCROLL_TOP_BUTTON_TOOLTIP'] = "Листать по Верху"
+L['STRING_OK'] = "OK"
+L['STRING_OPTIONS_CLEAR_LOGS_DESC'] = "Очищает все сохраненные логи."
+L['STRING_OPTIONS_CLEAR_LOGS'] = "Очистить"
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_1'] = "Позволяет Elephant контролировать запись в файл. Отключении опции оставить текущий статус лога неизменным."
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_2'] = "Внимание: Вы не должны разрешать контролировать двум разным аддонам файл лога."
+L['STRING_OPTIONS_FILE_LOGGING_ACTIVATE'] = "Активировано"
+L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_1'] = "Регистрирует чат (не лог боя) как Логи \\WoWChatLog.txt."
+L['STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_2'] = "Замечу: Если опция активна,то запись лога происходит автоматически."
+L['STRING_OPTIONS_FILE_LOGGING_CHAT'] = "Регистрировать чат в файл"
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_1'] = "Регистрирует чат (не лог боя) как Логи \\WoWCombatLog.txt.\n\nЗамечу: Если опция активна,то запись лога происходит автоматически."
+L['STRING_OPTIONS_FILE_LOGGING_COMBAT'] = "Регистрировать лог боя в чат"
+L['STRING_OPTIONS_FILE_LOGGING_GROUP_DESC'] = "Опции для сохранения лога в файл."
+L['STRING_OPTIONS_FILE_LOGGING_GROUP'] = "Файл логов"
+L['STRING_OPTIONS_FILTER_DELETE_DESC'] = "Удаляяет ранее созданый фильтр."
+L['STRING_OPTIONS_FILTER_NEW_DESC_1'] = "Создает новый фильтр."
+L['STRING_OPTIONS_FILTER_NEW_DESC_2'] = "Точное название  канала. Вы также можете использовать (*). Ex: <AceComm*>"
+L['STRING_OPTIONS_FILTERS_TAB_DESC'] = "Фильтры для не использования лога в определенных каналах."
+L['STRING_OPTIONS_LOG_NEW_CHANNELS_DESC'] = "Автоматически начинать регистрацию вновом канале."
+L['STRING_OPTIONS_LOG_NEW_CHANNELS'] = "Регистрировать новый канал"
+L['STRING_OPTIONS_LOGS_TAB_DESC'] = "Опции Логов."
+L['STRING_OPTIONS_LOGS_TAB'] = "Логи"
+L['STRING_OPTIONS_MAX_LOG_LINES_DESC_1'] = "Максимальный размер каждого лога."
+L['STRING_OPTIONS_MAX_LOG_LINES'] = "Max Лог"
+L['STRING_OPTIONS_PRAT_FORMATTING_DESC_1'] = "Сохраняет логи так же как и  Prat. Сохраненные опции логов разрешают в дальнейшем o Elephant's использовать его стиль по умолчанию."
+L['STRING_OPTIONS_PRAT_FORMATTING_DESC_3'] = "Это опция возможна если у вас стоит и работает Prat."
+L['STRING_OPTIONS_PRAT_FORMATTING'] = "Prat форматирование"
+L['STRING_OPTIONS_RESET_POSITION_DESC'] = "Обновляет Elephant's позицию главного окна."
+L['STRING_OPTIONS_RESET_SETTINGS_DESC'] = "Обновить все настройки и чаты."
+L['STRING_OPTIONS_RESET_TAB_DESC'] = "Обновить опции."
+L['STRING_OPTIONS_SHOW_CHAT_BUTTON_DESC'] = "Показывает кнопки нормального чата как кнопки Elephant."
+L['STRING_OPTIONS_SHOW_CHAT_BUTTON'] = "Показать кнопки"
+L['STRING_POPUP_CLEAR_LOGS'] = "Это очистит все логи."
+L['STRING_POSITION'] = "Position"
+L['STRING_RESET'] = "Обновить"
+L['STRING_SETTINGS'] = "Настройки"
+L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] = "Вы покинули канал."
+L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] = "Вы покинули канал."
+L['STRING_SPECIAL_LOG_LOGGING_STARTED_ON'] = "Запись начинается для %s на %s в %s."
+L['STRING_SPECIAL_LOG_LOGGING_STOPPED'] = "Запись остановлена."
+L['STRING_SPECIAL_LOG_MONSTER_SAYS'] = "%s сказать"
+L['STRING_SPECIAL_LOG_MONSTER_YELLS'] = "%s крикнуть"
+L['STRING_SPECIAL_LOG_WHISPER_FROM'] = "%s шепнуть"
+L['STRING_SPECIAL_LOG_WHISPER_TO'] = "К %s"
+L['URL_ITEM_LINK'] = "http://ru.wowhead.com/?item="

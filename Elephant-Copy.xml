@@ -3,8 +3,8 @@
     <Size x="500" y="500"/>
     <Scripts>
         <OnLoad>
-            self:SetPoint("TOP", Elephant.defaultConf.copyposition.x, Elephant.defaultConf.copyposition.y)
-            getglobal(self:GetName().."TitleFontString"):SetText(Elephant.L['copywindow'])
+            self:SetPoint("TOP", Elephant:DefaultConfiguration().copyposition.x, Elephant:DefaultConfiguration().copyposition.y)
+            getglobal(self:GetName().."TitleFontString"):SetText(Elephant.L['STRING_COPY_WINDOW'])
         </OnLoad>
         <OnEnter>
             getglobal(self:GetName().."ScrollFrame"):UpdateScrollChildRect()
@@ -231,15 +231,15 @@
             </Anchors>
             <Scripts>
                 <OnLoad>
-                    self:SetText(Elephant.L['bbAndText'])
+                    self:SetText(Elephant.L['STRING_COPY_WINDOW_BB_TEXT_BUTTON'])
                 </OnLoad>
                 <OnEnter>
                     Elephant:SetTooltip(self, {
-                        Elephant.L['bbAndText'],
-                        Elephant.L['bbAndTextInfo'][1],
+                        Elephant.L['STRING_COPY_WINDOW_BB_TEXT_BUTTON'],
+                        Elephant.L['STRING_COPY_WINDOW_BB_TEXT_BUTTON_DESC_1'],
                         " ",
                         {
-                            text = format(Elephant.L['bbAndTextInfo'][2], Elephant.defaultConf.copywindowmaxlinesbb),
+                            text = Elephant.L['STRING_COPY_WINDOW_BB_TEXT_BUTTON_DESC_2'],
                             r = 1.0,
                             g = 0.2,
                             b = 0.2
@@ -306,7 +306,7 @@
             </Anchors>
             <Scripts>
                 <OnLoad>
-                    getglobal(self:GetName().."Text"):SetText(Elephant.L['showtimestamps'])
+                    getglobal(self:GetName().."Text"):SetText(Elephant.L['STRING_COPY_WINDOW_SHOW_TIMESTAMPS_CHECKBOX'])
                     Elephant:UpdateButtonWithUseTimestampsInCopyWindow(self)
                 </OnLoad>
                 <OnClick>
