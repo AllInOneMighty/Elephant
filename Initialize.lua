@@ -45,7 +45,7 @@ function Elephant:OnInitialize()
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant.volatileConfiguration.lootmethod = GetLootMethod()
+  Elephant.volatileConfiguration.lootmethod = C_PartyInfo.GetLootMethod()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
