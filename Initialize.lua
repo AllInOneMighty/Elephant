@@ -1,3 +1,12 @@
+-- Retail/Classic loot-method shim
+local function GetLootMethodCompat()
+  if C_PartyInfo and C_PartyInfo.GetLootMethod then
+    return C_PartyInfo.GetLootMethod()
+  elseif GetLootMethod then
+    return GetLootMethod()
+  end
+end
+
 --[[
 When addon is initialized. Registers database,
 options, initializes the main frame, Elephant
@@ -45,7 +54,7 @@ function Elephant:OnInitialize()
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant.volatileConfiguration.lootmethod = C_PartyInfo.GetLootMethod()
+  Elephant.volatileConfiguration.lootmethod = GetLootMethodCompat()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
