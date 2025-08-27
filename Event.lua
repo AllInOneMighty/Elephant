@@ -46,6 +46,15 @@ local function GetChannelIndexFromChannelName(channel_name)
   return channel_index
 end
 
+-- Retail/Classic loot-method shim
+local function GetLootMethodCompat()
+  if C_PartyInfo and C_PartyInfo.GetLootMethod then
+    return C_PartyInfo.GetLootMethod()
+  elseif GetLootMethod then
+    return GetLootMethod()
+  end
+end
+
 --[[
 Handles messages sent by the WoW engine
 as well as the ones sent by Prat.
@@ -182,7 +191,7 @@ local function HandleMessage(prat_struct, event, ...)
       end
 
       if event == "PARTY_LOOT_METHOD_CHANGED" then
-        local method, masterloot_party, masterloot_raid = GetLootMethod()
+        local method, masterloot_party, masterloot_raid = GetLootMethodCompat()
 
         if masterloot_party or masterloot_raid then
           local player
