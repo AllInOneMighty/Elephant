@@ -182,7 +182,7 @@ local function HandleMessage(prat_struct, event, ...)
       end
 
       if event == "PARTY_LOOT_METHOD_CHANGED" then
-        local method, masterloot_party, masterloot_raid = GetLootMethod()
+        local method, masterloot_party, masterloot_raid = Elephant:GetLootMethod()
 
         if masterloot_party or masterloot_raid then
           local player

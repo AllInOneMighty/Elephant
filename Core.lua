@@ -473,6 +473,15 @@ function Elephant:DefaultConfiguration()
   return default_configuration
 end
 
+--[[ Returns the loot method with a compatibility code. ]]
+function Elephant:GetLootMethod()
+  if C_PartyInfo and C_PartyInfo.GetLootMethod then
+    return C_PartyInfo.GetLootMethod()
+  elseif GetLootMethod then
+    return GetLootMethod()
+  end
+end
+
 --[[ Temporary config, not saved but does change at runtime ]]
 Elephant.volatileConfiguration = {
   currentline = Elephant:DefaultConfiguration().defaultline,
