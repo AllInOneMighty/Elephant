@@ -480,9 +480,9 @@ end
 function Elephant:GetLootMethod()
   if C_PartyInfo and C_PartyInfo.GetLootMethod then
     return C_PartyInfo.GetLootMethod()
-  elseif GetLootMethod then
-    return GetLootMethod()
   end
+
+  return GetLootMethod()
 end
 
 --[[ Temporary config, not saved but does change at runtime ]]
