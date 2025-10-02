@@ -69,10 +69,19 @@ L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'] = "Reseted all settings and chats
 L['STRING_KEYBIND_TOGGLE_DESC'] = "Shows or hides the main window."
 L['STRING_KEYBIND_TOGGLE'] = "Toggle Elephant"
 L['STRING_LOOT_METHOD__freeforall'] = ERR_SET_LOOT_FREEFORALL
-L['STRING_LOOT_METHOD__group'] = ERR_SET_LOOT_GROUP
-L['STRING_LOOT_METHOD__master'] = ERR_SET_LOOT_MASTER
-L['STRING_LOOT_METHOD__needbeforegreed'] = ERR_SET_LOOT_NBG
 L['STRING_LOOT_METHOD__roundrobin'] = ERR_SET_LOOT_ROUNDROBIN
+L['STRING_LOOT_METHOD__master'] = ERR_SET_LOOT_MASTER
+L['STRING_LOOT_METHOD__group'] = ERR_SET_LOOT_GROUP
+L['STRING_LOOT_METHOD__needbeforegreed'] = ERR_SET_LOOT_NBG
+L['STRING_LOOT_METHOD__personal'] = ERR_SET_LOOT_PERSONAL
+-- Support for new GetLootMethod that returns integers
+-- https://warcraft.wiki.gg/wiki/API_C_PartyInfo.GetLootMethod
+L['STRING_LOOT_METHOD__0'] = ERR_SET_LOOT_FREEFORALL
+L['STRING_LOOT_METHOD__1'] = ERR_SET_LOOT_ROUNDROBIN
+L['STRING_LOOT_METHOD__2'] = ERR_SET_LOOT_MASTER
+L['STRING_LOOT_METHOD__3'] = ERR_SET_LOOT_GROUP
+L['STRING_LOOT_METHOD__4'] = ERR_SET_LOOT_NBG
+L['STRING_LOOT_METHOD__5'] = ERR_SET_LOOT_PERSONAL
 L['STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES'] = "Lines: %s"
 L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_1'] = "Lets you copy %s characters of log, ending with the last line displayed in the window above."
 L['STRING_MAIN_WINDOW_COPY_BUTTON_DESC_2'] = "Messages sent over Battle.net are automatically removed to protect your privacy."
