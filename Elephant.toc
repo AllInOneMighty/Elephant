@@ -1,4 +1,4 @@
-## Interface: 11507
+## Interface: 11508
 ## Title: Elephant
 ## Title-zhCN: Elephant 聊天记录器
 ## Category: Chat
