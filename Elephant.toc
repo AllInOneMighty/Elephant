@@ -1,6 +1,17 @@
-## Interface: 110200
+## Interface: 110207
 ## Title: Elephant
 ## Title-zhCN: Elephant 聊天记录器
+## Category: Chat
+## Category-deDE: Chat
+## Category-esES: Chat
+## Category-esMX: Chat
+## Category-frFR: Discussion
+## Category-itIT: Chat
+## Category-koKR: 대화
+## Category-ptBR: Bate-papo
+## Category-ruRU: Чат
+## Category-zhCN: 聊天
+## Category-zhTW: 對話
 ## Notes: A friendly companion that remembers the chat.
 ## Notes-zhCN: 聊天记录助手
 ## Notes-frFR: Un compagnon amical qui se souvient de vos discussions.
