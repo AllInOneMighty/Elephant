@@ -62,7 +62,7 @@ end
   Initialized with DefaultConfiguration().savedconfdefaults
 ]]
 function Elephant:ProfileDb()
-  return Elephant.db.profile
+  return Elephant._db.profile
 end
 
 --[[
@@ -83,7 +83,7 @@ end
   Initialized with DefaultConfiguration().savedpercharconfdefaults
 ]]
 function Elephant:CharDb()
-  return Elephant.db.char
+  return Elephant._db.char
 end
 
 --[[
@@ -91,7 +91,7 @@ end
   Initialized with DefaultConfiguration().savedperfactionrealmconfdefaults
 ]]
 function Elephant:FactionRealmDb()
-  return Elephant.db.factionrealm
+  return Elephant._db.factionrealm
 end
 
 --[[ Indexes used for default WoW channels ]]
@@ -486,7 +486,7 @@ function Elephant:GetLootMethod()
 end
 
 --[[ Temporary config, not saved but does change at runtime ]]
-Elephant.volatileConfiguration = {
+Elephant._volatileConfiguration = {
   currentline = nil,
 
   -- Data for specific events, such as loot method
