@@ -484,7 +484,7 @@ end
 
 --[[ Temporary config, not saved but does change at runtime ]]
 Elephant.volatileConfiguration = {
-  currentline = Elephant:DefaultConfiguration().defaultline,
+  currentline = nil,
 
   -- Data for specific events, such as loot method
   -- change (here only for reference)
