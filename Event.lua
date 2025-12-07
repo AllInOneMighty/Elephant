@@ -205,17 +205,17 @@ local function HandleMessage(prat_struct, event, ...)
           -- has just been loaded
           if player == "Unknown" then
             new_message_struct_2.arg1 = "<" .. Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN'] .. ">"
-          elseif player ~= Elephant.volatileConfiguration.masterlooter then
-            Elephant.volatileConfiguration.masterlooter = player
+          elseif player ~= Elephant._volatileConfiguration.masterlooter then
+            Elephant._volatileConfiguration.masterlooter = player
 
             new_message_struct_2.arg1 =  format(Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'], player)
           end
         else
-          Elephant.volatileConfiguration.masterlooter = nil
+          Elephant._volatileConfiguration.masterlooter = nil
         end
 
-        if method ~= Elephant.volatileConfiguration.lootmethod then
-          Elephant.volatileConfiguration.lootmethod = method
+        if method ~= Elephant._volatileConfiguration.lootmethod then
+          Elephant._volatileConfiguration.lootmethod = method
           new_message_struct.arg1 = Elephant.L['STRING_LOOT_METHOD__' .. method]
         else
           -- Warning: new_message_struct_2 might also be nil

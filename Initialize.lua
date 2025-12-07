@@ -6,20 +6,22 @@ logging, and initializes other useful data.
 ]]
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
-  Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
+  Elephant._db = LibStub("AceDB-3.0"):New("ElephantDB", {
     profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults),
     char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults),
     factionrealm = Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults),
   })
 
+  -- Now the Elephant._db is initialized, we can use the quick db access methods.
+
   -- If old maxlog value exists...
-  if Elephant.db.profile.maxlog ~= nil then
+  if Elephant:ProfileDb().maxlog ~= nil then
     -- Copy it to the factionrealm db if it is greater than the new default
-    if Elephant.db.profile.maxlog > Elephant.db.factionrealm.maxlog then
-      Elephant.db.factionrealm.maxlog = Elephant.db.profile.maxlog
+    if Elephant:ProfileDb().maxlog > Elephant:FactionRealmDb().maxlog then
+      Elephant:FactionRealmDb().maxlog = Elephant:ProfileDb().maxlog
     end
     -- Then, remove it.
-    Elephant.db.profile.maxlog = nil
+    Elephant:ProfileDb().maxlog = nil
   end
 
   -- Options
@@ -45,7 +47,7 @@ function Elephant:OnInitialize()
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant.volatileConfiguration.lootmethod = Elephant:GetLootMethod()
+  Elephant._volatileConfiguration.lootmethod = Elephant:GetLootMethod()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
@@ -112,6 +114,6 @@ function Elephant:OnEnable()
   if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then
     Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
   end
-  Elephant.volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
