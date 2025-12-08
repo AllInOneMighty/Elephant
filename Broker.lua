@@ -2,7 +2,7 @@
 Called when displaying tooltip on Broker source.
 ]]
 local function OnBrokerTooltipShow(tt)
-  tt:AddLine(Elephant.L['STRING_OPTIONS_MAX_LOG_LINES'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant:FactionRealmDb().maxlog .. "|r")
+  tt:AddLine(Elephant.L['STRING_OPTIONS_MAX_LOG_LINES'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant:GlobalDb().maxlog .. "|r")
 
   if Elephant:ProfileDb().filters and #Elephant:ProfileDb().filters > 0 then
     tt:AddLine(" ")

@@ -1,5 +1,5 @@
-local function ToggleUseFactionRealmDb()
-  Elephant:ProfileDb().use_factionrealm_db = not Elephant:ProfileDb().use_factionrealm_db
+local function ToggleUseGlobalDb()
+  Elephant:ProfileDb().use_global_db = not Elephant:ProfileDb().use_global_db
   Elephant:MaybeInitDefaultLogStructures()
   Elephant:MaybeInitCustomStructures()
   Elephant:AddHeaderToStructures(true)
@@ -46,7 +46,7 @@ function Elephant:SetupOptions()
         end,
         set = Elephant.ToggleButton
       },
-      use_factionrealm_db = {
+      use_global_db = {
         type = 'toggle',
         order = 3,
         name = Elephant.L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS'],
@@ -56,9 +56,9 @@ function Elephant:SetupOptions()
           Elephant.L['STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2'] .. "|r"
         ),
         get = function()
-          return Elephant:ProfileDb().use_factionrealm_db
+          return Elephant:ProfileDb().use_global_db
         end,
-        set = ToggleUseFactionRealmDb
+        set = ToggleUseGlobalDb
       },
       log = {
         type = 'group',
@@ -93,7 +93,7 @@ function Elephant:SetupOptions()
             max = Elephant:DefaultConfiguration().maxlogsize,
             step = 1,
             get = function()
-              return Elephant:FactionRealmDb().maxlog
+              return Elephant:GlobalDb().maxlog
             end,
             set = function(_, nb)
               Elephant:ChangeMaxLog(nb)

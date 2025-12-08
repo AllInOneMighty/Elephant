@@ -67,12 +67,12 @@ end
 
 --[[
   Returns an appropriate database to save logs. The returned
-  database depends on the per-profile use_factionrealm_db
+  database depends on the per-profile use_global_db
   setting.
 ]]
 function Elephant:LogsDb()
-  if Elephant:ProfileDb().use_factionrealm_db then
-    return Elephant:FactionRealmDb()
+    if Elephant:ProfileDb().use_global_db then
+    return Elephant:GlobalDb()
   else
     return Elephant:CharDb()
   end
@@ -87,11 +87,12 @@ function Elephant:CharDb()
 end
 
 --[[
-  Faction realm database. Shared between all characters on the same realm AND faction.
-  Initialized with DefaultConfiguration().savedperfactionrealmconfdefaults
+  Global database. Shared between all characters on all realms and both factions.
+  Initialized with DefaultConfiguration().savedglobalconfdefaults
 ]]
-function Elephant:FactionRealmDb()
-  return Elephant._db.factionrealm
+
+function Elephant:GlobalDb()
+  return Elephant._db.global
 end
 
 --[[ Indexes used for default WoW channels ]]
@@ -182,7 +183,7 @@ local default_configuration = {
     timestamps_in_copywindow = true,
     -- By default, use a per-character database. It has historically been the
     -- case with Elephant, so keep it as-is.
-    use_factionrealm_db = false,
+    use_global_db = true,
     -- Minimap
     minimap = {
       hide = false
@@ -467,7 +468,7 @@ local default_configuration = {
     -- Current log displayed is a per character setting.
     currentlogindex = 1,
   },
-  savedperfactionrealmconfdefaults = {
+  savedglobalconfdefaults = {
     logs = {},
     maxlog = 1000,
   },

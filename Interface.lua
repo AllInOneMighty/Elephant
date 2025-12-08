@@ -304,7 +304,7 @@ end
 Updates the maximum log count information of the current log.
 ]]
 function Elephant:SetTitleInfoMaxLog()
-  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['STRING_MAIN_WINDOW_MAX_LOG'], Elephant:FactionRealmDb().maxlog))
+  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['STRING_MAIN_WINDOW_MAX_LOG'], Elephant:GlobalDb().maxlog))
 end
 
 --[[

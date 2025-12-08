@@ -9,16 +9,16 @@ function Elephant:OnInitialize()
   Elephant._db = LibStub("AceDB-3.0"):New("ElephantDB", {
     profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults),
     char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults),
-    factionrealm = Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults),
+    global = Elephant:Clone(Elephant:DefaultConfiguration().savedglobalconfdefaults)
   })
 
   -- Now the Elephant._db is initialized, we can use the quick db access methods.
 
   -- If old maxlog value exists...
   if Elephant:ProfileDb().maxlog ~= nil then
-    -- Copy it to the factionrealm db if it is greater than the new default
-    if Elephant:ProfileDb().maxlog > Elephant:FactionRealmDb().maxlog then
-      Elephant:FactionRealmDb().maxlog = Elephant:ProfileDb().maxlog
+    -- Copy it to the global db if it is greater than the new default
+    if Elephant:ProfileDb().maxlog > Elephant:GlobalDb().maxlog then
+      Elephant:GlobalDb().maxlog = Elephant:ProfileDb().maxlog
     end
     -- Then, remove it.
     Elephant:ProfileDb().maxlog = nil

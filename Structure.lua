@@ -78,7 +78,7 @@ It then returns the number of deleted lines
 (may be 0).
 ]]
 local function CheckTableSize(index)
-  local max_log_size = Elephant:FactionRealmDb().maxlog
+  local max_log_size = Elephant:GlobalDb().maxlog
 
   local deleted_lines = 0
   while #Elephant:LogsDb().logs[index].logs > max_log_size do
@@ -113,8 +113,8 @@ local function ResetSavedVariables()
   for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults)) do
     Elephant:CharDb()[key] = value
   end
-  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults)) do
-    Elephant:FactionRealmDb()[key] = value
+  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedglobalconfdefaults)) do
+    Elephant:GlobalDb()[key] = value
   end
 end
 
@@ -261,7 +261,7 @@ function Elephant:ChangeMaxLog(new_max_log)
   if (new_max_log < Elephant:DefaultConfiguration().minlogsize) then return end
   if (new_max_log > Elephant:DefaultConfiguration().maxlogsize) then return end
 
-  Elephant:FactionRealmDb().maxlog = new_max_log
+  Elephant:GlobalDb().maxlog = new_max_log
 
   for index_or_name_id in pairs(Elephant:LogsDb().logs) do
     CheckTableSize(index_or_name_id)
