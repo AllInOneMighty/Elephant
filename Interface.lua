@@ -5,46 +5,47 @@ This method uses Blizzard's default chat type
 colors.
 ]]
 local function SetObjectColorWithCurrentLogColor(obj)
-  local type_info
+  local typeInfo
 
-  if Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.whisper then
-    type_info = "WHISPER"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.raid then
-    type_info = "RAID"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.party then
-    type_info = "PARTY"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.say then
-    type_info = "SAY"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.yell then
-    type_info = "YELL"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.officer then
-    type_info = "OFFICER"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.guild then
-    type_info = "GUILD"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.system then
-    type_info = "SYSTEM"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.loot then
-    type_info = "LOOT"
-  elseif Elephant:CharDb().currentlogindex == Elephant:DefaultConfiguration().defaultindexes.instance then
-    type_info = "INSTANCE_CHAT"
+  if Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.whisper then
+    typeInfo = "WHISPER"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.raid then
+    typeInfo = "RAID"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.party then
+    typeInfo = "PARTY"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.say then
+    typeInfo = "SAY"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.yell then
+    typeInfo = "YELL"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.officer then
+    typeInfo = "OFFICER"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.guild then
+    typeInfo = "GUILD"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.system then
+    typeInfo = "SYSTEM"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.loot then
+    typeInfo = "LOOT"
+  elseif Elephant.dbpc.char.currentlogindex == Elephant.defaultConf.defaultindexes.instance then
+    typeInfo = "INSTANCE_CHAT"
   else
-    type_info = "CHANNEL"
+    typeInfo = "CHANNEL"
 
     local channelId, channelName
+    local i
     -- Max: 20 channels
-    for i=1, 20 do
+    for i=1,20 do
       channelId,channelName = GetChannelName(i)
 
       if channelName ~= nil and
-        string.lower(channelName) == string.lower(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name)
+        string.lower(channelName) == string.lower(Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].name)
       then
-        type_info = "CHANNEL" .. channelId
+        typeInfo = "CHANNEL" .. channelId
         break
       end
     end
   end
 
-  obj:SetTextColor(ChatTypeInfo[type_info].r, ChatTypeInfo[type_info].g, ChatTypeInfo[type_info].b, ChatTypeInfo[type_info].a)
+  obj:SetTextColor(ChatTypeInfo[typeInfo].r, ChatTypeInfo[typeInfo].g, ChatTypeInfo[typeInfo].b, ChatTypeInfo[typeInfo].a)
 end
 
 --[[
@@ -64,38 +65,38 @@ the same color as the given values, it will
 not be detected and will be treated like
 the other ones.
 ]]
-local function AddColorStrings(message, r, g, b)
+local function AddColorStrings(msg, r, g, b)
   if r and g and b then
     local hex = Elephant:MakeTextHexColor(r, g, b)
-    message = string.gsub(message, "\|c(%x%x%x%x%x%x%x%x.-)\|r", "|r|c%1|r|c" .. hex)
+    msg = string.gsub(msg, "\|c(%x%x%x%x%x%x%x%x.-)\|r", "|r|c%1|r|c" .. hex)
 
     -- If message starts with an "end" color string, remove it
     -- Otherwise prepend the "start" color string
-    if string.sub(message, 1, 2) == "|r" then
-      message = string.sub(message, 3)
+    if string.sub(msg, 1, 2) == "|r" then
+      msg = string.sub(msg, 3)
     else
-      message = "|c" .. hex .. message
+      msg = "|c" .. hex .. msg
     end
 
     -- If message ends with a "start" color string, remove it
     -- Otherwise append the "end" color string
-    if string.sub(message, string.len(message)-9) == "|c" .. hex then
-      message = message.sub(message, 1, string.len(message)-10)
+    if string.sub(msg, string.len(msg)-9) == "|c" .. hex then
+      msg = msg.sub(msg, 1, string.len(msg)-10)
     else
-      message = message .. "|r"
+      msg = msg .. "|r"
     end
   end
-  return message
+  return msg
 end
 
 --[[
 Removes all non visible text from the given message and returns the length of
 the resulting message, thus matching the number of letters visible by the user.
 ]]
-local function CountVisibleLetters(message)
-  message = string.gsub(message, "|H.-|h(.-)|h", "%1")
-  message = string.gsub(message, "|c%x%x%x%x%x%x%x%x(.-)|r", "%1")
-  return string.len(message)
+local function CountVisibleLetters(msg)
+  msg = string.gsub(msg, "|H.-|h(.-)|h", "%1")
+  msg = string.gsub(msg, "|c%x%x%x%x%x%x%x%x(.-)|r", "%1")
+  return string.len(msg)
 end
 
 --[[
@@ -122,70 +123,72 @@ elements to their corresponding BBCode:
 local function FillCopyWindow()
   ElephantCopyFrameScrollFrameEditBox:SetText("")
   ElephantCopyFrameScrollFrameEditBox:SetMaxLetters(
-    Elephant:ProfileDb().maxcopyletters)
+    Elephant.db.profile.maxcopyletters)
   ElephantCopyFrameTitleInfoFrameLogLengthFontString:SetText(
     format(
-      Elephant.L['STRING_COPY_WINDOW_MAX_CHARACTERS'],
-      Elephant:ProfileDb().maxcopyletters))
+      Elephant.L['copywindowloglength'],
+      Elephant.db.profile.maxcopyletters))
 
-  if not Elephant._volatileConfiguration.is_copywindow_bbcode then
-    ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['STRING_COPY_WINDOW_PLAIN_TEXT'])
+  if not Elephant.tempConf.is_copywindow_bbcode then
+    ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['copywindowplaintext'])
 
     -- Normal text
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
-    local total_chars = 0
-    for i = Elephant._volatileConfiguration.currentline, 0, -1 do
-      local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
+    local msg
+    local totalChars = 0
+    for i = Elephant.tempConf.currentline, 0, -1 do
+      msg = Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs[i]
       -- Ignoring Battle.net messages
-      if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
-        local message_text = AddColorStrings(
+      if msg and msg.type ~= "BN_WHISPER_INFORM" and msg.type ~= "BN_WHISPER" then
+        msg = AddColorStrings(
           Elephant:GetLiteralMessage(
-            message_struct, Elephant:ProfileDb().timestamps_in_copywindow))
-        message_text = message_text .. "\n"
+            msg, Elephant.db.profile.timestamps_in_copywindow))
+        msg = msg .. "\n"
 
-        total_chars = total_chars + CountVisibleLetters(message_text)
-        if total_chars > Elephant:ProfileDb().maxcopyletters then
+        totalChars = totalChars + CountVisibleLetters(msg)
+        if totalChars > Elephant.db.profile.maxcopyletters then
           break
         end
 
         ElephantCopyFrameScrollFrameEditBox:SetCursorPosition(0)
-        ElephantCopyFrameScrollFrameEditBox:Insert(message_text)
+        ElephantCopyFrameScrollFrameEditBox:Insert(msg)
       end
     end
   else
     -- BBCode
     ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(
-      Elephant.L['STRING_COPY_WINDOW_BB_CODE'])
+      Elephant.L['copywindowbbcode'])
 
     ElephantCopyFrameScrollFrameEditBox:SetTextColor(0.75, 0.75, 0.75, 1.0)
-    local item_link_site = Elephant.L['URL_ITEM_LINK']
-    local total_chars = 0
-    for line_index = Elephant._volatileConfiguration.currentline, 0, -1 do
-      local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
+    local i, msg
+    local itemLinkSite = Elephant.L['itemLinkSite']
+    local totalChars = 0
+    for i = Elephant.tempConf.currentline, 0, -1 do
+      msg = Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs[i]
       -- Ignoring Battle.net messages
-      if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
-        local message_text = AddColorStrings(
+      if msg and msg.type ~= "BN_WHISPER_INFORM" and msg.type ~= "BN_WHISPER" then
+        msg = AddColorStrings(
           Elephant:GetLiteralMessage(
-            message_struct,
-            Elephant:ProfileDb().timestamps_in_copywindow))
+            msg,
+            Elephant.db.profile.timestamps_in_copywindow))
 
         -- Create BBCode item links
-        message_text = string.gsub(
-          message_text,
+        msg = string.gsub(
+          msg,
           "|c%x%x(%x%x%x%x%x%x)|Hitem:(%d-):.-|h(.-)|h|r",
-          "[url=" .. item_link_site .. "%2][color=#%1]%3[/color][/url]")
+          "[url=" .. itemLinkSite .. "%2][color=#%1]%3[/color][/url]")
         -- Create BBCode colors
-        message_text = string.gsub(
-          message_text, "|c%x%x(%x%x%x%x%x%x)(.-)|r", "[color=#%1]%2[/color]")
-        message_text = message_text .. "\n"
+        msg = string.gsub(
+          msg, "|c%x%x(%x%x%x%x%x%x)(.-)|r", "[color=#%1]%2[/color]")
+        msg = msg .. "\n"
 
-        total_chars = total_chars + CountVisibleLetters(message_text)
-        if total_chars > Elephant:ProfileDb().maxcopyletters then
+        totalChars = totalChars + CountVisibleLetters(msg)
+        if totalChars > Elephant.db.profile.maxcopyletters then
           break
         end
 
         ElephantCopyFrameScrollFrameEditBox:SetCursorPosition(0)
-        ElephantCopyFrameScrollFrameEditBox:Insert(message_text)
+        ElephantCopyFrameScrollFrameEditBox:Insert(msg)
       end
     end
   end
@@ -205,14 +208,14 @@ The message must be a table of one or more
 strings, where the first string will be used
 as title and the others as content.
 ]]
-local function PlaceTooltip(frame, message_struct, position)
-  if not (type(message_struct) == "table") then
+local function PlaceTooltip(frame, msg, position)
+  if not (type(msg) == "table") then
     return
   end
 
   GameTooltip:SetOwner(frame, position)
-  local line, text, r, g, b
-  for index, line in ipairs(message_struct) do
+  local index, line, text, r, g, b
+  for index, line in ipairs(msg) do
     if index == 1 then
       -- Title color cannot be changed
       GameTooltip:SetText(line)
@@ -242,9 +245,9 @@ Changes the value of the current log index to
 the new one, changes the current line to the
 last one of the log, and finally shows the log.
 ]]
-function Elephant:ChangeLog(channel_index)
-  Elephant:CharDb().currentlogindex = channel_index
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[channel_index].logs
+function Elephant:ChangeLog(index)
+  Elephant.dbpc.char.currentlogindex = index
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[index].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -260,26 +263,27 @@ information, and updates the status of log buttons.
 Finally, populates the frame and updates the
 status of the catchers button.
 ]]
-function Elephant:ShowCurrentLog()
+function Elephant:ShowCurrentLog()  
   ElephantFrameScrollingMessageFrame:Clear()
 
   SetObjectColorWithCurrentLogColor(ElephantFrameTitleInfoFrameTabFontString)
   SetObjectColorWithCurrentLogColor(ElephantFrameTitleInfoFrameCurrentLineFontString)
   SetObjectColorWithCurrentLogColor(ElephantFrameScrollingMessageFrame)
-  ElephantFrameTitleInfoFrameTabFontString:SetText("< " .. Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name .. " >")
+  ElephantFrameTitleInfoFrameTabFontString:SetText("< " .. Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].name .. " >")
   Elephant:SetTitleInfoCurrentLine()
   Elephant:UpdateCurrentLogButtons()
 
   -- Populate the scrolling message frame
-  for line_index = Elephant._volatileConfiguration.currentline-Elephant:DefaultConfiguration().scrollmaxlines, Elephant._volatileConfiguration.currentline do
-    if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index] then
-      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index], true))
+  local i
+  for i = Elephant.tempConf.currentline-Elephant.defaultConf.scrollmaxlines, Elephant.tempConf.currentline do
+    if Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs[i] then
+      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs[i], true))
     end
   end
 
   -- Updating message catchers button
-  for _, event_struct in pairs(Elephant:ProfileDb().events) do
-    if event_struct.channels and event_struct.channels[Elephant:CharDb().currentlogindex] then
+  for _,v in pairs(Elephant.db.profile.events) do
+    if v.channels and v.channels[Elephant.dbpc.char.currentlogindex] then
       if not ElephantFrameCatchOptionsButton:IsEnabled() then
         ElephantFrameCatchOptionsButton:Enable()
       end
@@ -297,14 +301,14 @@ end
 Updates the current line information of the current log.
 ]]
 function Elephant:SetTitleInfoCurrentLine()
-  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant._volatileConfiguration.currentline .. " / " .. #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs)
+  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant.tempConf.currentline .. " / " .. #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs)
 end
 
 --[[
 Updates the maximum log count information of the current log.
 ]]
 function Elephant:SetTitleInfoMaxLog()
-  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['STRING_MAIN_WINDOW_MAX_LOG'], Elephant:FactionRealmDb().maxlog))
+  ElephantFrameTitleInfoFrameMaxLogFontString:SetText(format(Elephant.L['maxlog'], Elephant.db.profile.maxlog))
 end
 
 --[[
@@ -335,7 +339,7 @@ normal text and BBCode. This method then
 triggers a refill of the copy window.
 ]]
 function Elephant:ToggleBetweenNormalTextAndBBCode()
-  Elephant._volatileConfiguration.is_copywindow_bbcode = not Elephant._volatileConfiguration.is_copywindow_bbcode
+  Elephant.tempConf.is_copywindow_bbcode = not Elephant.tempConf.is_copywindow_bbcode
 
   if ElephantCopyFrame:IsVisible() then
     FillCopyWindow()
@@ -352,19 +356,19 @@ required. The buttons are:
 - Delete
 ]]
 function Elephant:UpdateCurrentLogButtons()
-  if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
-    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['STRING_DISABLE'])
+  if Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled then
+    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Disable'])
   else
-    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['STRING_ENABLE'])
+    ElephantFrameEnableButton:GetFontString():SetText(Elephant.L['Enable'])
   end
-  if #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs > 0 then
+  if #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs > 0 then
     ElephantFrameCopyButton:Enable()
   else
     ElephantFrameCopyButton:Disable()
   end
-  if Elephant:IsExactGeneralChatChannelId(Elephant:CharDb().currentlogindex) or (type(Elephant:CharDb().currentlogindex) == "number") then
+  if Elephant.L['generalchats'][Elephant.dbpc.char.currentlogindex] or (type(Elephant.dbpc.char.currentlogindex) == "number") then
     ElephantFrameDeleteButton:Disable()
-  elseif GetChannelName(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) > 0 then
+  elseif GetChannelName(Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].name) > 0 then
     ElephantFrameDeleteButton:Disable()
   else
     ElephantFrameDeleteButton:Enable()
@@ -375,8 +379,8 @@ end
 Forces the enabled/disabled state of the
 delete log button to the given one.
 ]]
-function Elephant:ForceCurrentLogDeleteButtonStatus(is_enabled)
-  if is_enabled then
+function Elephant:ForceCurrentLogDeleteButtonStatus(isEnabled)
+  if isEnabled then
     ElephantFrameDeleteButton:Enable()
   else
     ElephantFrameDeleteButton:Disable()
@@ -393,19 +397,19 @@ in that case forces him/her back to the
 corresponding limit, so you don't have to do
 it yourself.
 ]]
-function Elephant:Scroll(lines_count)
-  local old_index = Elephant._volatileConfiguration.currentline
+function Elephant:Scroll(n)
+  local oldIndex = Elephant.tempConf.currentline
 
-  Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline + lines_count
-  if Elephant._volatileConfiguration.currentline < 1 then
-    Elephant._volatileConfiguration.currentline = 1
+  Elephant.tempConf.currentline = Elephant.tempConf.currentline + n
+  if Elephant.tempConf.currentline < 1 then
+    Elephant.tempConf.currentline = 1
   end
-  if Elephant._volatileConfiguration.currentline > #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs then
-    Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant.tempConf.currentline > #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs then
+    Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
   end
 
   -- Prevent too much processing
-  if old_index ~= Elephant._volatileConfiguration.currentline then
+  if oldIndex ~= Elephant.tempConf.currentline then
     Elephant:ShowCurrentLog()
   end
 end
@@ -414,7 +418,7 @@ end
 Scrolls the current log to its last line.
 ]]
 function Elephant:ScrollBottom()
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -422,9 +426,9 @@ end
 Scrolls the current log to its first line.
 ]]
 function Elephant:ScrollTop()
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
-  if Elephant._volatileConfiguration.currentline > 1 then
-    Elephant._volatileConfiguration.currentline = 1
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
+  if Elephant.tempConf.currentline > 1 then
+    Elephant.tempConf.currentline = 1
   end
   Elephant:ShowCurrentLog()
 end
@@ -433,11 +437,11 @@ end
 Places a tooltip containing the given message
 on the given frame, using ANCHOR_RIGHT.
 ]]
-function Elephant:SetTooltip(frame, message_struct, anchor)
+function Elephant:SetTooltip(frame, msg, anchor)
   if anchor == nil then
     anchor = "ANCHOR_RIGHT"
   end
-  PlaceTooltip(frame, message_struct, anchor)
+  PlaceTooltip(frame, msg, anchor)
 end
 
 --[[
@@ -457,7 +461,7 @@ Resets the position of the main frame.
 ]]
 function Elephant:ResetPosition()
   ElephantFrame:ClearAllPoints()
-  ElephantFrame:SetPoint("TOP", Elephant:DefaultConfiguration().position.x, Elephant:DefaultConfiguration().position.y)
+  ElephantFrame:SetPoint("TOP", Elephant.defaultConf.position.x, Elephant.defaultConf.position.y)
 end
 
 --[[
@@ -476,13 +480,13 @@ parameter. However, if Elephant's
 "activate log" option is not enabled,
 this method does nothing.
 ]]
-function Elephant:ChatLogEnable(enabled_status)
-  if not Elephant:ProfileDb().activate_log then
+function Elephant:ChatLogEnable(enabledStatus)
+  if not Elephant.db.profile.activate_log then
     return
   end
 
-  if not (LoggingChat() == enabled_status) then
-    LoggingChat(enabled_status)
+  if not (LoggingChat() == enabledStatus) then
+    LoggingChat(enabledStatus)
   end
 end
 
@@ -493,13 +497,13 @@ parameter. However, if Elephant's
 "activate log" option is not enabled,
 this method does nothing.
 ]]
-function Elephant:CombatLogEnable(enabled_status)
-  if not Elephant:ProfileDb().activate_log then
+function Elephant:CombatLogEnable(enabledStatus)
+  if not Elephant.db.profile.activate_log then
     return
   end
 
-  if not (LoggingCombat() == enabled_status) then
-    LoggingCombat(enabled_status)
+  if not (LoggingCombat() == enabledStatus) then
+    LoggingCombat(enabledStatus)
   end
 end
 
@@ -508,8 +512,8 @@ Updates the current state of the "Use timestamps in
 copy window" option. Also refreshes the copy window
 if it is currently displayed.
 ]]
-function Elephant:ToggleUseTimestampsInCopyWindow(enabled_status)
-  Elephant:ProfileDb().timestamps_in_copywindow = enabled_status
+function Elephant:ToggleUseTimestampsInCopyWindow(enabledStatus)
+  Elephant.db.profile.timestamps_in_copywindow = enabledStatus
   if ElephantCopyFrame:IsVisible() then
     FillCopyWindow()
   end
@@ -522,7 +526,7 @@ copy window" option. Useful to call on the
 appropriate button when the option is changed.
 ]]
 function Elephant:UpdateButtonWithUseTimestampsInCopyWindow(button)
-  button:SetChecked(Elephant:ProfileDb().timestamps_in_copywindow)
+  button:SetChecked(Elephant.db.profile.timestamps_in_copywindow)
 end
 
 --[[
@@ -534,7 +538,7 @@ this method does nothing.
 function Elephant:ResetButtonPosition()
   if ElephantButtonFrame then
     ElephantButtonFrame:ClearAllPoints()
-    ElephantButtonFrame:SetPoint("BOTTOM", QuickJoinToastButton, "TOP")
+    ElephantButtonFrame:SetPoint("BOTTOM", ChatFrameChannelButton, "TOP")
   end
 end
 
@@ -560,14 +564,14 @@ hiding the button.
 function Elephant:ToggleButton()
   if not ElephantButtonFrame then
     Elephant:CreateButton()
-    Elephant:ProfileDb().button = true
+    Elephant.db.profile.button = true
   else
     if ElephantButtonFrame:IsVisible() then
       ElephantButtonFrame:Hide()
-      Elephant:ProfileDb().button = false
+      Elephant.db.profile.button = false
     else
       ElephantButtonFrame:Show()
-      Elephant:ProfileDb().button = true
+      Elephant.db.profile.button = true
     end
   end
 end
@@ -577,11 +581,11 @@ Returns the localized "Enabled" or "Disabled"
 message, depending on the value of the given
 parameter.
 ]]
-function Elephant:GetStateMsg(is_enabled)
-  if is_enabled then
-    return Elephant.L['STRING_ENABLED']
+function Elephant:GetStateMsg(isEnabled)
+  if isEnabled then
+    return Elephant.L['enabled']
   else
-    return Elephant.L['STRING_DISABLED']
+    return Elephant.L['disabled']
   end
 end
 
@@ -591,8 +595,8 @@ is enabled or disabled. When calling this
 method, you need to specify which color
 you wish to get the value: "r", "g" or "b".
 ]]
-function Elephant:GetStateColor(is_enabled, color)
-  if is_enabled then
+function Elephant:GetStateColor(isEnabled, color)
+  if isEnabled then
     if color == "r" then
       return 0.2
     elseif color == "g" then

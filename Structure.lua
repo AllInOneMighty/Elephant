@@ -1,35 +1,67 @@
 --[[
+Iterates over all custom channels joined by the user
+(other than trade, worlddefense, ...) and creates a new
+structure for each new one found, keeping the existing
+ones intact.
+]]
+local function InitCustomStructures()
+  local channelCustomId, channelName
+  local found
+  local i
+  -- Max: 20 channels
+  for i=1,20 do
+    _,channelName = GetChannelName(i)
+
+    if channelName ~= nil then
+      channelCustomId = string.lower(channelName)
+
+      found = false
+      for k,v in pairs(Elephant.L['generalchats']) do
+        if (channelCustomId == k) or string.find(channelCustomId, k .. " - ") then
+          found = true
+          break
+        end
+      end
+
+      if not found and not Elephant:IsFiltered(channelCustomId) then
+        Elephant:InitCustomStructure(string.lower(channelName), channelName)
+      end
+    end
+  end
+end
+
+--[[
 Creates a new log structure at the given index, using
 the given friendly name. It also sets the default
 "enabled" value, based on the user preference "log new
 channels".
 ]]
-local function CreateNewLogStructure(channel_index, name)
-  Elephant:LogsDb().logs[channel_index] = {}
+local function CreateNewLogStructure(index, name)
+  Elephant.dbpc.char.logs[index] = {}
 
-  Elephant:LogsDb().logs[channel_index].name = name
-  Elephant:LogsDb().logs[channel_index].enabled = Elephant:ProfileDb().defaultlog
-  Elephant:LogsDb().logs[channel_index].logs = {}
+  Elephant.dbpc.char.logs[index].name = name
+  Elephant.dbpc.char.logs[index].enabled = Elephant.db.profile.defaultlog
+  Elephant.dbpc.char.logs[index].logs = {}
 end
 
 --[[
 Adds the given message to the given table
 at (size of table)+1.
 ]]
-local function AddMsgToTable(table, message_struct)
-  table[#table + 1] = message_struct
+local function AddMsgToTable(t, msg)
+  t[#t+1] = msg
 end
 
 --[[
 Saves the given message in the given table
-at the specified index.
+at the specified position.
 ]]
-local function SaveMessageToTableAtPosition(table, message_struct, index)
-  table[index] = message_struct
+local function SaveMsgToTableAtPosition(t, msg, position)
+  t[position] = msg
 end
 
 --[[
-Adds a header to the given log structure.
+Adds a header to the given log object.
 Warning: should only be used if the log of
 this chat *is* enabled.
 
@@ -38,32 +70,32 @@ the log: if the last message of the log was
 a header, then this header is modified to
 reflect the new date and time.
 ]]
-local function AddHeaderToTable(log_struct)
+local function AddHeaderToTable(logObject)
   -- For "easier-to-read" code
-  local actual_logs_struct = log_struct.logs
+  local t = logObject.logs
 
   -- If log is not empty
-  if #actual_logs_struct > 0 then
-    if not log_struct.hasMessage then
+  if #t > 0 then
+    if not logObject.hasMessage then
       -- If the log does not have a message since the last header
       -- then simply modify the last header
-      SaveMessageToTableAtPosition(actual_logs_struct, { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(true) } , #actual_logs_struct)
+      SaveMsgToTableAtPosition(t, { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(true) } , #t)
     else
       -- Otherwise add two lines
-      AddMsgToTable(actual_logs_struct, { arg1 = " " } )
-      AddMsgToTable(actual_logs_struct, { arg1 = " " } )
+      AddMsgToTable(t, { ['arg1'] = " " } )
+      AddMsgToTable(t, { ['arg1'] = " " } )
     end
   end
 
   -- If log did save a message since the last header
   -- or log is empty
-  if log_struct.hasMessage or #actual_logs_struct == 0 then
-    AddMsgToTable(actual_logs_struct, { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(true) } )
+  if logObject.hasMessage or #t == 0 then
+    AddMsgToTable(t, { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(true) } )
   end
 
   -- Specify that no messages has been saved since the last header
-  if log_struct.hasMessage then
-    log_struct.hasMessage = false
+  if logObject.hasMessage then
+    logObject.hasMessage = false
   end
 end
 
@@ -78,15 +110,17 @@ It then returns the number of deleted lines
 (may be 0).
 ]]
 local function CheckTableSize(index)
-  local max_log_size = Elephant:FactionRealmDb().maxlog
+  local mLog
+  local i=0
 
-  local deleted_lines = 0
-  while #Elephant:LogsDb().logs[index].logs > max_log_size do
-    table.remove(Elephant:LogsDb().logs[index].logs, 1)
-    deleted_lines = deleted_lines + 1
+  mLog = Elephant.db.profile.maxlog
+
+  while #Elephant.dbpc.char.logs[index].logs > mLog do
+    table.remove(Elephant.dbpc.char.logs[index].logs, 1)
+    i = i+1
   end
 
-  return deleted_lines
+  return i
 end
 
 --[[
@@ -96,8 +130,8 @@ the operation.
 ]]
 local function DeleteLog(index)
   -- Print must be done *before* deleting, obviously
-  Elephant:Print( format(Elephant.L['STRING_INFORM_CHAT_LOG_DELETED'], Elephant:LogsDb().logs[index].name) )
-  Elephant:LogsDb().logs[index] = nil
+  Elephant:Print( format(Elephant.L['deleteconfirm'], Elephant.dbpc.char.logs[index].name) )
+  Elephant.dbpc.char.logs[index] = nil
 end
 
 --[[
@@ -107,59 +141,12 @@ replaces the current table by a new and
 known one.
 ]]
 local function ResetSavedVariables()
-  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults)) do
-    Elephant:ProfileDb()[key] = value
+  for k,v in pairs(Elephant:clone(Elephant.defaultConf.savedconfdefaults)) do
+    Elephant.db.profile[k] = v
   end
-  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults)) do
-    Elephant:CharDb()[key] = value
+  for k,v in pairs(Elephant:clone(Elephant.defaultConf.savedpercharconfdefaults)) do
+    Elephant.dbpc.char[k] = v
   end
-  for key, value in pairs(Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults)) do
-    Elephant:FactionRealmDb()[key] = value
-  end
-end
-
---[[
-Returns true if the given ID exactly corresponds to a
-general chat channel ID. Only channel IDs known to
-Elephant must be given to this method, e.g.
-"trading (services)" and not "trade (services) - Orgrimmar".
-]]
-function Elephant:IsExactGeneralChatChannelId(channel_id)
-  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
-    if channel_id == general_chat_channel_metadata.id then
-      return true
-    end
-  end
-  return false
-end
-
---[[
-Returns true if the channel ID partially matches the
-general chat channel ID. For example, if the parameters
-("trade (services) - Orgrimmar", "trade (services)") are
-given, this method will return true.
-
-This method supports common separators between channel IDs
-and locations, such as "-", ":", etc.
-]]
-function Elephant:ChannelIdPartiallyMatches(channel_id, general_chat_channel_id)
-  return (channel_id == general_chat_channel_id)
-      or string.find(channel_id, general_chat_channel_id .. " - ", 1, true)
-      or string.find(channel_id, general_chat_channel_id .. " – ", 1, true)
-      or string.find(channel_id, general_chat_channel_id .. ": ", 1, true)
-end
-
---[[
-Returns true if the given channel ID partially corresponds to a
-general chat channel id, e.g. "trading (services) - Orgrimmar."
-]]
-function Elephant:IsPartialGeneralChatChannelId(channel_id)
-  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
-    if Elephant:ChannelIdPartiallyMatches(channel_id, general_chat_channel_metadata.id) then
-      return true
-    end
-  end
-  return false
 end
 
 --[[
@@ -167,40 +154,17 @@ Iterates over all Elephant default indexes (whisper, ...) and
 general chats (trade, worlddefense, ...) and creates a new log
 structure for them.
 ]]
-function Elephant:MaybeInitDefaultLogStructures()
-  for name_id, index in pairs(Elephant:DefaultConfiguration().defaultindexes) do
-    if not Elephant:LogsDb().logs[index] then
-      CreateNewLogStructure(index, Elephant:DefaultConfiguration().defaultnames[name_id])
+function Elephant:InitDefaultLogStructures()
+  local k,v
+  for k,v in pairs(Elephant.defaultConf.defaultindexes) do
+    if not Elephant.dbpc.char.logs[v] then
+      CreateNewLogStructure(v, Elephant.defaultConf.defaultnames[k])
     end
   end
 
-  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
-    if not Elephant:LogsDb().logs[general_chat_channel_metadata.id] then
-      CreateNewLogStructure(general_chat_channel_metadata.id, general_chat_channel_metadata.name)
-    elseif not Elephant:LogsDb().logs[general_chat_channel_metadata.id].name then
-      -- Fix for a bug where names would not be populated properly
-      Elephant:LogsDb().logs[general_chat_channel_metadata.id].name = general_chat_channel_metadata.name
-    end
-  end
-end
-
---[[
-Iterates over all custom channels joined by the user
-(other than trade, worlddefense, ...) and creates a new
-structure for each new one found, keeping the existing
-ones intact.
-]]
-function Elephant:MaybeInitCustomStructures()
-  -- Max: 20 channels
-  for channel_index = 1, 20 do
-    local _, channel_name = GetChannelName(channel_index)
-
-    if channel_name ~= nil then
-      local channel_custom_id = string.lower(channel_name)
-
-      if not Elephant:IsPartialGeneralChatChannelId(channel_custom_id) and not Elephant:IsFiltered(channel_custom_id) then
-        Elephant:MaybeInitCustomStructure(channel_custom_id, channel_name)
-      end
+  for k,v in pairs(Elephant.L['generalchats']) do
+    if not Elephant.dbpc.char.logs[k] then
+      CreateNewLogStructure(k, v.name)
     end
   end
 end
@@ -212,14 +176,14 @@ Checks if a log with the given id exists in the saved data.
   given name. Then, if the log is enabled (depends on the
   "log new channels" option), adds a first header to the log.
 ]]
-function Elephant:MaybeInitCustomStructure(id, name)
-  if Elephant:LogsDb().logs[id] then
+function Elephant:InitCustomStructure(id, name)
+  if Elephant.dbpc.char.logs[id] then
     return
   end
 
   CreateNewLogStructure(id, name)
-  if Elephant:LogsDb().logs[id].enabled then
-    AddHeaderToTable(Elephant:LogsDb().logs[id])
+  if Elephant.dbpc.char.logs[id].enabled then
+    AddHeaderToTable(Elephant.dbpc.char.logs[id])
   end
 end
 
@@ -228,27 +192,29 @@ Iterates over all the saved logs and for each
 *enabled* log found:
 - adds a header
 - checks its size
-If non_custom_channels_only is true, this is done
+If nonCustomChannelsOnly is true, this is done
 only to channels that have not been manually
 joined by the user (i.e. whisper, raid, ... and
 trade, worlddefense, ...).
 ]]
-function Elephant:AddHeaderToStructures(non_custom_channels_only)
-  for index_or_name_id, log_struct in pairs(Elephant:LogsDb().logs) do
-    if log_struct.enabled then
+function Elephant:AddHeaderToStructures(nonCustomChannelsOnly)
+  local k, v
+
+  for k,v in pairs(Elephant.dbpc.char.logs) do
+    if v.enabled then
       if
-        non_custom_channels_only == nil or
-        non_custom_channels_only == false or (
-          non_custom_channels_only == true and (
-            type(index_or_name_id) == "number" or
-            Elephant:IsExactGeneralChatChannelId(index_or_name_id)
+        nonCustomChannelsOnly == nil or
+        nonCustomChannelsOnly == false or (
+          nonCustomChannelsOnly == true and (
+            type(k) == "number" or
+            Elephant.L['generalchats'][k]
           )
         )
       then
-        AddHeaderToTable(log_struct)
+        AddHeaderToTable(v)
       end
     end
-    CheckTableSize(index_or_name_id)
+    CheckTableSize(k)
   end
 end
 
@@ -257,18 +223,19 @@ Changes the maximum size of all logs to the
 new given value. It reduces the size of each
 log if required.
 ]]
-function Elephant:ChangeMaxLog(new_max_log)
-  if (new_max_log < Elephant:DefaultConfiguration().minlogsize) then return end
-  if (new_max_log > Elephant:DefaultConfiguration().maxlogsize) then return end
+function Elephant:ChangeMaxLog(nb)
+  if (nb < Elephant.defaultConf.minlogsize) then return end
+  if (nb > Elephant.defaultConf.maxlogsize) then return end
 
-  Elephant:FactionRealmDb().maxlog = new_max_log
+  Elephant.db.profile.maxlog = nb
 
-  for index_or_name_id in pairs(Elephant:LogsDb().logs) do
-    CheckTableSize(index_or_name_id)
+  local k
+  for k in pairs(Elephant.dbpc.char.logs) do
+    CheckTableSize(k)
   end
 
-  if (new_max_log < Elephant._volatileConfiguration.currentline) then
-    Elephant._volatileConfiguration.currentline = new_max_log
+  if (nb < Elephant.tempConf.currentline) then
+    Elephant.tempConf.currentline = nb
   end
 
   Elephant:SetTitleInfoMaxLog()
@@ -281,14 +248,14 @@ adds a brand new header to it. Also warns the
 user of the operation.
 ]]
 function Elephant:EmptyCurrentLog()
-  Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs = {}
-  if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
-    AddHeaderToTable(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex])
+  Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs = {}
+  if Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled then
+    AddHeaderToTable(Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex])
   end
 
-  Elephant:Print( format(Elephant.L['STRING_INFORM_CHAT_LOG_EMPTIED'], Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) )
+  Elephant:Print( format(Elephant.L['emptyconfirm'], Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].name) )
 
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -298,16 +265,17 @@ a brand new header for each log that is enabled.
 Also warns the user of the operation.
 ]]
 function Elephant:ClearAllLogs()
-  for _, log_struct in pairs(Elephant:LogsDb().logs) do
-    log_struct.logs = {}
-    if log_struct.enabled then
-      AddHeaderToTable(log_struct)
+  local k, v
+  for k,v in pairs(Elephant.dbpc.char.logs) do
+    v.logs = {}
+    if v.enabled then
+      AddHeaderToTable(v)
     end
   end
 
-  Elephant:Print(Elephant.L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'])
+  Elephant:Print(Elephant.L['clearallconfirm'])
 
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -315,12 +283,12 @@ end
 Totally removes the structure of the current log.
 ]]
 function Elephant:DeleteCurrentLog()
-  DeleteLog(Elephant:CharDb().currentlogindex)
+  DeleteLog(Elephant.dbpc.char.currentlogindex)
 end
 
 --[[
 Captures the given message at the end of
-the log at the given index_or_name_id. It also sets
+the log at the given index. It also sets
 the "hasMessage" value of the log.
 
 If the affected log is the displayed one,
@@ -328,25 +296,17 @@ moves the log one line down if the last
 line was displayed (otherwise, doesn't
 change it).
 ]]
-function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
-  if message_struct.prat ~= nil and message_struct.lineid ~= nil then
-    local last_message_struct = Elephant:LogsDb().logs[index_or_name_id].logs[#Elephant:LogsDb().logs[index_or_name_id].logs]
-    if message_struct.prat == last_message_struct.prat and message_struct.lineid == last_message_struct.lineid then
-      -- Duplicate message, nothing to do
-      return
-    end
+function Elephant:CaptureNewMessage(msg, index)
+  table.insert(Elephant.dbpc.char.logs[index].logs, #Elephant.dbpc.char.logs[index].logs+1, msg)
+
+  if not Elephant.dbpc.char.logs[index].hasMessage then
+    Elephant.dbpc.char.logs[index].hasMessage = true
   end
 
-  table.insert(Elephant:LogsDb().logs[index_or_name_id].logs, #Elephant:LogsDb().logs[index_or_name_id].logs+1, message_struct)
-
-  if not Elephant:LogsDb().logs[index_or_name_id].hasMessage then
-    Elephant:LogsDb().logs[index_or_name_id].hasMessage = true
-  end
-
-  if Elephant:CharDb().currentlogindex == index_or_name_id then
+  if Elephant.dbpc.char.currentlogindex == index then
     -- Moves the current line if it was at the last line
-    if Elephant._volatileConfiguration.currentline == (#Elephant:LogsDb().logs[index_or_name_id].logs-1) then
-      Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline + 1
+    if Elephant.tempConf.currentline == (#Elephant.dbpc.char.logs[index].logs-1) then
+      Elephant.tempConf.currentline = Elephant.tempConf.currentline + 1
     end
 
     -- Note: in case the log is reduced, we should redisplay it
@@ -358,19 +318,19 @@ function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
     -- currently seen by the user may not be found anymore
     -- after the user moves through the log, but we keep it like
     -- this since it covers most of the usage of the addon.
-    Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline - CheckTableSize(index_or_name_id)
-    if Elephant._volatileConfiguration.currentline < 1 then
-      Elephant._volatileConfiguration.currentline = 1
+    Elephant.tempConf.currentline = Elephant.tempConf.currentline - CheckTableSize(index)
+    if Elephant.tempConf.currentline < 1 then
+      Elephant.tempConf.currentline = 1
     end
 
-    if Elephant._volatileConfiguration.currentline == #Elephant:LogsDb().logs[index_or_name_id].logs then
+    if Elephant.tempConf.currentline == #Elephant.dbpc.char.logs[index].logs then
       -- Adds the message to the screen
-      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(message_struct, true))
+      ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(msg, true))
     end
     -- Updates current line text
     Elephant:SetTitleInfoCurrentLine()
   else
-    CheckTableSize(index_or_name_id)
+    CheckTableSize(index)
   end
 end
 
@@ -398,31 +358,43 @@ function Elephant:Reset()
 
   ResetSavedVariables()
 
-  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
-  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
+  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
+  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
 
-  for channel_index = 1, GetNumDisplayChannels() do
-    local _, channel_name = GetChannelName(channel_index)
+  local k, v
+  local lcname
+  local found
+  local channelName
+  local i
+  for i=1,GetNumDisplayChannels() do
+    _,channelName = GetChannelName(i)
 
-    if channel_name ~= nil then
-      local channel_name_lowercase = string.lower(channel_name)
-      if not Elephant:IsPartialGeneralChatChannelId(channel_name_lowercase) then
-        Elephant:MaybeInitCustomStructure(channel_name_lowercase, channel_name)
-        Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_name_lowercase)
+    if channelName ~= nil then
+      lcname = string.lower(channelName)
+      found = false
+      for k,v in pairs(Elephant.L['generalchats']) do
+        if (lcname == k) or string.find(lcname, k .. " - ") then
+          found = true
+          break
+        end
+      end
+      if not found then
+        Elephant:InitCustomStructure(lcname, channelName)
+        Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant.L['customchat']['join'] } , lcname)
       end
     end
   end
 
-  Elephant:MaybeInitDefaultLogStructures()
-  Elephant:MaybeInitCustomStructures()
+  Elephant:InitDefaultLogStructures()
+  InitCustomStructures()
   Elephant:AddHeaderToStructures(true)
   Elephant:RegisterEventsRefresh()
   Elephant:ResetPosition()
-  Elephant:ChangeLog(Elephant:CharDb().currentlogindex)
+  Elephant:ChangeLog(Elephant.dbpc.char.currentlogindex)
 
   Elephant:RefreshLDBIcon()
 
-  Elephant:Print(Elephant.L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'])
+  Elephant:Print(Elephant.L['resetconfirm'])
 
   -- Force refresh of options frame
   InterfaceOptionsFrame_OpenToCategory("Elephant")
@@ -439,13 +411,13 @@ The buttons of the current log are also
 updated (enabling/disabling as needed).
 ]]
 function Elephant:ToggleEnableCurrentLog()
-  Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled = not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled
+  Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled = not Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled
 
-  if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
-    Elephant:CaptureNewMessage( { arg1 = " " } , Elephant:CharDb().currentlogindex)
-    Elephant:CaptureNewMessage( { arg1 = " " } , Elephant:CharDb().currentlogindex)
+  if Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled then
+    Elephant:CaptureNewMessage( { ['arg1'] = " " } , Elephant.dbpc.char.currentlogindex)
+    Elephant:CaptureNewMessage( { ['arg1'] = " " } , Elephant.dbpc.char.currentlogindex)
   end
-  Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant:GetStateChangeActionMsg(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled) } , Elephant:CharDb().currentlogindex)
+  Elephant:CaptureNewMessage( { ['type'] = "SYSTEM", ['arg1'] = Elephant:GetStateChangeActionMsg(Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].enabled) } , Elephant.dbpc.char.currentlogindex)
 
   Elephant:UpdateCurrentLogButtons()
 end
@@ -462,23 +434,25 @@ the new filter are deleted. If the current
 log was deleted, changes it to the default
 one.
 ]]
-function Elephant:AddFilter(new_filter)
-  for _, filter in pairs(Elephant:ProfileDb().filters) do
-    if filter == new_filter then
+function Elephant:AddFilter(arg1)
+  local v
+  for _,v in pairs(Elephant.db.profile.filters) do
+    if v == arg1 then
       return
     end
   end
 
-  table.insert(Elephant:ProfileDb().filters, new_filter)
-  Elephant:Print(format(Elephant.L['STRING_INFORM_CHAT_FILTER_ADDED'], new_filter))
+  table.insert(Elephant.db.profile.filters, arg1)
+  Elephant:Print(format(Elephant.L['filteradded'], arg1))
 
-  for index_or_name_id, _ in pairs(Elephant:LogsDb().logs) do
-    if type(index_or_name_id) ~= "number" and string.find(index_or_name_id, " ") == nil then
-      if Elephant:IsFiltered(index_or_name_id) then
-        DeleteLog(index_or_name_id)
+  local k,v
+  for k,v in pairs(Elephant.dbpc.char.logs) do
+    if type(k) ~= "number" and string.find(k, " ") == nil then
+      if Elephant:IsFiltered(k) then
+        DeleteLog(k)
         -- If displayed log has just been deleted, display the default one instead
-        if Elephant:CharDb().currentlogindex == index_or_name_id then
-          Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogindex)
+        if Elephant.dbpc.char.currentlogindex == k then
+          Elephant:ChangeLog(Elephant.defaultConf.savedpercharconfdefaults.currentlogindex)
         end
       end
     end
@@ -494,9 +468,10 @@ this should never happen since we never check
 if a *general* chat is filtered.
 ]]
 function Elephant:IsFiltered(index)
-  for _, filter in pairs(Elephant:ProfileDb().filters) do
-    filter = "^" .. string.gsub(string.lower(filter), "%*", "%.%*") .. "$"
-    if string.match(index, filter) ~= nil and not Elephant:IsExactGeneralChatChannelId(index) then
+  local v
+  for _,v in pairs(Elephant.db.profile.filters) do
+    v = "^" .. string.gsub(string.lower(v), "%*", "%.%*") .. "$"
+    if string.match(index, v) ~= nil and not Elephant.L['generalchats'][index] then
       return true
     end
   end
@@ -509,15 +484,15 @@ Deletes the filter at the given index. After
 doing so, recreates structures for all joined
 custom channels that were filtered.
 ]]
-function Elephant:DeleteFilter(filter_index)
-  if not Elephant:ProfileDb().filters[filter_index] then
+function Elephant:DeleteFilter(filterindex)
+  if not Elephant.db.profile.filters[filterindex] then
     return
   end
   -- Must be displayed before deleting filter, obviously
-  Elephant:Print(format(Elephant.L['STRING_INFORM_CHAT_FILTER_DELETED'], Elephant:ProfileDb().filters[filter_index]))
-  Elephant:ProfileDb().filters[filter_index] = nil
+  Elephant:Print(format(Elephant.L['filterdeleted'], Elephant.db.profile.filters[filterindex]))
+  Elephant.db.profile.filters[filterindex] = nil
 
-  Elephant:MaybeInitCustomStructures()
+  InitCustomStructures()
 end
 
 --[[
@@ -525,7 +500,7 @@ Enables the given catcher (= name of the event)
 for the channel at the given index (number or name).
 ]]
 function Elephant:EnableCatcher(catch, channel)
-  Elephant:ProfileDb().events[catch].channels[channel] = 1
+  Elephant.db.profile.events[catch].channels[channel] = 1
 end
 
 --[[
@@ -533,5 +508,5 @@ Disables the given catcher (= name of the event)
 for the channel at the given index (number or name).
 ]]
 function Elephant:DisableCatcher(catch, channel)
-  Elephant:ProfileDb().events[catch].channels[channel] = 0
+  Elephant.db.profile.events[catch].channels[channel] = 0
 end

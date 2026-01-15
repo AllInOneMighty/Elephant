@@ -1,26 +1,14 @@
-## Interface: 110207
+## Interface: 20505
 ## Title: Elephant
-## Title-zhCN: Elephant 聊天记录器
-## Category: Chat
-## Category-deDE: Chat
-## Category-esES: Chat
-## Category-esMX: Chat
-## Category-frFR: Discussion
-## Category-itIT: Chat
-## Category-koKR: 대화
-## Category-ptBR: Bate-papo
-## Category-ruRU: Чат
-## Category-zhCN: 聊天
-## Category-zhTW: 對話
+## Title-zhCN: Elephant �?�天记录器
 ## Notes: A friendly companion that remembers the chat.
-## Notes-zhCN: 聊天记录助手
+## Notes-zhCN: �?�天记录�?助手
 ## Notes-frFR: Un compagnon amical qui se souvient de vos discussions.
 ## Notes-deDE: A friendly companion that remembers the chat.
-## Notes-zhTW: 聊天記錄助手。
-## Notes-ruRU: Друже твенный компаньон который запоминает чат.
-## Author: AllInOneMighty
-## Version: @project-version@
-## IconTexture: Interface\AddOns\Elephant\icon.tga
+## Notes-zhTW: �?�天記錄�?助手。
+## Notes-ruRU: Друже�?твенный компаньон который запоминает чат.
+## Author: All-in-one Mighty
+## Version: 2.5.1b
 ## SavedVariables: ElephantDB
 ## SavedVariablesPerCharacter: ElephantDBPerChar
 ## OptionalDeps: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0, Prat

@@ -2,21 +2,23 @@
 Called when displaying tooltip on Broker source.
 ]]
 local function OnBrokerTooltipShow(tt)
-  tt:AddLine(Elephant.L['STRING_OPTIONS_MAX_LOG_LINES'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant:FactionRealmDb().maxlog .. "|r")
+  tt:AddLine(Elephant.L['maxlogwords'] .. ": |c" .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0) .. Elephant.db.profile.maxlog .. "|r")
 
-  if Elephant:ProfileDb().filters and #Elephant:ProfileDb().filters > 0 then
+  if Elephant.db.profile.filters and #Elephant.db.profile.filters > 0 then
     tt:AddLine(" ")
-    tt:AddLine(Elephant.L['STRING_MINIMAP_TOOLTIP_ACTIVE_FILTERS'])
+    tt:AddLine(Elephant.L['activefilters'])
 
     local filter
-    for _, filter in pairs(Elephant:ProfileDb().filters) do
+    for _,filter in pairs(Elephant.db.profile.filters) do
       tt:AddLine("  " .. filter, 1.0, 1.0, 1.0, 1.0)
     end
-    tt:AddLine(" ")
+
   end
 
-  tt:AddLine(format(Elephant.L['STRING_MINIMAP_TOOLTIP_HINT_TOGGLE'], Elephant:MakeTextHexColor(0.93, 0.65, 0.37)) .. ".", 0.2, 1.0, 0.2, 1.0)
-  tt:AddLine(format(Elephant.L['STRING_MINIMAP_TOOLTIP_HINT_SETTINGS'], Elephant:MakeTextHexColor(0.93, 0.65, 0.37)) .. ".", 0.2, 1.0, 0.2, 1.0)
+  tt:AddLine(" ")
+  tt:AddLine(format(Elephant.L['toggletooltiphint1'], Elephant:MakeTextHexColor(0.93, 0.65, 0.37)) .. ", "
+    .. format(Elephant.L['toggletooltiphint2'], Elephant:MakeTextHexColor(0.93, 0.65, 0.37)) .. ".",
+    0.2, 1.0, 0.2, 1.0)
 end
 
 --[[ Broker source ]]
@@ -28,11 +30,7 @@ if LDB then
     icon = "Interface\\AddOns\\Elephant\\icon.tga",
     OnClick = function(self, button)
       if button == "RightButton" then
-        if Settings and Settings.OpenToCategory then
-          Settings.OpenToCategory("Elephant")
-        elseif InterfaceOptionsFrame_OpenToCategory then
-          InterfaceOptionsFrame_OpenToCategory("Elephant")
-        end
+        InterfaceOptionsFrame_OpenToCategory("Elephant")
       else
         Elephant:Toggle()
       end
@@ -50,20 +48,20 @@ function Elephant:RegisterLDBIcon()
     return
   end
 
-  LibDBIcon:Register("Elephant", LDBDataObject, Elephant:ProfileDb().minimap)
+  LibDBIcon:Register("Elephant", LDBDataObject, Elephant.db.profile.minimap)
 end
 
 function Elephant:ToggleLDBIcon()
   if not Elephant:IsLDBIconAvailable() then return end
 
-  Elephant:ProfileDb().minimap.hide = not Elephant:ProfileDb().minimap.hide
+  Elephant.db.profile.minimap.hide = not Elephant.db.profile.minimap.hide
   Elephant:RefreshLDBIcon()
 end
 
 function Elephant:RefreshLDBIcon()
   if not Elephant:IsLDBIconAvailable() then return end
 
-  if Elephant:ProfileDb().minimap.hide then
+  if Elephant.db.profile.minimap.hide then
     LibDBIcon:Hide("Elephant")
   else
     LibDBIcon:Show("Elephant")

@@ -6,23 +6,12 @@ logging, and initializes other useful data.
 ]]
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
-  Elephant._db = LibStub("AceDB-3.0"):New("ElephantDB", {
-    profile = Elephant:Clone(Elephant:DefaultConfiguration().savedconfdefaults),
-    char = Elephant:Clone(Elephant:DefaultConfiguration().savedpercharconfdefaults),
-    factionrealm = Elephant:Clone(Elephant:DefaultConfiguration().savedperfactionrealmconfdefaults),
+  Elephant.db = LibStub("AceDB-3.0"):New("ElephantDB", {
+    profile = Elephant:clone(Elephant.defaultConf.savedconfdefaults)
   })
-
-  -- Now the Elephant._db is initialized, we can use the quick db access methods.
-
-  -- If old maxlog value exists...
-  if Elephant:ProfileDb().maxlog ~= nil then
-    -- Copy it to the factionrealm db if it is greater than the new default
-    if Elephant:ProfileDb().maxlog > Elephant:FactionRealmDb().maxlog then
-      Elephant:FactionRealmDb().maxlog = Elephant:ProfileDb().maxlog
-    end
-    -- Then, remove it.
-    Elephant:ProfileDb().maxlog = nil
-  end
+  Elephant.dbpc = LibStub("AceDB-3.0"):New("ElephantDBPerChar", {
+    char = Elephant:clone(Elephant.defaultConf.savedpercharconfdefaults)
+  })
 
   -- Options
   Elephant:SetupOptions()
@@ -31,23 +20,23 @@ function Elephant:OnInitialize()
   Elephant:SetTitleInfoMaxLog()
 
   -- Elephant button
-  if Elephant:ProfileDb().button == true then
+  if Elephant.db.profile.button == true then
     Elephant:CreateButton()
   end
 
   -- Enabling/disabling chat logging if required
-  Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
-  Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
+  Elephant:ChatLogEnable(Elephant.db.profile.chatlog)
+  Elephant:CombatLogEnable(Elephant.db.profile.combatlog)
 
   -- Checks & creates default log structures
-  Elephant:MaybeInitDefaultLogStructures()
+  Elephant:InitDefaultLogStructures()
   Elephant:AddHeaderToStructures()
 
   -- Getting current loot method to avoid displaying too many times
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant._volatileConfiguration.lootmethod = Elephant:GetLootMethod()
+  Elephant.tempConf.lootmethod = (Elephant.GetLootMethodCompat and Elephant:GetLootMethodCompat()) or nil
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
@@ -79,41 +68,41 @@ function Elephant:OnEnable()
   -- Sets chat tab buttons color
   SetTabButtonProperties(
     ElephantFrameGuildTabButton,
-    Elephant.L['STRING_CHAT_NAME_GUILD'],
+    Elephant.L['chatnames']['guild'],
     'GUILD')
   SetTabButtonProperties(
     ElephantFrameOfficerTabButton,
-    Elephant.L['STRING_CHAT_NAME_OFFICER'],
+    Elephant.L['chatnames']['officer'],
     'OFFICER')
   SetTabButtonProperties(
     ElephantFrameWhisperTabButton,
-    Elephant.L['STRING_CHAT_NAME_WHISPER'],
+    Elephant.L['chatnames']['whisper'],
     'WHISPER')
   SetTabButtonProperties(
     ElephantFramePartyTabButton,
-    Elephant.L['STRING_CHAT_NAME_PARTY'],
+    Elephant.L['chatnames']['party'],
     'PARTY')
   SetTabButtonProperties(
     ElephantFrameRaidTabButton,
-    Elephant.L['STRING_CHAT_NAME_RAID'],
+    Elephant.L['chatnames']['raid'],
     'RAID')
   SetTabButtonProperties(
     ElephantFrameInstanceTabButton,
-    Elephant.L['STRING_CHAT_NAME_INSTANCE'],
+    Elephant.L['chatnames']['instance'],
     'INSTANCE_CHAT')
   SetTabButtonProperties(
     ElephantFrameSayTabButton,
-    Elephant.L['STRING_CHAT_NAME_SAY'],
+    Elephant.L['chatnames']['say'],
     'SAY')
   SetTabButtonProperties(
     ElephantFrameYellTabButton,
-    Elephant.L['STRING_CHAT_NAME_YELL'],
+    Elephant.L['chatnames']['yell'],
     'YELL')
 
   -- Displays default log
-  if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then
-    Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
+  if not Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex] then
+    Elephant.dbpc.char.currentlogindex = Elephant.defaultConf.defaultlogindex
   end
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant.tempConf.currentline = #Elephant.dbpc.char.logs[Elephant.dbpc.char.currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
