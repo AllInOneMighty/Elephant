@@ -59,7 +59,7 @@ local function HandleMessage(prat_struct, event, ...)
   end
 
   -- Getting info from event args
-  local message, sender, _, _, _, flags, _, _, channel_name, _, _, guid = ...
+  local message, sender, _, _, _, flags, _, _, channel_name, _, _, guid, bn_sender_id = ...
   if flags == "" then
     flags = nil
   end
@@ -174,6 +174,18 @@ local function HandleMessage(prat_struct, event, ...)
         event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
       then
         new_message_struct.arg2 = sender
+        new_message_struct.clColor = GetClassColorByGUID(guid)
+      end
+
+      if event == "CHAT_MSG_BN_WHISPER" or
+        event == "CHAT_MSG_BN_WHISPER_INFORM"
+      then
+        if bn_sender_id and C_BattleNet.GetAccountInfoByID then
+          local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
+          new_message_struct.battleTag = account_info.battleTag
+        else
+          new_message_struct.arg2 = sender
+        end
         new_message_struct.clColor = GetClassColorByGUID(guid)
       end
 
