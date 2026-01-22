@@ -25,8 +25,12 @@ local function GetSenderWithClassColor(sender, class_color, with_link)
   end
 end
 
-local function GetBattleNetId(sender)
-  return string.sub(sender, 3, -3)
+local function GetAndFormatBattleTagOrId(message_struct)
+  if message_struct.battleTag then
+    return "<" .. message_struct.battleTag .. ">"
+  else
+    return "[" .. Elephant.L['STRING_ID'] .. ": " .. string.sub(message_struct.arg2, 3, -3) .. "]"
+  end
 end
 
 --[[
@@ -95,7 +99,7 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
         if message_struct.type == "BN_WHISPER_INFORM" or message_struct.type == "BN_WHISPER" then
           -- We can't track Battle.net names due to privacy reasons, so we remove links and name resolution.
           with_link = false
-          sender = "[" .. Elephant.L['STRING_ID'] .. ": " .. GetBattleNetId(message_struct.arg2) .. "]"
+          sender = GetAndFormatBattleTagOrId(message_struct)
         end
 
         local player_link = GetSenderWithClassColor(sender, message_struct.clColor, with_link)
