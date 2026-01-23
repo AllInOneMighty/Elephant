@@ -47,7 +47,7 @@ function Elephant:OnInitialize()
   -- the same loot method in case of ReloadUI()
   -- Note: in case of login, a PARTY_LOOT_METHOD_CHANGED
   -- event is triggered anyway
-  Elephant._volatileConfiguration.lootmethod = Elephant:GetLootMethod()
+  Elephant:VolatileConfig().lootmethod = Elephant:GetLootMethod()
 
   -- Minimap icon
   Elephant:RegisterLDBIcon()
@@ -114,6 +114,6 @@ function Elephant:OnEnable()
   if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then
     Elephant:CharDb().currentlogindex = Elephant:DefaultConfiguration().defaultlogindex
   end
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end

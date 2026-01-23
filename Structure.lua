@@ -267,8 +267,8 @@ function Elephant:ChangeMaxLog(new_max_log)
     CheckTableSize(index_or_name_id)
   end
 
-  if (new_max_log < Elephant._volatileConfiguration.currentline) then
-    Elephant._volatileConfiguration.currentline = new_max_log
+  if (new_max_log < Elephant:VolatileConfig().currentline) then
+    Elephant:VolatileConfig().currentline = new_max_log
   end
 
   Elephant:SetTitleInfoMaxLog()
@@ -288,7 +288,7 @@ function Elephant:EmptyCurrentLog()
 
   Elephant:Print( format(Elephant.L['STRING_INFORM_CHAT_LOG_EMPTIED'], Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name) )
 
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -307,7 +307,7 @@ function Elephant:ClearAllLogs()
 
   Elephant:Print(Elephant.L['STRING_INFORM_CHAT_CLEAR_LOGS_SUCCESS'])
 
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -345,8 +345,8 @@ function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
 
   if Elephant:CharDb().currentlogindex == index_or_name_id then
     -- Moves the current line if it was at the last line
-    if Elephant._volatileConfiguration.currentline == (#Elephant:LogsDb().logs[index_or_name_id].logs-1) then
-      Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline + 1
+    if Elephant:VolatileConfig().currentline == (#Elephant:LogsDb().logs[index_or_name_id].logs-1) then
+      Elephant:VolatileConfig().currentline = Elephant:VolatileConfig().currentline + 1
     end
 
     -- Note: in case the log is reduced, we should redisplay it
@@ -358,12 +358,12 @@ function Elephant:CaptureNewMessage(message_struct, index_or_name_id)
     -- currently seen by the user may not be found anymore
     -- after the user moves through the log, but we keep it like
     -- this since it covers most of the usage of the addon.
-    Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline - CheckTableSize(index_or_name_id)
-    if Elephant._volatileConfiguration.currentline < 1 then
-      Elephant._volatileConfiguration.currentline = 1
+    Elephant:VolatileConfig().currentline = Elephant:VolatileConfig().currentline - CheckTableSize(index_or_name_id)
+    if Elephant:VolatileConfig().currentline < 1 then
+      Elephant:VolatileConfig().currentline = 1
     end
 
-    if Elephant._volatileConfiguration.currentline == #Elephant:LogsDb().logs[index_or_name_id].logs then
+    if Elephant:VolatileConfig().currentline == #Elephant:LogsDb().logs[index_or_name_id].logs then
       -- Adds the message to the screen
       ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(message_struct, true))
     end
@@ -425,7 +425,7 @@ function Elephant:Reset()
   Elephant:Print(Elephant.L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'])
 
   -- Force refresh of options frame
-  InterfaceOptionsFrame_OpenToCategory("Elephant")
+  Elephant:OpenOptions()
 end
 
 --[[
