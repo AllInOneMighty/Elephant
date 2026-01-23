@@ -182,8 +182,11 @@ local function HandleMessage(prat_struct, event, ...)
       then
         if bn_sender_id and C_BattleNet.GetAccountInfoByID then
           local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
-          new_message_struct.battleTag = account_info.battleTag
-        else
+          if account_info then
+            new_message_struct.battleTag = account_info.battleTag
+          end
+        end
+        if not new_message_struct.battleTag then
           new_message_struct.arg2 = sender
         end
         new_message_struct.clColor = GetClassColorByGUID(guid)
