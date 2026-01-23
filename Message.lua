@@ -17,20 +17,35 @@ This method does not add colors if the
 addon "Show class colors in logs" option
 is not enabled.
 ]]
-local function GetSenderWithClassColor(sender, class_color, with_link)
-  if sender and class_color and Elephant:ProfileDb().class_colors_in_log then
-    if with_link then
-      return "|Hplayer:" .. sender .. "|h[|c" .. class_color .. sender .. "|r]|h"
-    else
-      return "|c" .. class_color .. sender .. "|r"
-    end
+local function GetDecoratedSender(message_struct)
+  local sender = nil
+  local sender_link = nil
+
+  if message_struct.type == "BN_WHISPER_INFORM" or message_struct.type == "BN_WHISPER" then
+    sender = GetAndFormatBattleTagOrId(message_struct)
   else
-    if with_link then
-      return "|Hplayer:" .. sender .. "|h[" .. sender .. "]|h"
-    else
-      return sender
+    sender = message_struct.arg2
+    if message_struct.type ~= "EMOTE" then
+      sender_link = "player:" .. sender
     end
   end
+
+  if not sender then
+    return ""
+  end
+
+  local decorated_sender = sender
+
+  local class_color = message_struct.clColor
+  if class_color and Elephant:ProfileDb().class_colors_in_log then
+    decorated_sender = "|c" .. class_color .. decorated_sender .. "|r"
+  end
+
+  if sender_link then
+    decorated_sender = "|H" .. sender_link .. "|h[" .. decorated_sender .. "]|h"
+  end
+
+  return decorated_sender
 end
 
 --[[
@@ -83,7 +98,7 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   -- Sender name (could be monster, player, ...); shouldn't be there if Prat message
   if message_struct.arg2 then
     if message_struct.type == "EMOTE" then
-      literal_message = literal_message .. GetSenderWithClassColor(message_struct.arg2, message_struct.clColor) .. " "
+      literal_message = literal_message .. GetDecoratedSender(message_struct) .. " "
     elseif (message_struct.type ~= "MONSTER_EMOTE" and message_struct.type ~= "ACHIEVEMENT" and
             message_struct.type ~= "GUILD_ACHIEVEMENT" and message_struct.type ~= "RAID_BOSS_EMOTE") then
       if message_struct.type == "MONSTER_SAY" then
@@ -93,21 +108,12 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
       elseif message_struct.type == "MONSTER_WHISPER" then
         literal_message = literal_message .. message_struct.arg2
       else
-        local with_link = true
-        local sender = message_struct.arg2
-
-        if message_struct.type == "BN_WHISPER_INFORM" or message_struct.type == "BN_WHISPER" then
-          -- We can't track Battle.net names due to privacy reasons, so we remove links and name resolution.
-          with_link = false
-          sender = GetAndFormatBattleTagOrId(message_struct)
-        end
-
-        local player_link = GetSenderWithClassColor(sender, message_struct.clColor, with_link)
+        local decorated_sender = GetDecoratedSender(message_struct)
 
         if message_struct.type == "WHISPER_INFORM" or message_struct.type == "BN_WHISPER_INFORM" then
-          literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_TO'], player_link)
+          literal_message = literal_message .. format(Elephant.L['STRING_SPECIAL_LOG_WHISPER_TO'], decorated_sender)
         else
-          literal_message = literal_message .. player_link
+          literal_message = literal_message .. decorated_sender
         end
       end
 
