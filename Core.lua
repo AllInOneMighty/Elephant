@@ -94,6 +94,23 @@ function Elephant:FactionRealmDb()
   return Elephant._db.factionrealm
 end
 
+local volatile_configuration = {
+  currentline = nil,
+
+  -- Data for specific events, such as loot method
+  -- change (here only for reference)
+  lootmethod = nil,
+  masterlooter = nil,
+
+  -- For copy window state
+  is_copywindow_bbcode = false
+}
+
+--[[ Temporary config, not saved but does change at runtime ]]
+function Elephant:VolatileConfig()
+  return volatile_configuration
+end
+
 --[[ Indexes used for default WoW channels ]]
 local default_channel_indexes = {
   whisper = 1,
@@ -481,16 +498,3 @@ function Elephant:GetLootMethod()
     return GetLootMethod()
   end
 end
-
---[[ Temporary config, not saved but does change at runtime ]]
-Elephant._volatileConfiguration = {
-  currentline = nil,
-
-  -- Data for specific events, such as loot method
-  -- change (here only for reference)
-  lootmethod = nil,
-  masterlooter = nil,
-
-  -- For copy window state
-  is_copywindow_bbcode = false
-}

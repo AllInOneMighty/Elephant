@@ -28,11 +28,7 @@ if LDB then
     icon = "Interface\\AddOns\\Elephant\\icon.tga",
     OnClick = function(self, button)
       if button == "RightButton" then
-        if Settings and Settings.OpenToCategory then
-          Settings.OpenToCategory("Elephant")
-        elseif InterfaceOptionsFrame_OpenToCategory then
-          InterfaceOptionsFrame_OpenToCategory("Elephant")
-        end
+        Elephant:OpenOptions()
       else
         Elephant:Toggle()
       end

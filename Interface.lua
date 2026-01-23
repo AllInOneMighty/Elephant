@@ -128,13 +128,13 @@ local function FillCopyWindow()
       Elephant.L['STRING_COPY_WINDOW_MAX_CHARACTERS'],
       Elephant:ProfileDb().maxcopyletters))
 
-  if not Elephant._volatileConfiguration.is_copywindow_bbcode then
+  if not Elephant:VolatileConfig().is_copywindow_bbcode then
     ElephantCopyFrameTitleInfoFrameCopyLogDisplayed:SetText(Elephant.L['STRING_COPY_WINDOW_PLAIN_TEXT'])
 
     -- Normal text
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
     local total_chars = 0
-    for i = Elephant._volatileConfiguration.currentline, 0, -1 do
+    for i = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
@@ -160,7 +160,7 @@ local function FillCopyWindow()
     ElephantCopyFrameScrollFrameEditBox:SetTextColor(0.75, 0.75, 0.75, 1.0)
     local item_link_site = Elephant.L['URL_ITEM_LINK']
     local total_chars = 0
-    for line_index = Elephant._volatileConfiguration.currentline, 0, -1 do
+    for line_index = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
       -- Ignoring Battle.net messages
       if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
@@ -244,7 +244,7 @@ last one of the log, and finally shows the log.
 ]]
 function Elephant:ChangeLog(channel_index)
   Elephant:CharDb().currentlogindex = channel_index
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[channel_index].logs
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[channel_index].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -271,7 +271,7 @@ function Elephant:ShowCurrentLog()
   Elephant:UpdateCurrentLogButtons()
 
   -- Populate the scrolling message frame
-  for line_index = Elephant._volatileConfiguration.currentline-Elephant:DefaultConfiguration().scrollmaxlines, Elephant._volatileConfiguration.currentline do
+  for line_index = Elephant:VolatileConfig().currentline-Elephant:DefaultConfiguration().scrollmaxlines, Elephant:VolatileConfig().currentline do
     if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index] then
       ElephantFrameScrollingMessageFrame:AddMessage(Elephant:GetLiteralMessage(Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index], true))
     end
@@ -297,7 +297,7 @@ end
 Updates the current line information of the current log.
 ]]
 function Elephant:SetTitleInfoCurrentLine()
-  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant._volatileConfiguration.currentline .. " / " .. #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs)
+  ElephantFrameTitleInfoFrameCurrentLineFontString:SetText(Elephant:VolatileConfig().currentline .. " / " .. #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs)
 end
 
 --[[
@@ -335,7 +335,7 @@ normal text and BBCode. This method then
 triggers a refill of the copy window.
 ]]
 function Elephant:ToggleBetweenNormalTextAndBBCode()
-  Elephant._volatileConfiguration.is_copywindow_bbcode = not Elephant._volatileConfiguration.is_copywindow_bbcode
+  Elephant:VolatileConfig().is_copywindow_bbcode = not Elephant:VolatileConfig().is_copywindow_bbcode
 
   if ElephantCopyFrame:IsVisible() then
     FillCopyWindow()
@@ -394,18 +394,18 @@ corresponding limit, so you don't have to do
 it yourself.
 ]]
 function Elephant:Scroll(lines_count)
-  local old_index = Elephant._volatileConfiguration.currentline
+  local old_index = Elephant:VolatileConfig().currentline
 
-  Elephant._volatileConfiguration.currentline = Elephant._volatileConfiguration.currentline + lines_count
-  if Elephant._volatileConfiguration.currentline < 1 then
-    Elephant._volatileConfiguration.currentline = 1
+  Elephant:VolatileConfig().currentline = Elephant:VolatileConfig().currentline + lines_count
+  if Elephant:VolatileConfig().currentline < 1 then
+    Elephant:VolatileConfig().currentline = 1
   end
-  if Elephant._volatileConfiguration.currentline > #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs then
-    Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant:VolatileConfig().currentline > #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs then
+    Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   end
 
   -- Prevent too much processing
-  if old_index ~= Elephant._volatileConfiguration.currentline then
+  if old_index ~= Elephant:VolatileConfig().currentline then
     Elephant:ShowCurrentLog()
   end
 end
@@ -414,7 +414,7 @@ end
 Scrolls the current log to its last line.
 ]]
 function Elephant:ScrollBottom()
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
   Elephant:ShowCurrentLog()
 end
 
@@ -422,9 +422,9 @@ end
 Scrolls the current log to its first line.
 ]]
 function Elephant:ScrollTop()
-  Elephant._volatileConfiguration.currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
-  if Elephant._volatileConfiguration.currentline > 1 then
-    Elephant._volatileConfiguration.currentline = 1
+  Elephant:VolatileConfig().currentline = #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs
+  if Elephant:VolatileConfig().currentline > 1 then
+    Elephant:VolatileConfig().currentline = 1
   end
   Elephant:ShowCurrentLog()
 end
@@ -608,5 +608,14 @@ function Elephant:GetStateColor(is_enabled, color)
     elseif color == "b" then
       return 0.2
     end
+  end
+end
+
+--[[ Opens the options pane of Elephant. ]]
+function Elephant:OpenOptions()
+  if Settings and Settings.OpenToCategory then
+    Settings.OpenToCategory(Elephant:VolatileConfig().categoryId)
+  elseif InterfaceOptionsFrame_OpenToCategory then
+    InterfaceOptionsFrame_OpenToCategory("Elephant")
   end
 end

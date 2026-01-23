@@ -320,10 +320,10 @@ function Elephant:SetupOptions()
   })
 
   -- Adding options to blizzard frame
-  LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Elephant")
+  _, Elephant:VolatileConfig().categoryId = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Elephant")
 
   -- Adding slash command to access options
   Elephant:RegisterChatCommand("elephant", function()
-    InterfaceOptionsFrame_OpenToCategory("Elephant")
+    Elephant:OpenOptions()
   end)
 end
