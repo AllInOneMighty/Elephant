@@ -425,7 +425,7 @@ function Elephant:Reset()
   Elephant:Print(Elephant.L['STRING_INFORM_CHAT_RESET_SETTINGS_SUCCESS'])
 
   -- Force refresh of options frame
-  Elephant:OpenOptions()
+  LibStub("AceConfigRegistry-3.0"):NotifyChange("Elephant")
 end
 
 --[[
