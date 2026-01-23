@@ -1,3 +1,11 @@
+local function GetAndFormatBattleTagOrId(message_struct)
+  if message_struct.battleTag then
+    return "<" .. message_struct.battleTag .. ">"
+  else
+    return "[" .. Elephant.L['STRING_ID'] .. ": " .. string.sub(message_struct.arg2, 3, -3) .. "]"
+  end
+end
+
 --[[
 Returns the given sender name with a
 color string built from the given class
@@ -38,14 +46,6 @@ local function GetDecoratedSender(message_struct)
   end
 
   return decorated_sender
-end
-
-local function GetAndFormatBattleTagOrId(message_struct)
-  if message_struct.battleTag then
-    return "<" .. message_struct.battleTag .. ">"
-  else
-    return "[" .. Elephant.L['STRING_ID'] .. ": " .. string.sub(message_struct.arg2, 3, -3) .. "]"
-  end
 end
 
 --[[
