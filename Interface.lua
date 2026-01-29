@@ -137,7 +137,7 @@ local function FillCopyWindow()
     for i = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct = Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
       -- Ignoring Battle.net messages
-      if message_struct and message_struct.type ~= "BN_WHISPER_INFORM" and message_struct.type ~= "BN_WHISPER" then
+      if message_struct then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
             message_struct, Elephant:ProfileDb().timestamps_in_copywindow))
