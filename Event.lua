@@ -6,12 +6,19 @@ corresponds to no player, or the found class
 color does not exist.
 ]]
 local function GetClassColorByGUID(guid)
-  if guid and guid ~= "" then
+  if guid then
     local _, english_class = GetPlayerInfoByGUID(guid)
     if english_class then
-      local class_color_table = RAID_CLASS_COLORS[english_class];
-      if class_color_table then
-        return Elephant:MakeTextHexColor(class_color_table.r, class_color_table.g, class_color_table.b)
+      if C_ClassColor.GetClassColor then
+        local class_color = C_ClassColor.GetClassColor(english_class)
+        if class_color then
+          return class_color:GenerateHexColor()
+        end
+      else
+        local class_color_table = RAID_CLASS_COLORS(english_class);
+        if class_color_table then
+          return Elephant:MakeTextHexColor(class_color_table.r, class_color_table.g, class_color_table.b)
+        end
       end
     end
   end
@@ -166,8 +173,6 @@ local function HandleMessage(prat_struct, event, ...)
         event == "CHAT_MSG_GUILD" or
         event == "CHAT_MSG_EMOTE" or
         event == "CHAT_MSG_MONSTER_EMOTE" or
-        event == "CHAT_MSG_BN_WHISPER" or
-        event == "CHAT_MSG_BN_WHISPER_INFORM" or
         event == "CHAT_MSG_ACHIEVEMENT" or
         event == "CHAT_MSG_GUILD_ACHIEVEMENT" or
         event == "CHAT_MSG_INSTANCE_CHAT" or
@@ -180,16 +185,23 @@ local function HandleMessage(prat_struct, event, ...)
       if event == "CHAT_MSG_BN_WHISPER" or
         event == "CHAT_MSG_BN_WHISPER_INFORM"
       then
-        if bn_sender_id and C_BattleNet.GetAccountInfoByID then
-          local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
-          if account_info then
-            new_message_struct.battleTag = account_info.battleTag
+        if InCombatLockdown() then
+          if not Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat then
+            local warning_message = "|cffff4800" .. Elephant.L['STRING_INFORM_CHAT_CANNOT_LOG_BN_CHAT_IN_COMBAT'] .. "|r"
+            Elephant:Print(warning_message)
+            -- We replace the message, which is a secure value, with a warning message.
+            new_message_struct.arg1 = warning_message
+            Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat = true
           end
+        else
+          if bn_sender_id and C_BattleNet.GetAccountInfoByID then
+            local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
+            if account_info then
+              new_message_struct.battleTag = account_info.battleTag
+            end
+          end
+          new_message_struct.clColor = GetClassColorByGUID(guid)
         end
-        if not new_message_struct.battleTag then
-          new_message_struct.arg2 = sender
-        end
-        new_message_struct.clColor = GetClassColorByGUID(guid)
       end
 
       if event == "CHAT_MSG_WHISPER" then

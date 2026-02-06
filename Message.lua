@@ -1,8 +1,11 @@
 local function GetAndFormatBattleTagOrId(message_struct)
   if message_struct.battleTag then
     return "<" .. message_struct.battleTag .. ">"
-  else
+  elseif message_struct.arg2 then
     return "[" .. Elephant.L['STRING_ID'] .. ": " .. string.sub(message_struct.arg2, 3, -3) .. "]"
+  else
+    -- Should never happen, but we have this for safeguard.
+    return "<??????#????>"
   end
 end
 
@@ -96,7 +99,7 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   end
 
   -- Sender name (could be monster, player, ...); shouldn't be there if Prat message
-  if message_struct.arg2 then
+  if message_struct.arg2 or message_struct.battleTag then
     if message_struct.type == "EMOTE" then
       literal_message = literal_message .. GetDecoratedSender(message_struct) .. " "
     elseif (message_struct.type ~= "MONSTER_EMOTE" and message_struct.type ~= "ACHIEVEMENT" and

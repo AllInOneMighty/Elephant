@@ -103,7 +103,9 @@ local volatile_configuration = {
   masterlooter = nil,
 
   -- For copy window state
-  is_copywindow_bbcode = false
+  is_copywindow_bbcode = false,
+
+  warned_cannot_log_bn_chat_in_combat = false
 }
 
 --[[ Temporary config, not saved but does change at runtime ]]
