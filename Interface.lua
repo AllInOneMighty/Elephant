@@ -142,10 +142,6 @@ end
   fills it with the current line of the current log and the "n" lines preceding
   it; "n" is defined in the default configuration of the addon.
 
-  All Battle.net messages are ignored, since it is not possible to correcly get
-  the name of the friends when copying (and it's also cool to protect the
-  privacy of the user).
-
   If BBCode is currently activated in the addon, when filling the edit box, this
   method automatically replaces the following elements to their corresponding
   BBCode:
@@ -175,7 +171,6 @@ local function FillCopyWindow()
     for i = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct =
         Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
-      -- Ignoring Battle.net messages
       if message_struct then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
