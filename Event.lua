@@ -1,9 +1,7 @@
 --[[
-Returns the hexadecimal string corresponding
-to the color of the class of the player with the
-given GUID, or nil if either the GUID is nil,
-corresponds to no player, or the found class
-color does not exist.
+  Returns the hexadecimal string corresponding to the color of the class of the
+  player with the given GUID, or nil if either the GUID is nil, corresponds to
+  no player, or the found class color does not exist.
 ]]
 local function GetClassColorByGUID(guid)
   if guid then
@@ -15,9 +13,13 @@ local function GetClassColorByGUID(guid)
           return class_color:GenerateHexColor()
         end
       else
-        local class_color_table = RAID_CLASS_COLORS(english_class);
+        local class_color_table = RAID_CLASS_COLORS(english_class)
         if class_color_table then
-          return Elephant:MakeTextHexColor(class_color_table.r, class_color_table.g, class_color_table.b)
+          return Elephant:MakeTextHexColor(
+            class_color_table.r,
+            class_color_table.g,
+            class_color_table.b
+          )
         end
       end
     end
@@ -26,11 +28,10 @@ local function GetClassColorByGUID(guid)
 end
 
 --[[
-Returns the channel index to be used for the given channel name.
-Correctly detects general channels and returns an appropriate
-integer for them.
+  Returns the channel index to be used for the given channel name. Correctly
+  detects general channels and returns an appropriate integer for them.
 
-Returns nil if a channel cannot be found.
+  Returns nil if a channel cannot be found.
 ]]
 local function GetChannelIndexFromChannelName(channel_name)
   if channel_name == "" then
@@ -40,8 +41,15 @@ local function GetChannelIndexFromChannelName(channel_name)
   channel_name = string.lower(channel_name)
 
   local channel_index
-  for _, general_chat_channel_metadata in pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata) do
-    if Elephant:ChannelIdPartiallyMatches(channel_name, general_chat_channel_metadata.id) then
+  for _, general_chat_channel_metadata in
+    pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata)
+  do
+    if
+      Elephant:ChannelIdPartiallyMatches(
+        channel_name,
+        general_chat_channel_metadata.id
+      )
+    then
       channel_index = general_chat_channel_metadata.id
       break
     end
@@ -78,46 +86,54 @@ local function HasText(event)
 end
 
 local function HasPlayerName(event)
-  return event == "CHAT_MSG_BATTLEGROUND" or
-    event == "CHAT_MSG_BATTLEGROUND_LEADER" or
-    event == "CHAT_MSG_WHISPER" or
-    event == "CHAT_MSG_WHISPER_INFORM" or
-    event == "CHAT_MSG_MONSTER_WHISPER" or
-    event == "CHAT_MSG_RAID" or
-    event == "CHAT_MSG_RAID_BOSS_EMOTE" or
-    event == "CHAT_MSG_RAID_LEADER" or
-    event == "CHAT_MSG_RAID_WARNING" or
-    event == "CHAT_MSG_PARTY" or
-    event == "CHAT_MSG_PARTY_LEADER" or
-    event == "CHAT_MSG_SAY" or
-    event == "CHAT_MSG_MONSTER_SAY" or
-    event == "CHAT_MSG_YELL" or
-    event == "CHAT_MSG_MONSTER_YELL" or
-    event == "CHAT_MSG_OFFICER" or
-    event == "CHAT_MSG_GUILD" or
-    event == "CHAT_MSG_EMOTE" or
-    event == "CHAT_MSG_MONSTER_EMOTE" or
-    event == "CHAT_MSG_ACHIEVEMENT" or
-    event == "CHAT_MSG_GUILD_ACHIEVEMENT" or
-    event == "CHAT_MSG_INSTANCE_CHAT" or
-    event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
+  return event == "CHAT_MSG_BATTLEGROUND"
+    or event == "CHAT_MSG_BATTLEGROUND_LEADER"
+    or event == "CHAT_MSG_WHISPER"
+    or event == "CHAT_MSG_WHISPER_INFORM"
+    or event == "CHAT_MSG_MONSTER_WHISPER"
+    or event == "CHAT_MSG_RAID"
+    or event == "CHAT_MSG_RAID_BOSS_EMOTE"
+    or event == "CHAT_MSG_RAID_LEADER"
+    or event == "CHAT_MSG_RAID_WARNING"
+    or event == "CHAT_MSG_PARTY"
+    or event == "CHAT_MSG_PARTY_LEADER"
+    or event == "CHAT_MSG_SAY"
+    or event == "CHAT_MSG_MONSTER_SAY"
+    or event == "CHAT_MSG_YELL"
+    or event == "CHAT_MSG_MONSTER_YELL"
+    or event == "CHAT_MSG_OFFICER"
+    or event == "CHAT_MSG_GUILD"
+    or event == "CHAT_MSG_EMOTE"
+    or event == "CHAT_MSG_MONSTER_EMOTE"
+    or event == "CHAT_MSG_ACHIEVEMENT"
+    or event == "CHAT_MSG_GUILD_ACHIEVEMENT"
+    or event == "CHAT_MSG_INSTANCE_CHAT"
+    or event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
 end
 
 local function HasClassColor(event)
-  return HasPlayerName(event) or (IsBattleNetEvent(event) and not InCombatLockdown())
+  return HasPlayerName(event)
+    or (IsBattleNetEvent(event) and not InCombatLockdown())
 end
 
 local function HasFlags(event)
   return event == "CHAT_MSG_WHISPER"
 end
 
-local function Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_struct, ...)
-  -- Fixing error where structure for channel does not exist
-  -- This should normally not happen, but it may be triggered
-  -- if the client never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED
-  -- event for that channel. In this case though, the client cannot be
-  -- displaying that log, so we don't have to update the buttons like
-  -- when a YOU_JOINED event happens.
+local function Handle_CHAT_MSG_CHANNEL(
+  channel_index,
+  channel_name,
+  prat_struct,
+  ...
+)
+  --[[
+    Fixing error where structure for channel does not exist.
+
+    This should normally not happen, but it may be triggered if the client
+    never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel.
+    In this case though, the client cannot be displaying that log, so we don't
+    have to update the buttons like when a YOU_JOINED event happens.
+  ]]
   Elephant:MaybeInitCustomStructure(channel_index, channel_name)
   if not Elephant:LogsDb().logs[channel_index].enabled then
     return
@@ -137,7 +153,7 @@ local function Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_struct,
       arg2 = NilIfEmpty(sender),
       arg6 = NilIfEmpty(flags),
       arg9 = channel_name,
-      clColor = GetClassColorByGUID(guid)
+      clColor = GetClassColorByGUID(guid),
     }, channel_index)
   end
 end
@@ -150,21 +166,30 @@ local function Handle_CHAT_MSG_CHANNEL_NOTICE(channel_index, channel_name, ...)
       return
     end
 
-    Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_JOINED_CHANNEL'] } , channel_index)
+    Elephant:CaptureNewMessage({
+      type = "SYSTEM",
+      arg1 = Elephant.L["STRING_SPECIAL_LOG_JOINED_CHANNEL"],
+    }, channel_index)
     if Elephant:CharDb().currentlogindex == channel_index then
       Elephant:UpdateCurrentLogButtons()
     end
   end
   if message == "YOU_LEFT" then
-    if not Elephant:LogsDb().logs[channel_index] or not Elephant:LogsDb().logs[channel_index].enabled then
+    if
+      not Elephant:LogsDb().logs[channel_index]
+      or not Elephant:LogsDb().logs[channel_index].enabled
+    then
       return
     end
 
-    Elephant:CaptureNewMessage( { type = "SYSTEM", arg1 = Elephant.L['STRING_SPECIAL_LOG_LEFT_CHANNEL'] } , channel_index)
-    Elephant:CaptureNewMessage( { arg1 = " " } , channel_index)
+    Elephant:CaptureNewMessage(
+      { type = "SYSTEM", arg1 = Elephant.L["STRING_SPECIAL_LOG_LEFT_CHANNEL"] },
+      channel_index
+    )
+    Elephant:CaptureNewMessage({ arg1 = " " }, channel_index)
     if Elephant:CharDb().currentlogindex == channel_index then
       Elephant:UpdateCurrentLogButtons()
-      Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]]true)
+      Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]] true)
     end
   end
 end
@@ -174,7 +199,9 @@ local function HandleChannelEvent(prat_struct, event, ...)
   local channel_index = GetChannelIndexFromChannelName(channel_name)
 
   -- channel_index == nil should never happen, but better to ignore than crash.
-  if channel_index == nil or Elephant:IsFiltered(channel_index) then return end
+  if channel_index == nil or Elephant:IsFiltered(channel_index) then
+    return
+  end
 
   if event == "CHAT_MSG_CHANNEL" then
     Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_struct, ...)
@@ -216,17 +243,21 @@ local function UpdateWithPartyLootMethodChangedEvent(new_message)
 
     extra_new_message = {
       time = time(),
-      type = Elephant:ProfileDb().events[event].type
+      type = Elephant:ProfileDb().events[event].type,
     }
 
-    -- Name of player may be unknown here, if interface
-    -- has just been loaded
+    -- Name of player may be unknown here, if interface has just been loaded.
     if player == "Unknown" then
-      extra_new_message.arg1 = "<" .. Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN'] .. ">"
+      extra_new_message.arg1 = "<"
+        .. Elephant.L["STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_UNKNOWN"]
+        .. ">"
     elseif player ~= Elephant:VolatileConfig().masterlooter then
       Elephant:VolatileConfig().masterlooter = player
 
-      extra_new_message.arg1 =  format(Elephant.L['STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED'], player)
+      extra_new_message.arg1 = format(
+        Elephant.L["STRING_INFORM_CHAT_LOOT_MASTER_LOOTER_CHANGED"],
+        player
+      )
     end
   else
     Elephant:VolatileConfig().masterlooter = nil
@@ -234,7 +265,7 @@ local function UpdateWithPartyLootMethodChangedEvent(new_message)
 
   if method ~= Elephant:VolatileConfig().lootmethod then
     Elephant:VolatileConfig().lootmethod = method
-    new_message.arg1 = Elephant.L['STRING_LOOT_METHOD__' .. method]
+    new_message.arg1 = Elephant.L["STRING_LOOT_METHOD__" .. method]
   else
     -- Warning: extra_new_message might be nil
     for key, _ in pairs(new_message) do
@@ -251,10 +282,7 @@ local function UpdateWithPartyLootMethodChangedEvent(new_message)
   return extra_new_message
 end
 
---[[
-Handles messages sent by the WoW engine
-as well as the ones sent by Prat.
-]]
+-- Handles messages sent by the WoW engine as well as the ones sent by Prat.
 local function HandleEvent(prat_struct, event, ...)
   if not Elephant:ProfileDb().prat and prat_struct then
     return
@@ -263,13 +291,13 @@ local function HandleEvent(prat_struct, event, ...)
     return
   end
 
-  -- Channels
+  -- Channel events
   if IsChannelEvent(event) then
     HandleChannelEvent(prat_struct, event, ...)
     return
   end
 
-  -- Not channel messages
+  -- Other events
 
   -- Sometimes we need to log two messages for the price of one.
   local new_message, extra_new_message = nil, nil
@@ -304,14 +332,26 @@ local function HandleEvent(prat_struct, event, ...)
     if IsBattleNetEvent(event) then
       if InCombatLockdown() then
         if Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat then
-          -- No Battle.net message can be logged during combat lockdown as all
-          -- values are secret, so we skip it if a warning has already been issued.
+          --[[
+            No Battle.net message can be logged during combat lockdown as all
+            values are secret, so we skip it if a warning has already been
+            issued.
+          ]]
           return
         end
 
-        local warning_message = "|cffff4800" .. Elephant.L['STRING_INFORM_CHAT_CANNOT_LOG_BN_CHAT_IN_COMBAT'] .. "|r"
+        --[[
+          Issue warning that Battle.net messages cannot be logged while in
+          combat lockdown.
+        ]]
+        local warning_message = "|cffff4800"
+          .. Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_BN_CHAT_IN_COMBAT"]
+          .. "|r"
         Elephant:Print(warning_message)
-        -- We replace the message, which is a secure value, with a warning message.
+        --[[
+          We replace the message, which is a secure value, with a warning
+          message.
+        ]]
         new_message.arg1 = warning_message
         Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat = true
       else
@@ -333,7 +373,10 @@ local function HandleEvent(prat_struct, event, ...)
   if new_message ~= nil then
     local channel_index
     for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
-      if Elephant:ProfileDb().events[event].channels[channel_index] ~= 0 and Elephant:LogsDb().logs[channel_index].enabled then
+      if
+        Elephant:ProfileDb().events[event].channels[channel_index] ~= 0
+        and Elephant:LogsDb().logs[channel_index].enabled
+      then
         Elephant:CaptureNewMessage(new_message, channel_index)
         if extra_new_message ~= nil then
           Elephant:CaptureNewMessage(extra_new_message, channel_index)
@@ -344,15 +387,13 @@ local function HandleEvent(prat_struct, event, ...)
 end
 
 --[[
-Unregisters all events from Elephant, and then
-registers back either:
-- Only one Prat event if the "Prat formatting"
-  option is enabled.
-- All WoW events defined in Core.lua
+  Unregisters all events from Elephant, and then registers back either:
+   - Only one Prat event if the "Prat formatting"
+     option is enabled.
+   - All WoW events defined in Core.lua
 
-This method displays a message if the "Prat
-formatting" option is checked but Prat is not
-loaded.
+  This method displays a message if the "Prat formatting" option is checked but
+  Prat is not loaded.
 ]]
 function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
@@ -369,7 +410,11 @@ function Elephant:RegisterEventsRefresh()
     end
   else
     if not Prat and Elephant:ProfileDb().prat then
-      Elephant:Print("|cffff0000" .. Elephant.L['STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT'] .. "|r")
+      Elephant:Print(
+        "|cffff0000"
+          .. Elephant.L["STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT"]
+          .. "|r"
+      )
     end
 
     for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
@@ -379,14 +424,25 @@ function Elephant:RegisterEventsRefresh()
 end
 
 --[[
-Method pre-handling messages sent by Prat before
-sending them to HandleEvent()
+  Method pre-handling messages sent by Prat before sending them to
+  HandleEvent(). Cannot be local.
 ]]
--- Cannot be local
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
   prat_struct = {
     message = text,
-    lineid = message.ORG.LINE_ID
+    lineid = message.ORG.LINE_ID,
   }
-  HandleEvent(prat_struct, event, message.ORG.MESSAGE, _, _, _, _, _, _, _, message.ORG.CHANNEL)
+  HandleEvent(
+    prat_struct,
+    event,
+    message.ORG.MESSAGE,
+    _,
+    _,
+    _,
+    _,
+    _,
+    _,
+    _,
+    message.ORG.CHANNEL
+  )
 end

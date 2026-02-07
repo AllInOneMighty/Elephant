@@ -14,5 +14,5 @@ externals:
     Libs/LibStub: svn://svn.wowace.com/wow/libstub/mainline/trunk
 
 ignore:
-  - README.md
   - Icons
+  - README.md
