@@ -206,11 +206,8 @@ local function FillCopyWindow()
     for line_index = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct =
         Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
-      -- Ignoring Battle.net messages
       if
         message_struct
-        and message_struct.type ~= "BN_WHISPER_INFORM"
-        and message_struct.type ~= "BN_WHISPER"
       then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
