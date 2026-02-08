@@ -192,6 +192,7 @@ local default_configuration = {
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES_ID"],
+      id_alt = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES_ID_ALT"],
       name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES"],
     },
   },

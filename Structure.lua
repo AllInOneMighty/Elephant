@@ -138,7 +138,10 @@ function Elephant:IsExactGeneralChatChannelId(channel_id)
   for _, general_chat_channel_metadata in
     pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata)
   do
-    if channel_id == general_chat_channel_metadata.id then
+    if
+      channel_id == general_chat_channel_metadata.id
+      or channel_id == general_chat_channel_metadata.id_alt
+    then
       return true
     end
   end
@@ -154,6 +157,9 @@ end
   as "-", ":", etc.
 ]]
 function Elephant:ChannelIdPartiallyMatches(channel_id, general_chat_channel_id)
+  if not general_chat_channel_id then
+    return false
+  end
   return (channel_id == general_chat_channel_id)
     or string.find(channel_id, general_chat_channel_id .. " - ", 1, true)
     or string.find(channel_id, general_chat_channel_id .. " – ", 1, true)
@@ -172,6 +178,10 @@ function Elephant:IsPartialGeneralChatChannelId(channel_id)
       Elephant:ChannelIdPartiallyMatches(
         channel_id,
         general_chat_channel_metadata.id
+      )
+      or Elephant:ChannelIdPartiallyMatches(
+        channel_id,
+        general_chat_channel_metadata.alt_id
       )
     then
       return true

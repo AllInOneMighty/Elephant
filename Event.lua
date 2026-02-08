@@ -7,13 +7,13 @@ local function GetClassColorByGUID(guid)
   if guid then
     local _, english_class = GetPlayerInfoByGUID(guid)
     if english_class then
-      if C_ClassColor.GetClassColor then
+      if C_ClassColor and C_ClassColor.GetClassColor then
         local class_color = C_ClassColor.GetClassColor(english_class)
         if class_color then
           return class_color:GenerateHexColor()
         end
       else
-        local class_color_table = RAID_CLASS_COLORS(english_class)
+        local class_color_table = RAID_CLASS_COLORS[english_class]
         if class_color_table then
           return Elephant:MakeTextHexColor(
             class_color_table.r,
@@ -48,6 +48,10 @@ local function GetChannelIndexFromChannelName(channel_name)
       Elephant:ChannelIdPartiallyMatches(
         channel_name,
         general_chat_channel_metadata.id
+      )
+      or Elephant:ChannelIdPartiallyMatches(
+        channel_name,
+        general_chat_channel_metadata.id_alt
       )
     then
       channel_index = general_chat_channel_metadata.id
@@ -216,7 +220,7 @@ end
 
 local function UpdateWithBattleNetEvent(new_message, ...)
   local _, _, _, _, _, _, _, _, _, _, _, _, bn_sender_id = ...
-  if bn_sender_id and C_BattleNet.GetAccountInfoByID then
+  if bn_sender_id and C_BattleNet and C_BattleNet.GetAccountInfoByID then
     local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
     if account_info then
       new_message.battleTag = account_info.battleTag

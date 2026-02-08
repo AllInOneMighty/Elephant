@@ -37,19 +37,20 @@ local function DropdownCustomChatsInitialize()
 
   local index, tindex, k, v
   for index, tindex in pairs(Elephant:LogsDb().logs) do
-    if not (type(index) == "number") then
-      if not Elephant:IsExactGeneralChatChannelId(index) then
-        info = {}
-        info.text = tindex.name
-        info.func = Elephant.ChangeLog
-        info.arg1 = index
-        info.checked = GetChannelName(tindex.name) ~= 0
-        if not tindex.enabled then
-          info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-          info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
-        end
-        UIDropDownMenu_AddButton(info)
+    if
+      not (type(index) == "number")
+      and not Elephant:IsExactGeneralChatChannelId(index)
+    then
+      info = {}
+      info.text = tindex.name
+      info.func = Elephant.ChangeLog
+      info.arg1 = index
+      info.checked = GetChannelName(tindex.name) ~= 0
+      if not tindex.enabled then
+        info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
+        info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
       end
+      UIDropDownMenu_AddButton(info)
     end
   end
 end
