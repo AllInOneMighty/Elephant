@@ -3,7 +3,7 @@
     <Size x="32" y="34"/>
     <Scripts>
         <OnLoad>
-            self:SetPoint("BOTTOM", QuickJoinToastButton, "TOP")
+            Elephant:SetButtonPosition()
         </OnLoad>
         <OnEnter>
             Elephant:SetTooltip(self, {

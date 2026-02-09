@@ -201,9 +201,7 @@ local function FillCopyWindow()
     for line_index = Elephant:VolatileConfig().currentline, 0, -1 do
       local message_struct =
         Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
-      if
-        message_struct
-      then
+      if message_struct then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
             message_struct,
@@ -587,13 +585,26 @@ function Elephant:UpdateButtonWithUseTimestampsInCopyWindow(button)
 end
 
 --[[
-  Resets the Elephant button to its initial button. If the frame of the button
-  is not foundable at that time, this method does nothing.
+  Sets the Elephant button to its correct position. If the user moved it, it
+  will be where the user last moved it.
+]]
+function Elephant:SetButtonPosition()
+  if QuickJoinToastButton then
+    ElephantButtonFrame:SetPoint("BOTTOM", QuickJoinToastButton, "TOP")
+  else
+    ElephantButtonFrame:SetPoint("BOTTOM", FriendsMicroButton, "TOP")
+  end
+end
+
+--[[
+  Forcibly resets the Elephant button to its initial button, even if the user
+  previously moved it. If the frame of the button is not found, this method does
+  nothing.
 ]]
 function Elephant:ResetButtonPosition()
   if ElephantButtonFrame then
     ElephantButtonFrame:ClearAllPoints()
-    ElephantButtonFrame:SetPoint("BOTTOM", QuickJoinToastButton, "TOP")
+    Elephant:SetButtonPosition()
   end
 end
 
