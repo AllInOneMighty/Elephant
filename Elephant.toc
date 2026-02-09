@@ -22,7 +22,6 @@
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\Elephant\icon.tga
 ## SavedVariables: ElephantDB
-## SavedVariablesPerCharacter: ElephantDBPerChar
 ## OptionalDeps: CallbackHandler-1.0, Ace3, LibDataBroker-1.1, LibDBIcon-1.0, Prat
 ## X-Category: Chat/Communication
 ## X-Credits: harl, Antikleia, <CWDG>月色狼影, Cossy
