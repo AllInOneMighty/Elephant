@@ -8,7 +8,7 @@
                 "TOP",
                 Elephant:DefaultConfiguration().position.x,
                 Elephant:DefaultConfiguration().position.y)
-            getglobal(self:GetName().."TitleFontString"):SetText("Elephant @project-version@")
+            getglobal(self:GetName().."TitleFontString"):SetText("|TInterface\\AddOns\\Elephant\\icon.tga:16:16|t Elephant")
         </OnLoad>
         <OnShow>
             if ElephantCopyFrame then
