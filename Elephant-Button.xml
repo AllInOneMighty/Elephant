@@ -8,9 +8,9 @@
       </OnLoad>
       <OnEnter>
         Elephant:SetTooltip(self, {
-            Elephant.L['STRING_CHAT_BUTTON_TOOLTIP'],
-            Elephant.L['STRING_CHAT_BUTTON_TOOLTIP_DESC_1'],
-            Elephant.L['STRING_CHAT_BUTTON_TOOLTIP_DESC_2'],
+          Elephant.L['STRING_CHAT_BUTTON_TOOLTIP'],
+          Elephant.L['STRING_CHAT_BUTTON_TOOLTIP_DESC_1'],
+          Elephant.L['STRING_CHAT_BUTTON_TOOLTIP_DESC_2'],
         })
       </OnEnter>
       <OnLeave>
