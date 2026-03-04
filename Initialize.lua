@@ -58,10 +58,21 @@ function Elephant:OnInitialize()
   Elephant:RegisterLDBIcon()
 end
 
-local function SetTabButtonProperties(obj, name, typeInfo)
+local function SetTabButtonProperties(obj, typeInfo)
   obj:SetNormalFontObject(GameFontNormalSmall2)
   getglobal(obj:GetName() .. "Text"):SetPoint("CENTER", obj, "CENTER", 0, 2)
-  obj:SetText(string.sub(name, 0, 1))
+  local single_letter = nil
+  for k, v in pairs(Elephant.L) do
+    if k == "STRING_CHAT_NAME_SINGLE_LETTER_" .. typeInfo then
+      single_letter = v
+      break
+    end
+  end
+  if not single_letter then
+    single_letter =
+      string.sub(Elephant.L["STRING_CHAT_NAME_" .. typeInfo], 0, 1)
+  end
+  obj:SetText(single_letter)
   obj:GetNormalTexture():SetVertexColor(
     ChatTypeInfo[typeInfo].r,
     ChatTypeInfo[typeInfo].g,
@@ -83,46 +94,14 @@ function Elephant:OnEnable()
   Elephant:RegisterEventsRefresh()
 
   -- Sets chat tab buttons color
-  SetTabButtonProperties(
-    ElephantFrameGuildTabButton,
-    Elephant.L["STRING_CHAT_NAME_GUILD"],
-    "GUILD"
-  )
-  SetTabButtonProperties(
-    ElephantFrameOfficerTabButton,
-    Elephant.L["STRING_CHAT_NAME_OFFICER"],
-    "OFFICER"
-  )
-  SetTabButtonProperties(
-    ElephantFrameWhisperTabButton,
-    Elephant.L["STRING_CHAT_NAME_WHISPER"],
-    "WHISPER"
-  )
-  SetTabButtonProperties(
-    ElephantFramePartyTabButton,
-    Elephant.L["STRING_CHAT_NAME_PARTY"],
-    "PARTY"
-  )
-  SetTabButtonProperties(
-    ElephantFrameRaidTabButton,
-    Elephant.L["STRING_CHAT_NAME_RAID"],
-    "RAID"
-  )
-  SetTabButtonProperties(
-    ElephantFrameInstanceTabButton,
-    Elephant.L["STRING_CHAT_NAME_INSTANCE"],
-    "INSTANCE_CHAT"
-  )
-  SetTabButtonProperties(
-    ElephantFrameSayTabButton,
-    Elephant.L["STRING_CHAT_NAME_SAY"],
-    "SAY"
-  )
-  SetTabButtonProperties(
-    ElephantFrameYellTabButton,
-    Elephant.L["STRING_CHAT_NAME_YELL"],
-    "YELL"
-  )
+  SetTabButtonProperties(ElephantFrameGuildTabButton, "GUILD")
+  SetTabButtonProperties(ElephantFrameOfficerTabButton, "OFFICER")
+  SetTabButtonProperties(ElephantFrameWhisperTabButton, "WHISPER")
+  SetTabButtonProperties(ElephantFramePartyTabButton, "PARTY")
+  SetTabButtonProperties(ElephantFrameRaidTabButton, "RAID")
+  SetTabButtonProperties(ElephantFrameInstanceTabButton, "INSTANCE_CHAT")
+  SetTabButtonProperties(ElephantFrameSayTabButton, "SAY")
+  SetTabButtonProperties(ElephantFrameYellTabButton, "YELL")
 
   -- Displays default log
   if not Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex] then

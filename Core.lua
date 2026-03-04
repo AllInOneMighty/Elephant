@@ -162,7 +162,7 @@ local default_configuration = {
     loot = Elephant.L["STRING_CHAT_NAME_LOOT"],
     system = Elephant.L["STRING_CHAT_NAME_SYSTEM"],
     achievement = Elephant.L["STRING_CHAT_NAME_ACHIEVEMENT"],
-    instance = Elephant.L["STRING_CHAT_NAME_INSTANCE"],
+    instance = Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
   },
   generalchatchannelmetadata = {
     -- Keep it in the order it should be shown in the dropdown menu.

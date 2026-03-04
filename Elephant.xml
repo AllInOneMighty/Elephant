@@ -502,9 +502,6 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            self:SetText(C)
-          </OnLoad>
           <OnEnter>
             Elephant:SetTooltip(self, {
               Elephant.L["STRING_CHAT_NAME_GUILD"],
@@ -722,7 +719,7 @@
         <Scripts>
           <OnEnter>
             Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_INSTANCE"],
+              Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
               {
                 text = Elephant:GetStateMsg(
                   Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled
