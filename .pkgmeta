@@ -16,3 +16,4 @@ externals:
 ignore:
   - Icons
   - README.md
+  - UI.xsd
