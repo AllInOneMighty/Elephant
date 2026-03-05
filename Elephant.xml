@@ -1,6 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
-  <Frame name="ElephantFrame" parent="UIParent" enableMouse="true" movable="true" toplevel="true" hidden="true">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.blizzard.com/wow/ui/ UI.xsd">
+  <Frame name="ElephantFrame" parent="UIParent" enableMouse="true" movable="true" toplevel="true"
+    hidden="true">
     <Size x="600" y="580"/>
     <Scripts>
       <OnLoad>
@@ -174,7 +176,8 @@
               </Anchors>
               <!-- No color here, will be set during OnEnable() -->
             </FontString>
-            <FontString name="$parentCurrentLineFontString" text="0 / 0" inherits="GameFontNormalSmall">
+            <FontString name="$parentCurrentLineFontString" text="0 / 0"
+              inherits="GameFontNormalSmall">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="170" y="-15"/>
@@ -295,7 +298,8 @@
       <Button name="$parentScrollBottomButton">
         <Size x="32" y="32"/>
         <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeTo="$parentScrollingMessageFrame" relativePoint="BOTTOMRIGHT">
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentScrollingMessageFrame"
+            relativePoint="BOTTOMRIGHT">
             <Offset x="4" y="0"/>
           </Anchor>
         </Anchors>

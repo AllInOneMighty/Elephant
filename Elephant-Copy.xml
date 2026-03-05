@@ -1,6 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
-  <Frame name="ElephantCopyFrameTemplate" toplevel="true" enableMouse="true" hidden="true" virtual="true">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.blizzard.com/wow/ui/ UI.xsd">
+  <Frame name="ElephantCopyFrameTemplate" toplevel="true" enableMouse="true" hidden="true"
+    virtual="true">
     <Size x="500" y="500"/>
     <Scripts>
       <OnLoad>
@@ -80,12 +82,12 @@
       <Layer level="ARTWORK">
         <Texture file="Interface\DialogFrame\UI-DialogBox-Header">
           <Size>
-            <AbsDimension x="256" y="64" />
+            <AbsDimension x="256" y="64"/>
           </Size>
           <Anchors>
             <Anchor point="TOP">
               <Offset>
-                <AbsDimension x="0" y="12" />
+                <AbsDimension x="0" y="12"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -94,7 +96,7 @@
           <Anchors>
             <Anchor point="TOP">
               <Offset>
-                <AbsDimension x="0" y="-2" />
+                <AbsDimension x="0" y="-2"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -125,7 +127,7 @@
         </Layers>
       </Frame>
       <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-        <Size x="424" y="423" />
+        <Size x="424" y="423"/>
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
@@ -154,12 +156,12 @@
                             self:ClearFocus()
               </OnLeave>
             </Scripts>
-            <FontString inherits="ChatFontNormal" />
+            <FontString inherits="ChatFontNormal"/>
           </EditBox>
         </ScrollChild>
       </ScrollFrame>
       <Frame name="$parentScrollTextureFrame">
-        <Size x="435" y="435" />
+        <Size x="435" y="435"/>
         <Anchors>
           <Anchor point="TOP">
             <Offset>
