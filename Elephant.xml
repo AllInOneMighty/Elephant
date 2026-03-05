@@ -59,7 +59,7 @@
             <Anchor point="TOPRIGHT" x="0" y="8"/>
           </Anchors>
         </Texture>
-        <Texture file="Interface\AddOns\Elephant\roth-TR">
+        <Texture file="Interface\AddOns\Elephant\roth-TR" alpha="0.5">
           <Size x="8" y="8"/>
           <Anchors>
             <Anchor point="TOPRIGHT" x="8" y="8"/>
