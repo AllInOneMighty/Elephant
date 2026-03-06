@@ -89,12 +89,18 @@ local function HasText(event)
   return not (IsBattleNetEvent(event) and InCombatLockdown())
 end
 
+local function IsOfMonsterOrigin(event)
+  return event == "CHAT_MSG_MONSTER_WHISPER"
+    or event == "CHAT_MSG_MONSTER_SAY"
+    or event == "CHAT_MSG_MONSTER_YELL"
+    or event == "CHAT_MSG_MONSTER_EMOTE"
+end
+
 local function HasPlayerName(event)
   return event == "CHAT_MSG_BATTLEGROUND"
     or event == "CHAT_MSG_BATTLEGROUND_LEADER"
     or event == "CHAT_MSG_WHISPER"
     or event == "CHAT_MSG_WHISPER_INFORM"
-    or event == "CHAT_MSG_MONSTER_WHISPER"
     or event == "CHAT_MSG_RAID"
     or event == "CHAT_MSG_RAID_BOSS_EMOTE"
     or event == "CHAT_MSG_RAID_LEADER"
@@ -102,17 +108,15 @@ local function HasPlayerName(event)
     or event == "CHAT_MSG_PARTY"
     or event == "CHAT_MSG_PARTY_LEADER"
     or event == "CHAT_MSG_SAY"
-    or event == "CHAT_MSG_MONSTER_SAY"
     or event == "CHAT_MSG_YELL"
-    or event == "CHAT_MSG_MONSTER_YELL"
     or event == "CHAT_MSG_OFFICER"
     or event == "CHAT_MSG_GUILD"
     or event == "CHAT_MSG_EMOTE"
-    or event == "CHAT_MSG_MONSTER_EMOTE"
     or event == "CHAT_MSG_ACHIEVEMENT"
     or event == "CHAT_MSG_GUILD_ACHIEVEMENT"
     or event == "CHAT_MSG_INSTANCE_CHAT"
     or event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
+    or IsOfMonsterOrigin(event)
 end
 
 local function HasClassColor(event)
@@ -122,6 +126,18 @@ end
 
 local function HasFlags(event)
   return event == "CHAT_MSG_WHISPER"
+end
+
+local function IsLockedDownDueToCombat(event)
+  if not InCombatLockdown() then
+    return false
+  end
+
+  --[[
+    No Battle.net message can be logged during combat lockdown as all values are
+    secret.
+  ]]
+  return IsBattleNetEvent(event) or IsOfMonsterOrigin(event)
 end
 
 local function Handle_CHAT_MSG_CHANNEL(
@@ -318,58 +334,51 @@ local function HandleEvent(prat_struct, event, ...)
       type = Elephant:ProfileDb().events[event].type,
     }
 
-    if HasText(event) then
-      local text = ...
-      new_message.arg1 = text
-    end
+    if IsLockedDownDueToCombat(event) then
+      if Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat then
+        -- Skip if a warning has already been issued.
+        return
+      end
 
-    if HasPlayerName(event) then
-      local _, player_name = ...
-      new_message.arg2 = player_name
-    end
+      --[[
+        Issue warning that some messages cannot be logged while in combat
+        lockdown.
+      ]]
+      local warning_message = "|cffff4800"
+        .. Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
+        .. "|r"
+      Elephant:Print(warning_message)
+      -- We set the message with a warning.
+      new_message.arg1 = warning_message
+      Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
+    else
+      if HasText(event) then
+        local text = ...
+        new_message.arg1 = text
+      end
 
-    if HasClassColor(event) then
-      local _, _, _, _, _, _, _, _, _, _, _, guid = ...
-      new_message.clColor = GetClassColorByGUID(guid)
-    end
+      if HasPlayerName(event) then
+        local _, player_name = ...
+        new_message.arg2 = player_name
+      end
 
-    if IsBattleNetEvent(event) then
-      if InCombatLockdown() then
-        if Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat then
-          --[[
-            No Battle.net message can be logged during combat lockdown as all
-            values are secret, so we skip it if a warning has already been
-            issued.
-          ]]
-          return
-        end
+      if HasClassColor(event) then
+        local _, _, _, _, _, _, _, _, _, _, _, guid = ...
+        new_message.clColor = GetClassColorByGUID(guid)
+      end
 
-        --[[
-          Issue warning that Battle.net messages cannot be logged while in
-          combat lockdown.
-        ]]
-        local warning_message = "|cffff4800"
-          .. Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_BN_CHAT_IN_COMBAT"]
-          .. "|r"
-        Elephant:Print(warning_message)
-        --[[
-          We replace the message, which is a secure value, with a warning
-          message.
-        ]]
-        new_message.arg1 = warning_message
-        Elephant:VolatileConfig().warned_cannot_log_bn_chat_in_combat = true
-      else
+      if IsBattleNetEvent(event) then
         UpdateWithBattleNetEvent(new_message, ...)
       end
-    end
 
-    if HasFlags(event) then
-      local _, _, _, _, _, flags = ...
-      new_message.arg6 = NilIfEmpty(flags)
-    end
+      if HasFlags(event) then
+        local _, _, _, _, _, flags = ...
+        new_message.arg6 = NilIfEmpty(flags)
+      end
 
-    if IsPartyLootMethodChanged(event) then
-      extra_new_message = UpdateWithPartyLootMethodChangedEvent(new_message)
+      if IsPartyLootMethodChanged(event) then
+        extra_new_message = UpdateWithPartyLootMethodChangedEvent(new_message)
+      end
     end
   end
 

@@ -108,7 +108,7 @@ local volatile_configuration = {
   -- For copy window state
   is_copywindow_bbcode = false,
 
-  warned_cannot_log_bn_chat_in_combat = false,
+  warned_cannot_log_some_msgs_in_combat = false,
 }
 
 -- Temporary config, not saved but does change at runtime
