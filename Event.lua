@@ -94,15 +94,14 @@ local function IsOfMonsterOrigin(event)
     or event == "CHAT_MSG_MONSTER_SAY"
     or event == "CHAT_MSG_MONSTER_YELL"
     or event == "CHAT_MSG_MONSTER_EMOTE"
+    or event == "CHAT_MSG_RAID_BOSS_WHISPER"
+    or event == "CHAT_MSG_RAID_BOSS_EMOTE"
 end
 
 local function HasPlayerName(event)
-  return event == "CHAT_MSG_BATTLEGROUND"
-    or event == "CHAT_MSG_BATTLEGROUND_LEADER"
-    or event == "CHAT_MSG_WHISPER"
+  return event == "CHAT_MSG_WHISPER"
     or event == "CHAT_MSG_WHISPER_INFORM"
     or event == "CHAT_MSG_RAID"
-    or event == "CHAT_MSG_RAID_BOSS_EMOTE"
     or event == "CHAT_MSG_RAID_LEADER"
     or event == "CHAT_MSG_RAID_WARNING"
     or event == "CHAT_MSG_PARTY"

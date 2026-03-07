@@ -1,25 +1,47 @@
 -- Utility method to sort the dropdowns menu choices alphabetically.
 local function SortTable(arg1, arg2)
-  local i = 1
-  local j
-
-  repeat
-    j = string.byte(arg1.desc, i) - string.byte(arg2.desc, i)
-
-    if j == 0 then
-      i = i + 1
-    elseif j < 0 then
-      return true
-    else
-      return false
-    end
-  until string.byte(arg1.desc, i) == nil or string.byte(arg2.desc, i) == nil
-
-  if string.byte(arg1.desc, i) == nil then
+  -- Safeguard
+  if arg1 == nil or arg1.desc == nil then
     return true
-  else
+  elseif arg2 == nil or arg2.desc == nil then
     return false
   end
+
+  local max_length = max(string.len(arg1.desc), string.len(arg2.desc))
+
+  local index = nil
+  local byte_diff = nil
+  local arg1_char = nil
+  local arg2_char = nil
+
+  for index = 1, max_length do
+    arg1_char = string.byte(arg1.desc, index)
+    if arg1_char == nil then
+      -- No more letters on arg1, so it should appear first.
+      return true
+    end
+
+    arg2_char = string.byte(arg2.desc, index)
+    if arg2_char == nil then
+      -- No more letters on arg2, so it should appear first.
+      return false
+    end
+
+    byte_diff = arg1_char - arg2_char
+
+    --[[
+      Alphabet goes with increasing byte values, so a difference less than 0
+      means the first letter appears before the second in the alphabet.
+    ]]
+    if byte_diff < 0 then
+      return true
+    elseif byte_diff > 0 then
+      return false
+    end
+  end
+
+  -- Happens when string are identical.
+  return false
 end
 
 --[[
@@ -134,18 +156,29 @@ local function DropdownMiscChatsInitialize()
   UIDropDownMenu_AddButton(info)
 end
 
+local function GetEventDesc(eventTable)
+  if eventTable.desc then
+    return eventTable.desc
+  elseif _G[eventTable.type] then
+    return _G[eventTable.type]
+  else
+    return "???"
+  end
+end
+
 local function DropdownCatchOptionsInitialize(frame, level)
   local menu = {}
 
   -- Getting events for current log
   local eventKey, eventTable, catcherValue
-  for eventID, eventTable in pairs(Elephant:ProfileDb().events) do
-    if eventTable.channels and eventTable.desc then
+  for event_id, eventTable in pairs(Elephant:ProfileDb().events) do
+    local event_desc = GetEventDesc(eventTable)
+    if eventTable.channels and event_desc then
       catcherValue = eventTable.channels[Elephant:CharDb().currentlogindex]
       if catcherValue then
         table.insert(menu, {
-          desc = eventTable.desc,
-          key = eventID,
+          desc = event_desc,
+          key = event_id,
           option = catcherValue,
         })
       end

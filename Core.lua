@@ -230,14 +230,12 @@ local default_configuration = {
     events = {
       ["CHAT_MSG_ACHIEVEMENT"] = {
         type = "ACHIEVEMENT",
-        desc = CHAT_MSG_ACHIEVEMENT,
         channels = {
           [default_channel_indexes.achievement] = 0,
         },
       },
       ["CHAT_MSG_BG_SYSTEM_ALLIANCE"] = {
         type = "BG_SYSTEM_ALLIANCE",
-        desc = CHAT_MSG_BG_SYSTEM_ALLIANCE,
         channels = {
           [default_channel_indexes.raid] = 0,
           [default_channel_indexes.instance] = 1,
@@ -245,7 +243,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_BG_SYSTEM_HORDE"] = {
         type = "BG_SYSTEM_HORDE",
-        desc = CHAT_MSG_BG_SYSTEM_HORDE,
         channels = {
           [default_channel_indexes.raid] = 0,
           [default_channel_indexes.instance] = 1,
@@ -253,7 +250,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_BG_SYSTEM_NEUTRAL"] = {
         type = "BG_SYSTEM_NEUTRAL",
-        desc = CHAT_MSG_BG_SYSTEM_NEUTRAL,
         channels = {
           [default_channel_indexes.raid] = 0,
           [default_channel_indexes.instance] = 1,
@@ -261,14 +257,14 @@ local default_configuration = {
       },
       ["CHAT_MSG_BN_WHISPER"] = {
         type = "BN_WHISPER",
-        desc = CHAT_MSG_BN_WHISPER,
+        desc = format('%s (%s)', BN_WHISPER, CHAT_MSG_WHISPER),
         channels = {
           [default_channel_indexes.whisper] = -1,
         },
       },
       ["CHAT_MSG_BN_WHISPER_INFORM"] = {
         type = "BN_WHISPER_INFORM",
-        desc = CHAT_MSG_BN_CONVERSATION,
+        desc = format('%s (%s)', BN_WHISPER, CHAT_MSG_WHISPER_INFORM),
         channels = {
           [default_channel_indexes.whisper] = -1,
         },
@@ -281,7 +277,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_EMOTE"] = {
         type = "EMOTE",
-        desc = CHAT_MSG_EMOTE,
         channels = {
           [default_channel_indexes.say] = 1,
           [default_channel_indexes.party] = 0,
@@ -291,14 +286,13 @@ local default_configuration = {
       },
       ["CHAT_MSG_GUILD"] = {
         type = "GUILD",
-        desc = CHAT_MSG_GUILD,
+        desc = GUILD_CHAT,
         channels = {
           [default_channel_indexes.guild] = -1,
         },
       },
       ["CHAT_MSG_GUILD_ACHIEVEMENT"] = {
         type = "GUILD_ACHIEVEMENT",
-        desc = CHAT_MSG_GUILD_ACHIEVEMENT,
         channels = {
           [default_channel_indexes.achievement] = -1,
           [default_channel_indexes.guild] = 0,
@@ -307,14 +301,12 @@ local default_configuration = {
       },
       ["CHAT_MSG_INSTANCE_CHAT"] = {
         type = "INSTANCE_CHAT",
-        desc = INSTANCE_CHAT,
         channels = {
           [default_channel_indexes.instance] = -1,
         },
       },
       ["CHAT_MSG_INSTANCE_CHAT_LEADER"] = {
-        type = "INSTANCE_CHAT",
-        desc = INSTANCE_CHAT_LEADER,
+        type = "INSTANCE_CHAT_LEADER",
         channels = {
           [default_channel_indexes.instance] = -1,
         },
@@ -322,7 +314,7 @@ local default_configuration = {
       ["CHAT_MSG_LOOT"] = {
         type = "LOOT",
         register_with_prat = true,
-        desc = CHAT_MSG_LOOT,
+        desc = ITEM_LOOT,
         channels = {
           [default_channel_indexes.loot] = -1,
         },
@@ -330,7 +322,7 @@ local default_configuration = {
       ["CHAT_MSG_MONEY"] = {
         type = "MONEY",
         register_with_prat = true,
-        desc = CHAT_MSG_MONEY,
+        desc = MONEY_LOOT,
         channels = {
           [default_channel_indexes.loot] = 1,
         },
@@ -338,14 +330,12 @@ local default_configuration = {
       ["CHAT_MSG_CURRENCY"] = {
         type = "CURRENCY",
         register_with_prat = true,
-        desc = CURRENCY,
         channels = {
           [default_channel_indexes.loot] = 1,
         },
       },
       ["CHAT_MSG_MONSTER_EMOTE"] = {
         type = "MONSTER_EMOTE",
-        desc = CHAT_MSG_MONSTER_EMOTE,
         channels = {
           [default_channel_indexes.say] = 1,
           [default_channel_indexes.party] = 0,
@@ -355,7 +345,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_MONSTER_SAY"] = {
         type = "MONSTER_SAY",
-        desc = CHAT_MSG_MONSTER_SAY,
         channels = {
           [default_channel_indexes.say] = 1,
           [default_channel_indexes.party] = 0,
@@ -365,7 +354,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_MONSTER_WHISPER"] = {
         type = "MONSTER_WHISPER",
-        desc = CHAT_MSG_MONSTER_WHISPER,
         channels = {
           [default_channel_indexes.whisper] = 1,
           [default_channel_indexes.party] = 1,
@@ -375,7 +363,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_MONSTER_YELL"] = {
         type = "MONSTER_YELL",
-        desc = CHAT_MSG_MONSTER_YELL,
         channels = {
           [default_channel_indexes.say] = 0,
           [default_channel_indexes.party] = 1,
@@ -386,14 +373,13 @@ local default_configuration = {
       },
       ["CHAT_MSG_OFFICER"] = {
         type = "OFFICER",
-        desc = CHAT_MSG_OFFICER,
+        desc = OFFICER_CHAT,
         channels = {
           [default_channel_indexes.officer] = -1,
         },
       },
       ["CHAT_MSG_PARTY"] = {
         type = "PARTY",
-        desc = CHAT_MSG_PARTY,
         channels = {
           [default_channel_indexes.party] = -1,
           [default_channel_indexes.raid] = 0,
@@ -401,7 +387,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_PARTY_LEADER"] = {
         type = "PARTY_LEADER",
-        desc = CHAT_MSG_PARTY_LEADER,
         channels = {
           [default_channel_indexes.party] = -1,
           [default_channel_indexes.raid] = 0,
@@ -409,28 +394,32 @@ local default_configuration = {
       },
       ["CHAT_MSG_RAID"] = {
         type = "RAID",
-        desc = CHAT_MSG_RAID,
         channels = {
           [default_channel_indexes.raid] = -1,
         },
       },
       ["CHAT_MSG_RAID_LEADER"] = {
         type = "RAID_LEADER",
-        desc = CHAT_MSG_RAID_LEADER,
         channels = {
           [default_channel_indexes.raid] = -1,
         },
       },
       ["CHAT_MSG_RAID_WARNING"] = {
         type = "RAID_WARNING",
-        desc = CHAT_MSG_RAID_WARNING,
         channels = {
           [default_channel_indexes.raid] = -1,
         },
       },
+      ["CHAT_MSG_RAID_BOSS_WHISPER"] = {
+        type = "RAID_BOSS_WHISPER",
+        channels = {
+          [default_channel_indexes.whisper] = 0,
+          [default_channel_indexes.raid] = 1,
+          [default_channel_indexes.instance] = 1,
+        },
+      },
       ["CHAT_MSG_RAID_BOSS_EMOTE"] = {
         type = "RAID_BOSS_EMOTE",
-        desc = CHAT_MSG_RAID_BOSS_EMOTE,
         channels = {
           [default_channel_indexes.raid] = 1,
           [default_channel_indexes.instance] = 1,
@@ -438,14 +427,13 @@ local default_configuration = {
       },
       ["CHAT_MSG_SAY"] = {
         type = "SAY",
-        desc = CHAT_MSG_SAY,
         channels = {
           [default_channel_indexes.say] = -1,
         },
       },
       ["CHAT_MSG_SYSTEM"] = {
         type = "SYSTEM",
-        desc = CHAT_MSG_SYSTEM,
+        desc = SYSTEM_MESSAGES,
         channels = {
           [default_channel_indexes.system] = -1,
         },
@@ -476,7 +464,6 @@ local default_configuration = {
       },
       ["CHAT_MSG_YELL"] = {
         type = "YELL",
-        desc = CHAT_MSG_YELL,
         channels = {
           [default_channel_indexes.say] = 0,
           [default_channel_indexes.yell] = -1,
