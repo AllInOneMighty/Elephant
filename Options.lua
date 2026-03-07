@@ -17,10 +17,10 @@ function Elephant:SetupOptions()
     type = "group",
     childGroups = "tab",
     args = {
-      optionsareperchar = {
+      optionsareperprofile = {
         type = "description",
         order = 0,
-        name = Elephant.L["STRING_OPTIONS_DESC"],
+        name = Elephant.L["STRING_OPTIONS_ARE_PER_PROFILE_DESC"],
         fontSize = "medium",
       },
       toggleicon = {
