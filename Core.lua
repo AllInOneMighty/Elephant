@@ -216,6 +216,7 @@ local default_configuration = {
       case with Elephant, so keep it as-is.
     ]]
     use_factionrealm_db = false,
+    skip_cannot_log_restricted_warning = false,
     -- Minimap
     minimap = {
       hide = false,

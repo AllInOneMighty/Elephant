@@ -334,7 +334,10 @@ local function HandleEvent(prat_struct, event, ...)
     }
 
     if IsLockedDownDueToCombat(event) then
-      if Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat then
+      if
+        Elephant:ProfileDb().skip_cannot_log_restricted_warning
+        or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
+      then
         -- Skip if a warning has already been issued.
         return
       end
