@@ -162,6 +162,7 @@ local function GetEventDesc(eventTable)
   elseif _G[eventTable.type] then
     return _G[eventTable.type]
   else
+    -- Should never happen, here just in case.
     return "???"
   end
 end
