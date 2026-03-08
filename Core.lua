@@ -221,6 +221,7 @@ local default_configuration = {
     minimap = {
       hide = false,
     },
+    skin_id = "default",
     --[[
       Completing saved default configuration: Events & Default catchers.
       Possible values for channels:

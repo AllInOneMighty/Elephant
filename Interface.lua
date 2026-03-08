@@ -1,3 +1,166 @@
+local skins = {
+  default = {
+    name = "Default",
+    border = {
+      texture = [[Interface\Addons\Elephant\roth.tga]],
+      width = 16,
+      height = 16,
+      thickness = 6,
+      alpha = 0.5,
+    },
+    background = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Background]],
+      width = 64,
+      height = 64,
+      alpha = 0.75,
+    },
+  },
+  achievement = {
+    name = "Achievement",
+    border = {
+      texture = [[Interface\ACHIEVEMENTFRAME\UI-Achievement-WoodBorder]],
+      width = 64,
+      height = 64,
+      thickness = 23,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\QuestionFrame\question-background]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  bank = {
+    name = "Bank",
+    border = {
+      texture = [[Interface\LFGFRAME\LFGBorder]],
+      width = 32,
+      height = 32,
+      thickness = 15,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\BankFrame\BankFrameBackground]],
+      width = 256,
+      height = 256,
+      alpha = 1,
+    },
+  },
+  dialog = {
+    name = "Dialog",
+    border = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Border]],
+      width = 32,
+      height = 32,
+      thickness = 11,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Background]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  dialog_gold = {
+    name = "Dialog: Gold",
+    border = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Gold-Border]],
+      width = 32,
+      height = 32,
+      thickness = 11,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Gold-Background]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  panel = {
+    name = "Panel",
+    border = {
+      texture = [[Interface\GLUES\COMMON\TextPanel-Border]],
+      width = 32,
+      height = 32,
+      thickness = 6,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\BlackMarket\BlackMarketBackground-Tile]],
+      width = 256,
+      height = 256,
+      alpha = 1,
+    },
+  },
+  tooltip = {
+    name = "Tooltip: Normal",
+    border = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Border]],
+      width = 16,
+      height = 16,
+      thickness = 4,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\DialogFrame\UI-DialogBox-Background]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  tooltip_azerite = {
+    name = "Tooltip: Azerite",
+    border = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Border-Azerite]],
+      width = 16,
+      height = 16,
+      thickness = 4,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Background-Azerite]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  tooltip_corrupted = {
+    name = "Tooltip: Corrupted",
+    border = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Border-Corrupted]],
+      width = 16,
+      height = 16,
+      thickness = 4,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Background-Corrupted]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+  tooltip_maw = {
+    name = "Tooltip: Maw",
+    border = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Border-Maw]],
+      width = 16,
+      height = 16,
+      thickness = 4,
+      alpha = 1,
+    },
+    background = {
+      texture = [[Interface\Tooltips\UI-Tooltip-Background-Maw]],
+      width = 64,
+      height = 64,
+      alpha = 1,
+    },
+  },
+}
+
 --[[
   Sets the given frame color using :SetTextColor() to the color used by the
   currently log displayed. This method uses Blizzard's default chat type colors.
@@ -277,6 +440,231 @@ local function PlaceTooltip(frame, message_struct, position)
 end
 
 --[[
+  Changes the border of the given frame, expecting a single texture containing 8
+  parts of identical dimensions glued together from left to right, each one
+  representing the following, in order:
+   - Left side
+   - Right side
+   - Top side (rotated 90 degrees counter-clockwise)
+   - Bottom side (rotated 90 degrees counter-clockwise)
+   - Top left corner
+   - Top right corner
+   - Bottom left corner
+   - Bottom right corner
+
+  The border is added around the frame and not inside the frame, allowing its
+  full height and width to be used for content. The "thickness" parameter sets
+  that number for proper display.
+
+  Currently only supports one thickness that is consistent all around the frame.
+]]
+local function ChangeBorder(
+  frame,
+  texture,
+  border_width,
+  border_height,
+  thickness,
+  alpha
+)
+  -- Remove all borders
+  local regions = { frame:GetRegions() }
+  for _, region in ipairs(regions) do
+    if region:IsObjectType("Texture") and region:GetDrawLayer() == "BORDER" then
+      region:SetTexture(nil)
+    end
+  end
+
+  local _, _, frame_width, frame_height = frame:GetRect()
+  --[[
+    Part of ther border that is "inside" the frame. Used for proper positioning
+    of other elements, such as left, bottom, right and top sides.
+  ]]
+  local width_thickness_remainder = border_width - thickness
+  local height_thickness_remainder = border_height - thickness
+  --[[
+    Number of times the border should be repeated at the top and bottom of the
+    frame.
+  ]]
+  local width_border_repeat_count = (
+    frame_width - width_thickness_remainder * 2
+  ) / border_width
+
+  -- Set borders
+  local top_left = frame:CreateTexture()
+  top_left:SetDrawLayer("BORDER")
+  top_left:SetTexture(texture)
+  top_left:SetAlpha(alpha)
+  top_left:SetTexCoord(0.5, 0.625, 0, 1)
+  top_left:SetSize(border_width, border_height)
+  top_left:SetPoint("TOPLEFT", -thickness, thickness)
+
+  local left = frame:CreateTexture()
+  left:SetDrawLayer("BORDER")
+  left:SetTexture(texture, "CLAMP", "REPEAT")
+  left:SetAlpha(alpha)
+  left:SetTexCoord(0, 0.125, 0, 1)
+  left:SetSize(border_width, frame_height - height_thickness_remainder * 2)
+  left:SetVertTile(true)
+  left:SetPoint("TOPLEFT", -thickness, -height_thickness_remainder)
+
+  local bottom_left = frame:CreateTexture()
+  bottom_left:SetDrawLayer("BORDER")
+  bottom_left:SetTexture(texture)
+  bottom_left:SetAlpha(alpha)
+  bottom_left:SetTexCoord(0.75, 0.875, 0, 1)
+  bottom_left:SetSize(border_width, border_height)
+  bottom_left:SetPoint("BOTTOMLEFT", -thickness, -thickness)
+
+  --[[
+    The way this works is by setting the texture to repeat vertically, then by
+    using SetTexCoord() and select coordinates to map points of the image
+    to coordinates on the Texture while rotating it by 90 degrees.
+
+    In other words, we map the following image -> Texture points (remember that
+    the Texture has a size extending from one side to the other horizontally:
+     - (0.375, width_border_repeat_count) -> (0, 0) Top left
+     - (0.5, width_border_repeat_count) -> (0, 1) Bottom left
+     - (0.375, 0) -> (0, 1) Top right
+     - (0.5, 0) -> (1, 1) Bottom right
+
+    We cannot use horizontal expansion with SetTexCoord() as this would fill
+    with the other 'sides' of the border, thus why this madness is used here.
+    You shoudl NOT call setVertTile() or setHorizTile() as those screw up the
+    display. They do not do what you think they do.
+
+    The same applies to the top, just with different numbers.
+  ]]
+  local bottom = frame:CreateTexture()
+  bottom:SetDrawLayer("BORDER")
+  bottom:SetTexture(texture, "CLAMP", "REPEAT")
+  bottom:SetAlpha(alpha)
+  bottom:SetTexCoord(
+    0.375,
+    width_border_repeat_count,
+    0.5,
+    width_border_repeat_count,
+    0.375,
+    0,
+    0.5,
+    0
+  )
+  bottom:SetSize(frame_width - width_thickness_remainder * 2, border_height)
+  bottom:SetPoint("BOTTOMLEFT", width_thickness_remainder, -thickness)
+
+  local bottom_right = frame:CreateTexture()
+  bottom_right:SetDrawLayer("BORDER")
+  bottom_right:SetTexture(texture)
+  bottom_right:SetAlpha(alpha)
+  bottom_right:SetTexCoord(0.875, 1, 0, 1)
+  bottom_right:SetSize(border_width, border_height)
+  bottom_right:SetPoint("BOTTOMRIGHT", thickness, -thickness)
+
+  local right = frame:CreateTexture()
+  right:SetDrawLayer("BORDER")
+  right:SetTexture(texture, "CLAMP", "REPEAT")
+  right:SetAlpha(alpha)
+  right:SetTexCoord(0.125, 0.25, 0, 1)
+  right:SetSize(border_width, frame_height - height_thickness_remainder * 2)
+  right:SetVertTile(true)
+  right:SetPoint("TOPRIGHT", thickness, -height_thickness_remainder)
+
+  local top_right = frame:CreateTexture()
+  top_right:SetDrawLayer("BORDER")
+  top_right:SetTexture(texture)
+  top_right:SetAlpha(alpha)
+  top_right:SetTexCoord(0.625, 0.75, 0, 1)
+  top_right:SetSize(border_width, border_height)
+  top_right:SetPoint("TOPRIGHT", thickness, thickness)
+
+  local top = frame:CreateTexture()
+  top:SetDrawLayer("BORDER")
+  top:SetTexture(texture, "CLAMP", "REPEAT")
+  top:SetAlpha(alpha)
+  top:SetTexCoord(
+    0.250,
+    width_border_repeat_count,
+    0.375,
+    width_border_repeat_count,
+    0.250,
+    0,
+    0.375,
+    0
+  )
+  top:SetSize(frame_width - width_thickness_remainder * 2, border_height)
+  top:SetPoint("TOPLEFT", width_thickness_remainder, thickness)
+end
+
+local function ChangeBackground(frame, texture, width, height, alpha)
+  -- Remove all backgrounds (there should only be one)
+  local regions = { frame:GetRegions() }
+  for _, region in ipairs(regions) do
+    if
+      region:IsObjectType("Texture") and region:GetDrawLayer() == "BACKGROUND"
+    then
+      region:SetTexture(nil)
+    end
+  end
+
+  -- Set background
+  local background = frame:CreateTexture()
+  background:SetDrawLayer("BACKGROUND")
+  background:SetTexture(texture, "REPEAT", "REPEAT")
+  background:SetHorizTile(true)
+  background:SetVertTile(true)
+  background:SetSize(width, height)
+  background:SetAlpha(alpha)
+  background:SetAllPoints()
+end
+
+-- Changes Elephant's skin.
+local function ChangeSkin(skin_id)
+  local skin_tbl = skins["default"]
+
+  local id = nil
+  local tbl = nil
+  for id, tbl in pairs(skins) do
+    if id == skin_id then
+      skin_tbl = tbl
+      break
+    end
+  end
+
+  ChangeBorder(
+    ElephantFrame,
+    skin_tbl.border.texture,
+    skin_tbl.border.width,
+    skin_tbl.border.height,
+    skin_tbl.border.thickness,
+    skin_tbl.border.alpha
+  )
+  ChangeBackground(
+    ElephantFrame,
+    skin_tbl.background.texture,
+    skin_tbl.background.width,
+    skin_tbl.background.height,
+    skin_tbl.background.alpha
+  )
+
+  if ElephantCopyFrame then
+    ChangeBorder(
+      ElephantCopyFrame,
+      skin_tbl.border.texture,
+      skin_tbl.border.width,
+      skin_tbl.border.height,
+      skin_tbl.border.thickness,
+      skin_tbl.border.alpha
+    )
+    ChangeBackground(
+      ElephantCopyFrame,
+      skin_tbl.background.texture,
+      skin_tbl.background.width,
+      skin_tbl.background.height,
+      skin_tbl.background.alpha
+    )
+  end
+end
+
+--[[
   Changes the display of the current log to the one at the given index.
 
   Changes the value of the current log index to the new one, changes the current
@@ -385,14 +773,7 @@ function Elephant:ShowCopyWindow()
       UIParent,
       "ElephantCopyFrameTemplate"
     )
-    Elephant:ChangeBorder(
-      ElephantCopyFrame,
-      [[Interface\Addons\Elephant\roth.tga]],
-      16,
-      16,
-      6,
-      0.5
-    )
+    Elephant:UpdateSkin()
   end
 
   FillCopyWindow()
@@ -698,157 +1079,16 @@ function Elephant:OpenOptions()
   end
 end
 
---[[
-  Changes the border of the given frame, expecting a single texture containing 8
-  parts of identical dimensions glued together from left to right, each one
-  representing the following, in order:
-   - Left side
-   - Right side
-   - Top side (rotated 90 degrees counter-clockwise)
-   - Bottom side (rotated 90 degrees counter-clockwise)
-   - Top left corner
-   - Top right corner
-   - Bottom left corner
-   - Bottom right corner
-
-  The border is added around the frame and not inside the frame, allowing its
-  full height and width to be used for content. The "thickness" parameter sets
-  that number for proper display.
-
-  Currently only supports one thickness that is consistent all around the frame.
-]]
-function Elephant:ChangeBorder(
-  frame,
-  texture,
-  border_width,
-  border_height,
-  thickness,
-  alpha
-)
-  -- Remove all borders
-  local regions = { frame:GetRegions() }
-  for _, region in ipairs(regions) do
-    if region:IsObjectType("Texture") and region:GetDrawLayer() == "BORDER" then
-      region:SetTexture(nil)
-    end
+-- Returns all skins available.
+function Elephant:GetSkinNames()
+  local skin_names = {}
+  for skin_id, skin_tbl in pairs(skins) do
+    skin_names[skin_id] = skin_tbl.name
   end
+  return skin_names
+end
 
-  local _, _, frame_width, frame_height = frame:GetRect()
-  --[[
-    Part of ther border that is "inside" the frame. Used for proper positioning
-    of other elements, such as left, bottom, right and top sides.
-  ]]
-  local width_thickness_remainder = border_width - thickness
-  local height_thickness_remainder = border_height - thickness
-  --[[
-    Number of times the border should be repeated at the top and bottom of the
-    frame.
-  ]]
-  local width_border_repeat_count = (
-    frame_width - width_thickness_remainder * 2
-  ) / border_width
-
-  -- Set borders
-  local top_left = frame:CreateTexture()
-  top_left:SetDrawLayer("BORDER")
-  top_left:SetTexture(texture)
-  top_left:SetAlpha(alpha)
-  top_left:SetTexCoord(0.5, 0.625, 0, 1)
-  top_left:SetSize(border_width, border_height)
-  top_left:SetPoint("TOPLEFT", -thickness, thickness)
-
-  local left = frame:CreateTexture()
-  left:SetDrawLayer("BORDER")
-  left:SetTexture(texture, "CLAMP", "REPEAT")
-  left:SetAlpha(alpha)
-  left:SetTexCoord(0, 0.125, 0, 1)
-  left:SetSize(border_width, frame_height - height_thickness_remainder * 2)
-  left:SetVertTile(true)
-  left:SetPoint("TOPLEFT", -thickness, -height_thickness_remainder)
-
-  local bottom_left = frame:CreateTexture()
-  bottom_left:SetDrawLayer("BORDER")
-  bottom_left:SetTexture(texture)
-  bottom_left:SetAlpha(alpha)
-  bottom_left:SetTexCoord(0.75, 0.875, 0, 1)
-  bottom_left:SetSize(border_width, border_height)
-  bottom_left:SetPoint("BOTTOMLEFT", -thickness, -thickness)
-
-  --[[
-    The way this works is by setting the texture to repeat vertically, then by
-    using SetTexCoord() and select coordinates to map points of the image
-    to coordinates on the Texture while rotating it by 90 degrees.
-
-    In other words, we map the following image -> Texture points (remember that
-    the Texture has a size extending from one side to the other horizontally:
-     - (0.375, width_border_repeat_count) -> (0, 0) Top left
-     - (0.5, width_border_repeat_count) -> (0, 1) Bottom left
-     - (0.375, 0) -> (0, 1) Top right
-     - (0.5, 0) -> (1, 1) Bottom right
-
-    We cannot use horizontal expansion with SetTexCoord() as this would fill
-    with the other 'sides' of the border, thus why this madness is used here.
-    You shoudl NOT call setVertTile() or setHorizTile() as those screw up the
-    display. They do not do what you think they do.
-
-    The same applies to the top, just with different numbers.
-  ]]
-  local bottom = frame:CreateTexture()
-  bottom:SetDrawLayer("BORDER")
-  bottom:SetTexture(texture, "CLAMP", "REPEAT")
-  bottom:SetAlpha(alpha)
-  bottom:SetTexCoord(
-    0.375,
-    width_border_repeat_count,
-    0.5,
-    width_border_repeat_count,
-    0.375,
-    0,
-    0.5,
-    0
-  )
-  bottom:SetSize(frame_width - width_thickness_remainder * 2, border_height)
-  bottom:SetPoint("BOTTOMLEFT", width_thickness_remainder, -thickness)
-
-  local bottom_right = frame:CreateTexture()
-  bottom_right:SetDrawLayer("BORDER")
-  bottom_right:SetTexture(texture)
-  bottom_right:SetAlpha(alpha)
-  bottom_right:SetTexCoord(0.875, 1, 0, 1)
-  bottom_right:SetSize(border_width, border_height)
-  bottom_right:SetPoint("BOTTOMRIGHT", thickness, -thickness)
-
-  local right = frame:CreateTexture()
-  right:SetDrawLayer("BORDER")
-  right:SetTexture(texture, "CLAMP", "REPEAT")
-  right:SetAlpha(alpha)
-  right:SetTexCoord(0.125, 0.25, 0, 1)
-  right:SetSize(border_width, frame_height - height_thickness_remainder * 2)
-  right:SetVertTile(true)
-  right:SetPoint("TOPRIGHT", thickness, -height_thickness_remainder)
-
-  local top_right = frame:CreateTexture()
-  top_right:SetDrawLayer("BORDER")
-  top_right:SetTexture(texture)
-  top_right:SetAlpha(alpha)
-  top_right:SetTexCoord(0.625, 0.75, 0, 1)
-  top_right:SetSize(border_width, border_height)
-  top_right:SetPoint("TOPRIGHT", thickness, thickness)
-
-  local top = frame:CreateTexture()
-  top:SetDrawLayer("BORDER")
-  top:SetTexture(texture, "CLAMP", "REPEAT")
-  top:SetAlpha(alpha)
-  top:SetTexCoord(
-    0.250,
-    width_border_repeat_count,
-    0.375,
-    width_border_repeat_count,
-    0.250,
-    0,
-    0.375,
-    0
-  )
-  top:SetSize(frame_width - width_thickness_remainder * 2, border_height)
-  top:SetPoint("TOPLEFT", width_thickness_remainder, thickness)
+-- Update Elephant's skin to the one saved in the config.
+function Elephant:UpdateSkin()
+  ChangeSkin(Elephant:ProfileDb().skin_id)
 end

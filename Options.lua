@@ -333,9 +333,33 @@ function Elephant:SetupOptions()
           },
         },
       },
-      reset = {
+      skins = {
         type = "group",
         order = 5,
+        name = Elephant.L["STRING_OPTIONS_SKINS"],
+        desc = Elephant.L["STRING_OPTIONS_SKINS_DESC"],
+        args = {
+          skin = {
+            type = "select",
+            order = 1,
+            name = Elephant.L["STRING_OPTIONS_SKIN"],
+            style = "radio",
+            values = function()
+              return Elephant:GetSkinNames()
+            end,
+            get = function()
+              return Elephant:ProfileDb().skin_id
+            end,
+            set = function(_, skin_id)
+              Elephant:ProfileDb().skin_id = skin_id
+              Elephant:UpdateSkin()
+            end,
+          },
+        },
+      },
+      reset = {
+        type = "group",
+        order = 6,
         name = Elephant.L["STRING_RESET"],
         desc = Elephant.L["STRING_OPTIONS_RESET_TAB_DESC"],
         args = {
