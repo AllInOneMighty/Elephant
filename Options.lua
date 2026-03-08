@@ -46,45 +46,31 @@ function Elephant:SetupOptions()
         end,
         set = Elephant.ToggleButton,
       },
-      use_factionrealm_db = {
-        type = "toggle",
-        order = 3,
-        name = Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS"],
-        desc = (
-          Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1"]
-          .. "\n\n|c"
-          .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-          .. Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2"]
-          .. "|r"
-        ),
-        get = function()
-          return Elephant:ProfileDb().use_factionrealm_db
-        end,
-        set = ToggleUseFactionRealmDb,
-      },
-      skip_cannot_log_restricted_warning = {
-        type = "toggle",
-        order = 4,
-        width = "double",
-        name = Elephant.L["STRING_OPTIONS_SKIP_CANNOT_LOG_RESTRICTED_WARNING"],
-        desc = Elephant.L["STRING_OPTIONS_SKIP_CANNOT_LOG_RESTRICTED_WARNING_DESC_1"],
-        get = function()
-          return Elephant:ProfileDb().skip_cannot_log_restricted_warning
-        end,
-        set = function()
-          Elephant:ProfileDb().skip_cannot_log_restricted_warning =
-            not Elephant:ProfileDb().skip_cannot_log_restricted_warning
-        end,
-      },
       log = {
         type = "group",
-        order = 5,
+        order = 3,
         name = Elephant.L["STRING_OPTIONS_LOGS_TAB"],
         desc = Elephant.L["STRING_OPTIONS_LOGS_TAB_DESC"],
         args = {
-          default = {
+          use_factionrealm_db = {
             type = "toggle",
             order = 1,
+            name = Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS"],
+            desc = (
+              Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1"]
+              .. "\n\n|c"
+              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
+              .. Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2"]
+              .. "|r"
+            ),
+            get = function()
+              return Elephant:ProfileDb().use_factionrealm_db
+            end,
+            set = ToggleUseFactionRealmDb,
+          },
+          default = {
+            type = "toggle",
+            order = 2,
             name = Elephant.L["STRING_OPTIONS_LOG_NEW_CHANNELS"],
             desc = Elephant.L["STRING_OPTIONS_LOG_NEW_CHANNELS_DESC"],
             get = function()
@@ -94,9 +80,40 @@ function Elephant:SetupOptions()
               Elephant:ProfileDb().defaultlog = isEnabled
             end,
           },
+          classColors = {
+            type = "toggle",
+            order = 3,
+            name = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS"],
+            desc = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_1"]
+              .. "\n\n|c"
+              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
+              .. Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_2"]
+              .. "|r",
+            get = function()
+              return Elephant:ProfileDb().class_colors_in_log
+            end,
+            set = function(_, isEnabled)
+              Elephant:ProfileDb().class_colors_in_log = isEnabled
+              Elephant:ShowCurrentLog()
+            end,
+          },
+          skip_cannot_log_restricted_warning = {
+            type = "toggle",
+            order = 4,
+            width = "full",
+            name = Elephant.L["STRING_OPTIONS_SKIP_CANNOT_LOG_RESTRICTED_WARNING"],
+            desc = Elephant.L["STRING_OPTIONS_SKIP_CANNOT_LOG_RESTRICTED_WARNING_DESC_1"],
+            get = function()
+              return Elephant:ProfileDb().skip_cannot_log_restricted_warning
+            end,
+            set = function()
+              Elephant:ProfileDb().skip_cannot_log_restricted_warning =
+                not Elephant:ProfileDb().skip_cannot_log_restricted_warning
+            end,
+          },
           max = {
             type = "range",
-            order = 2,
+            order = 5,
             name = Elephant.L["STRING_OPTIONS_MAX_LOG_LINES"],
             desc = (
               Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_1"]
@@ -121,7 +138,7 @@ function Elephant:SetupOptions()
           },
           maxcopycharacters = {
             type = "range",
-            order = 3,
+            order = 6,
             name = Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS"],
             desc = Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_1"]
               .. "\n\n|c"
@@ -138,36 +155,10 @@ function Elephant:SetupOptions()
               Elephant:ProfileDb().maxcopyletters = v
             end,
           },
-          classColors = {
-            type = "toggle",
-            order = 4,
-            name = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS"],
-            desc = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_1"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-              .. Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_2"]
-              .. "|r",
-            get = function()
-              return Elephant:ProfileDb().class_colors_in_log
-            end,
-            set = function(_, isEnabled)
-              Elephant:ProfileDb().class_colors_in_log = isEnabled
-              Elephant:ShowCurrentLog()
-            end,
-          },
-          clearall = {
-            type = "execute",
-            order = 5,
-            name = Elephant.L["STRING_OPTIONS_CLEAR_LOGS"],
-            desc = Elephant.L["STRING_OPTIONS_CLEAR_LOGS_DESC"],
-            func = function()
-              StaticPopup_Show("ELEPHANT_CLEARALL")
-            end,
-          },
           prat_opt = {
             type = "group",
             name = Elephant.L["STRING_OPTIONS_PRAT_INTEGRATION_GROUP"],
-            order = 6,
+            order = 7,
             inline = true,
             args = {
               prat = {
@@ -193,7 +184,7 @@ function Elephant:SetupOptions()
           },
           files = {
             type = "group",
-            order = 7,
+            order = 8,
             name = Elephant.L["STRING_OPTIONS_FILE_LOGGING_GROUP"],
             desc = Elephant.L["STRING_OPTIONS_FILE_LOGGING_GROUP_DESC"],
             inline = true,
@@ -267,11 +258,20 @@ function Elephant:SetupOptions()
               },
             },
           },
+          clearall = {
+            type = "execute",
+            order = 9,
+            name = Elephant.L["STRING_OPTIONS_CLEAR_LOGS"],
+            desc = Elephant.L["STRING_OPTIONS_CLEAR_LOGS_DESC"],
+            func = function()
+              StaticPopup_Show("ELEPHANT_CLEARALL")
+            end,
+          },
         },
       },
       filters = {
         type = "group",
-        order = 6,
+        order = 4,
         name = Elephant.L["STRING_FILTERS"],
         desc = Elephant.L["STRING_OPTIONS_FILTERS_TAB_DESC"],
         args = {
@@ -335,7 +335,7 @@ function Elephant:SetupOptions()
       },
       reset = {
         type = "group",
-        order = 7,
+        order = 5,
         name = Elephant.L["STRING_RESET"],
         desc = Elephant.L["STRING_OPTIONS_RESET_TAB_DESC"],
         args = {
