@@ -385,6 +385,14 @@ function Elephant:ShowCopyWindow()
       UIParent,
       "ElephantCopyFrameTemplate"
     )
+    Elephant:ChangeBorder(
+      ElephantCopyFrame,
+      [[Interface\Addons\Elephant\roth.tga]],
+      16,
+      16,
+      6,
+      0.5
+    )
   end
 
   FillCopyWindow()
@@ -688,4 +696,159 @@ function Elephant:OpenOptions()
   elseif InterfaceOptionsFrame_OpenToCategory then
     InterfaceOptionsFrame_OpenToCategory("Elephant")
   end
+end
+
+--[[
+  Changes the border of the given frame, expecting a single texture containing 8
+  parts of identical dimensions glued together from left to right, each one
+  representing the following, in order:
+   - Left side
+   - Right side
+   - Top side (rotated 90 degrees counter-clockwise)
+   - Bottom side (rotated 90 degrees counter-clockwise)
+   - Top left corner
+   - Top right corner
+   - Bottom left corner
+   - Bottom right corner
+
+  The border is added around the frame and not inside the frame, allowing its
+  full height and width to be used for content. The "thickness" parameter sets
+  that number for proper display.
+
+  Currently only supports one thickness that is consistent all around the frame.
+]]
+function Elephant:ChangeBorder(
+  frame,
+  texture,
+  border_width,
+  border_height,
+  thickness,
+  alpha
+)
+  -- Remove all borders
+  local regions = { frame:GetRegions() }
+  for _, region in ipairs(regions) do
+    if region:IsObjectType("Texture") and region:GetDrawLayer() == "BORDER" then
+      region:SetTexture(nil)
+    end
+  end
+
+  local _, _, frame_width, frame_height = frame:GetRect()
+  --[[
+    Part of ther border that is "inside" the frame. Used for proper positioning
+    of other elements, such as left, bottom, right and top sides.
+  ]]
+  local width_thickness_remainder = border_width - thickness
+  local height_thickness_remainder = border_height - thickness
+  --[[
+    Number of times the border should be repeated at the top and bottom of the
+    frame.
+  ]]
+  local width_border_repeat_count = (
+    frame_width - width_thickness_remainder * 2
+  ) / border_width
+
+  -- Set borders
+  local top_left = frame:CreateTexture()
+  top_left:SetDrawLayer("BORDER")
+  top_left:SetTexture(texture)
+  top_left:SetAlpha(alpha)
+  top_left:SetTexCoord(0.5, 0.625, 0, 1)
+  top_left:SetSize(border_width, border_height)
+  top_left:SetPoint("TOPLEFT", -thickness, thickness)
+
+  local left = frame:CreateTexture()
+  left:SetDrawLayer("BORDER")
+  left:SetTexture(texture, "CLAMP", "REPEAT")
+  left:SetAlpha(alpha)
+  left:SetTexCoord(0, 0.125, 0, 1)
+  left:SetSize(border_width, frame_height - height_thickness_remainder * 2)
+  left:SetVertTile(true)
+  left:SetPoint("TOPLEFT", -thickness, -height_thickness_remainder)
+
+  local bottom_left = frame:CreateTexture()
+  bottom_left:SetDrawLayer("BORDER")
+  bottom_left:SetTexture(texture)
+  bottom_left:SetAlpha(alpha)
+  bottom_left:SetTexCoord(0.75, 0.875, 0, 1)
+  bottom_left:SetSize(border_width, border_height)
+  bottom_left:SetPoint("BOTTOMLEFT", -thickness, -thickness)
+
+  --[[
+    The way this works is by setting the texture to repeat vertically, then by
+    using SetTexCoord() and select coordinates to map points of the image
+    to coordinates on the Texture while rotating it by 90 degrees.
+
+    In other words, we map the following image -> Texture points (remember that
+    the Texture has a size extending from one side to the other horizontally:
+     - (0.375, width_border_repeat_count) -> (0, 0) Top left
+     - (0.5, width_border_repeat_count) -> (0, 1) Bottom left
+     - (0.375, 0) -> (0, 1) Top right
+     - (0.5, 0) -> (1, 1) Bottom right
+
+    We cannot use horizontal expansion with SetTexCoord() as this would fill
+    with the other 'sides' of the border, thus why this madness is used here.
+    You shoudl NOT call setVertTile() or setHorizTile() as those screw up the
+    display. They do not do what you think they do.
+
+    The same applies to the top, just with different numbers.
+  ]]
+  local bottom = frame:CreateTexture()
+  bottom:SetDrawLayer("BORDER")
+  bottom:SetTexture(texture, "CLAMP", "REPEAT")
+  bottom:SetAlpha(alpha)
+  bottom:SetTexCoord(
+    0.375,
+    width_border_repeat_count,
+    0.5,
+    width_border_repeat_count,
+    0.375,
+    0,
+    0.5,
+    0
+  )
+  bottom:SetSize(frame_width - width_thickness_remainder * 2, border_height)
+  bottom:SetPoint("BOTTOMLEFT", width_thickness_remainder, -thickness)
+
+  local bottom_right = frame:CreateTexture()
+  bottom_right:SetDrawLayer("BORDER")
+  bottom_right:SetTexture(texture)
+  bottom_right:SetAlpha(alpha)
+  bottom_right:SetTexCoord(0.875, 1, 0, 1)
+  bottom_right:SetSize(border_width, border_height)
+  bottom_right:SetPoint("BOTTOMRIGHT", thickness, -thickness)
+
+  local right = frame:CreateTexture()
+  right:SetDrawLayer("BORDER")
+  right:SetTexture(texture, "CLAMP", "REPEAT")
+  right:SetAlpha(alpha)
+  right:SetTexCoord(0.125, 0.25, 0, 1)
+  right:SetSize(border_width, frame_height - height_thickness_remainder * 2)
+  right:SetVertTile(true)
+  right:SetPoint("TOPRIGHT", thickness, -height_thickness_remainder)
+
+  local top_right = frame:CreateTexture()
+  top_right:SetDrawLayer("BORDER")
+  top_right:SetTexture(texture)
+  top_right:SetAlpha(alpha)
+  top_right:SetTexCoord(0.625, 0.75, 0, 1)
+  top_right:SetSize(border_width, border_height)
+  top_right:SetPoint("TOPRIGHT", thickness, thickness)
+
+  local top = frame:CreateTexture()
+  top:SetDrawLayer("BORDER")
+  top:SetTexture(texture, "CLAMP", "REPEAT")
+  top:SetAlpha(alpha)
+  top:SetTexCoord(
+    0.250,
+    width_border_repeat_count,
+    0.375,
+    width_border_repeat_count,
+    0.250,
+    0,
+    0.375,
+    0
+  )
+  top:SetSize(frame_width - width_thickness_remainder * 2, border_height)
+  top:SetPoint("TOPLEFT", width_thickness_remainder, thickness)
 end

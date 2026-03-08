@@ -93,6 +93,16 @@ function Elephant:OnEnable()
   -- Registering events
   Elephant:RegisterEventsRefresh()
 
+  -- Sets border
+  Elephant:ChangeBorder(
+    ElephantFrame,
+    [[Interface\Addons\Elephant\roth.tga]],
+    16,
+    16,
+    6,
+    0.5
+  )
+
   -- Sets chat tab buttons color
   SetTabButtonProperties(ElephantFrameGuildTabButton, "GUILD")
   SetTabButtonProperties(ElephantFrameOfficerTabButton, "OFFICER")
