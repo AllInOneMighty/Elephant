@@ -1,6 +1,6 @@
 local skins = {
   default = {
-    name = "Default",
+    name = DEFAULT,
     border = {
       texture = [[Interface\Addons\Elephant\roth.tga]],
       width = 16,
@@ -16,7 +16,7 @@ local skins = {
     },
   },
   achievement = {
-    name = "Achievement",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_ACHIEVEMENT"],
     border = {
       texture = [[Interface\ACHIEVEMENTFRAME\UI-Achievement-WoodBorder]],
       width = 64,
@@ -32,12 +32,12 @@ local skins = {
     },
   },
   bank = {
-    name = "Bank",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_BANK"],
     border = {
       texture = [[Interface\LFGFRAME\LFGBorder]],
       width = 32,
       height = 32,
-      thickness = 15,
+      thickness = 13,
       alpha = 1,
     },
     background = {
@@ -48,7 +48,7 @@ local skins = {
     },
   },
   dialog = {
-    name = "Dialog",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_DIALOG"],
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Border]],
       width = 32,
@@ -64,7 +64,7 @@ local skins = {
     },
   },
   dialog_gold = {
-    name = "Dialog: Gold",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_DIALOG_GOLD"],
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Gold-Border]],
       width = 32,
@@ -80,7 +80,7 @@ local skins = {
     },
   },
   panel = {
-    name = "Panel",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_PANEL"],
     border = {
       texture = [[Interface\GLUES\COMMON\TextPanel-Border]],
       width = 32,
@@ -96,7 +96,7 @@ local skins = {
     },
   },
   tooltip = {
-    name = "Tooltip: Normal",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_NORMAL"],
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border]],
       width = 16,
@@ -112,7 +112,7 @@ local skins = {
     },
   },
   tooltip_azerite = {
-    name = "Tooltip: Azerite",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_AZERITE"],
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Azerite]],
       width = 16,
@@ -128,7 +128,7 @@ local skins = {
     },
   },
   tooltip_corrupted = {
-    name = "Tooltip: Corrupted",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_CORRUPTED"],
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Corrupted]],
       width = 16,
@@ -144,7 +144,7 @@ local skins = {
     },
   },
   tooltip_maw = {
-    name = "Tooltip: Maw",
+    name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_MAW"],
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Maw]],
       width = 16,
