@@ -140,7 +140,7 @@ local default_configuration = {
   -- Log sizes / Scroll sizes
   minlogsize = 50,
   maxlogsize = 10000,
-  scrollmaxlines = 35,
+  scrollmaxlines = 50,
   scrollpage = 20,
   scrollmouse = 3,
   copywindowminletters = 1000,
@@ -221,6 +221,8 @@ local default_configuration = {
     minimap = {
       hide = false,
     },
+    log_font_id = nil,
+    log_font_size = 14,
     skin_id = "default",
     --[[
       Completing saved default configuration: Events & Default catchers.

@@ -1,3 +1,5 @@
+local LSM = LibStub("LibSharedMedia-3.0")
+
 local skins = {
   default = {
     name = DEFAULT,
@@ -616,6 +618,19 @@ local function ChangeBackground(frame, texture, width, height, alpha)
   background:SetAllPoints()
 end
 
+local function ChangeFont(frame)
+  -- Default font that was always used by Elephant.
+  local font_file = [[Fonts\ARIALN.TTF]]
+  if Elephant:ProfileDb().log_font_id then
+    --[[
+      If user has selected a new font, use that one instead. Reverts to
+      LibSharedMedia's default if the font does not exist.
+    ]]
+    font_file = LSM:Fetch("font", Elephant:ProfileDb().log_font_id)
+  end
+  frame:SetFont(font_file, Elephant:ProfileDb().log_font_size, "")
+end
+
 -- Changes Elephant's skin.
 local function ChangeSkin(skin_id)
   local skin_tbl = skins["default"]
@@ -644,6 +659,7 @@ local function ChangeSkin(skin_id)
     skin_tbl.background.height,
     skin_tbl.background.alpha
   )
+  ChangeFont(ElephantFrameScrollingMessageFrame)
 
   if ElephantCopyFrame then
     ChangeBorder(
@@ -661,6 +677,7 @@ local function ChangeSkin(skin_id)
       skin_tbl.background.height,
       skin_tbl.background.alpha
     )
+    ChangeFont(ElephantCopyFrameScrollFrameEditBox)
   end
 end
 

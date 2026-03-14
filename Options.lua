@@ -1,3 +1,5 @@
+local LSM = LibStub("LibSharedMedia-3.0")
+
 local function ToggleUseFactionRealmDb()
   Elephant:ProfileDb().use_factionrealm_db =
     not Elephant:ProfileDb().use_factionrealm_db
@@ -339,9 +341,55 @@ function Elephant:SetupOptions()
         name = Elephant.L["STRING_OPTIONS_SKINS"],
         desc = Elephant.L["STRING_OPTIONS_SKINS_DESC"],
         args = {
-          skin = {
+          font = {
             type = "select",
             order = 1,
+            name = Elephant.L["STRING_OPTIONS_LOG_FONT"],
+            style = "dropdown",
+            width = "double",
+            values = function()
+              local values = {}
+              for _, v in ipairs(LSM:List("font")) do
+                values[v] = v
+              end
+              return values
+            end,
+            get = function()
+              return Elephant:ProfileDb().log_font_id
+            end,
+            set = function(_, font_id)
+              Elephant:ProfileDb().log_font_id = font_id
+              Elephant:UpdateSkin()
+            end,
+          },
+          font_size = {
+            type = "select",
+            order = 2,
+            name = Elephant.L["STRING_OPTIONS_LOG_FONT_SIZE"],
+            style = "dropdown",
+            width = "half",
+            values = function()
+              return {
+                [12] = 12,
+                [14] = 14,
+                [16] = 16,
+                [18] = 18,
+                [20] = 20,
+                [24] = 24,
+                [27] = 27,
+              }
+            end,
+            get = function()
+              return Elephant:ProfileDb().log_font_size
+            end,
+            set = function(_, font_size)
+              Elephant:ProfileDb().log_font_size = font_size
+              Elephant:UpdateSkin()
+            end,
+          },
+          skin = {
+            type = "select",
+            order = 3,
             name = Elephant.L["STRING_OPTIONS_SKIN"],
             style = "radio",
             values = function()
