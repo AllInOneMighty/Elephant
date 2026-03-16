@@ -116,20 +116,71 @@ function Elephant:VolatileConfig()
   return volatile_configuration
 end
 
--- Indexes used for default WoW channels
-local default_channel_indexes = {
-  whisper = 1,
-  raid = 2,
-  party = 3,
-  say = 4,
-  yell = 5,
-  officer = 6,
-  guild = 7,
-  loot = 8,
-  system = 9,
-  achievement = 10,
-  instance = 11,
-  pet_battle = 12,
+--[[
+  Default logs that the user cannot delete. Does not include some General chats
+  owned by Blizzard (General, Trade, etc.).
+]]
+local default_logs = {
+  whisper = {
+    id = 1,
+    localized_name = Elephant.L["STRING_CHAT_NAME_WHISPER"],
+    type_info = ChatTypeInfo["WHISPER"],
+  },
+  raid = {
+    id = 2,
+    localized_name = Elephant.L["STRING_CHAT_NAME_RAID"],
+    type_info = ChatTypeInfo["RAID"],
+  },
+  party = {
+    id = 3,
+    localized_name = Elephant.L["STRING_CHAT_NAME_PARTY"],
+    type_info = ChatTypeInfo["PARTY"],
+  },
+  say = {
+    id = 4,
+    localized_name = Elephant.L["STRING_CHAT_NAME_SAY"],
+    type_info = ChatTypeInfo["SAY"],
+  },
+  yell = {
+    id = 5,
+    localized_name = Elephant.L["STRING_CHAT_NAME_YELL"],
+    type_info = ChatTypeInfo["YELL"],
+  },
+  officer = {
+    id = 6,
+    localized_name = Elephant.L["STRING_CHAT_NAME_OFFICER"],
+    type_info = ChatTypeInfo["OFFICER"],
+  },
+  guild = {
+    id = 7,
+    localized_name = Elephant.L["STRING_CHAT_NAME_GUILD"],
+    type_info = ChatTypeInfo["GUILD"],
+  },
+  loot = {
+    id = 8,
+    localized_name = Elephant.L["STRING_CHAT_NAME_LOOT"],
+    type_info = ChatTypeInfo["LOOT"],
+  },
+  system = {
+    id = 9,
+    localized_name = Elephant.L["STRING_CHAT_NAME_SYSTEM"],
+    type_info = ChatTypeInfo["SYSTEM"],
+  },
+  achievement = {
+    id = 10,
+    localized_name = Elephant.L["STRING_CHAT_NAME_ACHIEVEMENT"],
+    type_info = ChatTypeInfo["ACHIEVEMENT"],
+  },
+  instance = {
+    id = 11,
+    localized_name = Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
+    type_info = ChatTypeInfo["INSTANCE_CHAT"],
+  },
+  pet_battle = {
+    id = 12,
+    localized_name = Elephant.L["STRING_CHAT_NAME_PET_BATTLE_COMBAT_LOG"],
+    type_info = ChatTypeInfo["PET_BATTLE_COMBAT_LOG"],
+  },
 }
 
 -- Default configuration, doesn't change at runtime
@@ -149,23 +200,9 @@ local default_configuration = {
 
   --[[
     Default logs of the addon, cannot be removed (related to default chats
-    defined by Blizzard)
+    defined by Blizzard).
   ]]
-  defaultindexes = Elephant:Clone(default_channel_indexes),
-  defaultnames = {
-    whisper = Elephant.L["STRING_CHAT_NAME_WHISPER"],
-    raid = Elephant.L["STRING_CHAT_NAME_RAID"],
-    party = Elephant.L["STRING_CHAT_NAME_PARTY"],
-    say = Elephant.L["STRING_CHAT_NAME_SAY"],
-    yell = Elephant.L["STRING_CHAT_NAME_YELL"],
-    officer = Elephant.L["STRING_CHAT_NAME_OFFICER"],
-    guild = Elephant.L["STRING_CHAT_NAME_GUILD"],
-    loot = Elephant.L["STRING_CHAT_NAME_LOOT"],
-    system = Elephant.L["STRING_CHAT_NAME_SYSTEM"],
-    achievement = Elephant.L["STRING_CHAT_NAME_ACHIEVEMENT"],
-    instance = Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
-    pet_battle = Elephant.L["STRING_CHAT_NAME_PET_BATTLE_COMBAT_LOG"],
-  },
+  defaultlogs = default_logs,
   generalchatchannelmetadata = {
     -- Keep it in the order it should be shown in the dropdown menu.
     {
@@ -237,42 +274,42 @@ local default_configuration = {
       ["CHAT_MSG_ACHIEVEMENT"] = {
         type = "ACHIEVEMENT",
         channels = {
-          [default_channel_indexes.achievement] = 0,
+          [default_logs.achievement.id] = 0,
         },
       },
       ["CHAT_MSG_BG_SYSTEM_ALLIANCE"] = {
         type = "BG_SYSTEM_ALLIANCE",
         channels = {
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_BG_SYSTEM_HORDE"] = {
         type = "BG_SYSTEM_HORDE",
         channels = {
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_BG_SYSTEM_NEUTRAL"] = {
         type = "BG_SYSTEM_NEUTRAL",
         channels = {
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_BN_WHISPER"] = {
         type = "BN_WHISPER",
-        desc = format('%s (%s)', BN_WHISPER, CHAT_MSG_WHISPER),
+        desc = format("%s (%s)", BN_WHISPER, CHAT_MSG_WHISPER),
         channels = {
-          [default_channel_indexes.whisper] = -1,
+          [default_logs.whisper.id] = -1,
         },
       },
       ["CHAT_MSG_BN_WHISPER_INFORM"] = {
         type = "BN_WHISPER_INFORM",
-        desc = format('%s (%s)', BN_WHISPER, CHAT_MSG_WHISPER_INFORM),
+        desc = format("%s (%s)", BN_WHISPER, CHAT_MSG_WHISPER_INFORM),
         channels = {
-          [default_channel_indexes.whisper] = -1,
+          [default_logs.whisper.id] = -1,
         },
       },
       ["CHAT_MSG_CHANNEL"] = {
@@ -284,37 +321,37 @@ local default_configuration = {
       ["CHAT_MSG_EMOTE"] = {
         type = "EMOTE",
         channels = {
-          [default_channel_indexes.say] = 1,
-          [default_channel_indexes.party] = 0,
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 0,
+          [default_logs.say.id] = 1,
+          [default_logs.party.id] = 0,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["CHAT_MSG_GUILD"] = {
         type = "GUILD",
         desc = GUILD_CHAT,
         channels = {
-          [default_channel_indexes.guild] = -1,
+          [default_logs.guild.id] = -1,
         },
       },
       ["CHAT_MSG_GUILD_ACHIEVEMENT"] = {
         type = "GUILD_ACHIEVEMENT",
         channels = {
-          [default_channel_indexes.achievement] = -1,
-          [default_channel_indexes.guild] = 0,
-          [default_channel_indexes.officer] = 0,
+          [default_logs.achievement.id] = -1,
+          [default_logs.guild.id] = 0,
+          [default_logs.officer.id] = 0,
         },
       },
       ["CHAT_MSG_INSTANCE_CHAT"] = {
         type = "INSTANCE_CHAT",
         channels = {
-          [default_channel_indexes.instance] = -1,
+          [default_logs.instance.id] = -1,
         },
       },
       ["CHAT_MSG_INSTANCE_CHAT_LEADER"] = {
         type = "INSTANCE_CHAT_LEADER",
         channels = {
-          [default_channel_indexes.instance] = -1,
+          [default_logs.instance.id] = -1,
         },
       },
       ["CHAT_MSG_LOOT"] = {
@@ -322,7 +359,7 @@ local default_configuration = {
         register_with_prat = true,
         desc = ITEM_LOOT,
         channels = {
-          [default_channel_indexes.loot] = -1,
+          [default_logs.loot.id] = -1,
         },
       },
       ["CHAT_MSG_MONEY"] = {
@@ -330,161 +367,161 @@ local default_configuration = {
         register_with_prat = true,
         desc = MONEY_LOOT,
         channels = {
-          [default_channel_indexes.loot] = 1,
+          [default_logs.loot.id] = 1,
         },
       },
       ["CHAT_MSG_CURRENCY"] = {
         type = "CURRENCY",
         register_with_prat = true,
         channels = {
-          [default_channel_indexes.loot] = 1,
+          [default_logs.loot.id] = 1,
         },
       },
       ["CHAT_MSG_MONSTER_EMOTE"] = {
         type = "MONSTER_EMOTE",
         channels = {
-          [default_channel_indexes.say] = 1,
-          [default_channel_indexes.party] = 0,
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 0,
+          [default_logs.say.id] = 1,
+          [default_logs.party.id] = 0,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["CHAT_MSG_MONSTER_SAY"] = {
         type = "MONSTER_SAY",
         channels = {
-          [default_channel_indexes.say] = 1,
-          [default_channel_indexes.party] = 0,
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 0,
+          [default_logs.say.id] = 1,
+          [default_logs.party.id] = 0,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["CHAT_MSG_MONSTER_WHISPER"] = {
         type = "MONSTER_WHISPER",
         channels = {
-          [default_channel_indexes.whisper] = 1,
-          [default_channel_indexes.party] = 1,
-          [default_channel_indexes.raid] = 1,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.whisper.id] = 1,
+          [default_logs.party.id] = 1,
+          [default_logs.raid.id] = 1,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_MONSTER_YELL"] = {
         type = "MONSTER_YELL",
         channels = {
-          [default_channel_indexes.say] = 0,
-          [default_channel_indexes.party] = 1,
-          [default_channel_indexes.yell] = 1,
-          [default_channel_indexes.raid] = 1,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.say.id] = 0,
+          [default_logs.party.id] = 1,
+          [default_logs.yell.id] = 1,
+          [default_logs.raid.id] = 1,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_OFFICER"] = {
         type = "OFFICER",
         desc = OFFICER_CHAT,
         channels = {
-          [default_channel_indexes.officer] = -1,
+          [default_logs.officer.id] = -1,
         },
       },
       ["CHAT_MSG_PARTY"] = {
         type = "PARTY",
         channels = {
-          [default_channel_indexes.party] = -1,
-          [default_channel_indexes.raid] = 0,
+          [default_logs.party.id] = -1,
+          [default_logs.raid.id] = 0,
         },
       },
       ["CHAT_MSG_PARTY_LEADER"] = {
         type = "PARTY_LEADER",
         channels = {
-          [default_channel_indexes.party] = -1,
-          [default_channel_indexes.raid] = 0,
+          [default_logs.party.id] = -1,
+          [default_logs.raid.id] = 0,
         },
       },
       ["CHAT_MSG_PET_BATTLE_COMBAT_LOG"] = {
         type = "PET_BATTLE_INFO",
         channels = {
-          [default_channel_indexes.pet_battle] = -1,
+          [default_logs.pet_battle.id] = -1,
         },
       },
       ["CHAT_MSG_PET_BATTLE_INFO"] = {
         type = "PET_BATTLE_COMBAT_LOG",
         channels = {
-          [default_channel_indexes.pet_battle] = -1,
+          [default_logs.pet_battle.id] = -1,
         },
       },
       ["CHAT_MSG_RAID"] = {
         type = "RAID",
         channels = {
-          [default_channel_indexes.raid] = -1,
+          [default_logs.raid.id] = -1,
         },
       },
       ["CHAT_MSG_RAID_LEADER"] = {
         type = "RAID_LEADER",
         channels = {
-          [default_channel_indexes.raid] = -1,
+          [default_logs.raid.id] = -1,
         },
       },
       ["CHAT_MSG_RAID_WARNING"] = {
         type = "RAID_WARNING",
         channels = {
-          [default_channel_indexes.raid] = -1,
+          [default_logs.raid.id] = -1,
         },
       },
       ["CHAT_MSG_RAID_BOSS_WHISPER"] = {
         type = "RAID_BOSS_WHISPER",
         channels = {
-          [default_channel_indexes.whisper] = 0,
-          [default_channel_indexes.raid] = 1,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.whisper.id] = 0,
+          [default_logs.raid.id] = 1,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_RAID_BOSS_EMOTE"] = {
         type = "RAID_BOSS_EMOTE",
         channels = {
-          [default_channel_indexes.raid] = 1,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.raid.id] = 1,
+          [default_logs.instance.id] = 1,
         },
       },
       ["CHAT_MSG_SAY"] = {
         type = "SAY",
         channels = {
-          [default_channel_indexes.say] = -1,
+          [default_logs.say.id] = -1,
         },
       },
       ["CHAT_MSG_SYSTEM"] = {
         type = "SYSTEM",
         desc = SYSTEM_MESSAGES,
         channels = {
-          [default_channel_indexes.system] = -1,
+          [default_logs.system.id] = -1,
         },
       },
       ["CHAT_MSG_TEXT_EMOTE"] = {
         type = "TEXT_EMOTE",
         desc = CHAT_MSG_TEXT_EMOTE,
         channels = {
-          [default_channel_indexes.say] = 1,
-          [default_channel_indexes.party] = 0,
-          [default_channel_indexes.raid] = 0,
-          [default_channel_indexes.instance] = 0,
+          [default_logs.say.id] = 1,
+          [default_logs.party.id] = 0,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["CHAT_MSG_WHISPER"] = {
         type = "WHISPER",
         desc = CHAT_MSG_WHISPER,
         channels = {
-          [default_channel_indexes.whisper] = -1,
+          [default_logs.whisper.id] = -1,
         },
       },
       ["CHAT_MSG_WHISPER_INFORM"] = {
         type = "WHISPER_INFORM",
         desc = CHAT_MSG_WHISPER_INFORM,
         channels = {
-          [default_channel_indexes.whisper] = -1,
+          [default_logs.whisper.id] = -1,
         },
       },
       ["CHAT_MSG_YELL"] = {
         type = "YELL",
         channels = {
-          [default_channel_indexes.say] = 0,
-          [default_channel_indexes.yell] = -1,
+          [default_logs.say.id] = 0,
+          [default_logs.yell.id] = -1,
         },
       },
       ["PARTY_LOOT_METHOD_CHANGED"] = {
@@ -492,10 +529,10 @@ local default_configuration = {
         register_with_prat = true,
         desc = LOOT_METHOD,
         channels = {
-          [default_channel_indexes.loot] = -1,
-          [default_channel_indexes.party] = 1,
-          [default_channel_indexes.raid] = 1,
-          [default_channel_indexes.instance] = 1,
+          [default_logs.loot.id] = -1,
+          [default_logs.party.id] = 1,
+          [default_logs.raid.id] = 1,
+          [default_logs.instance.id] = 1,
         },
       },
     },

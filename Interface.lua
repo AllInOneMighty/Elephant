@@ -168,96 +168,43 @@ local skins = {
   currently log displayed. This method uses Blizzard's default chat type colors.
 ]]
 local function SetObjectColorWithCurrentLogColor(obj)
-  local type_info
+  local type_info = nil
 
-  if
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.whisper
-  then
-    type_info = "WHISPER"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.raid
-  then
-    type_info = "RAID"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.party
-  then
-    type_info = "PARTY"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.say
-  then
-    type_info = "SAY"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.yell
-  then
-    type_info = "YELL"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.officer
-  then
-    type_info = "OFFICER"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.guild
-  then
-    type_info = "GUILD"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.loot
-  then
-    type_info = "LOOT"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.system
-  then
-    type_info = "SYSTEM"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.achievement
-  then
-    type_info = "ACHIEVEMENT"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.instance
-  then
-    type_info = "INSTANCE_CHAT"
-  elseif
-    Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.pet_battle
-  then
-    type_info = "PET_BATTLE_COMBAT_LOG"
-  else
-    type_info = "CHANNEL"
+  local log_tbl = nil
+  -- Cannot use ipairs() if index is not an integer.
+  for _, log_tbl in pairs(Elephant:DefaultConfiguration().defaultlogs) do
+    if Elephant:CharDb().currentlogindex == log_tbl.id then
+      type_info = log_tbl.type_info
+      break
+    end
+  end
 
-    local channelId, channelName = nil, nil
+  if not type_info then
+    local channel_id, channelName = nil, nil
     -- Max: 20 channels
-    local i
+    local i = nil
     for i = 1, 20 do
-      channelId, channelName = GetChannelName(i)
+      -- channel_id is set correctly if channel_name is found and not nil
+      channel_id, channel_name = GetChannelName(i)
 
       if
-        channelName ~= nil
-        and string.lower(channelName)
+        channel_name ~= nil
+        and string.lower(channel_name)
           == string.lower(
             Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name
           )
       then
-        type_info = "CHANNEL" .. channelId
+        type_info = ChatTypeInfo["CHANNEL" .. channel_id]
         break
       end
     end
   end
 
-  obj:SetTextColor(
-    ChatTypeInfo[type_info].r,
-    ChatTypeInfo[type_info].g,
-    ChatTypeInfo[type_info].b,
-    ChatTypeInfo[type_info].a
-  )
+  if not type_info then
+    type_info = ChatTypeInfo["CHANNEL"]
+  end
+
+  obj:SetTextColor(type_info.r, type_info.g, type_info.b, type_info.a)
 end
 
 --[[
@@ -922,6 +869,23 @@ function Elephant:SetTooltip(frame, message_struct, anchor)
     anchor = "ANCHOR_RIGHT"
   end
   PlaceTooltip(frame, message_struct, anchor)
+end
+
+function Elephant:SetDefaultTabButtonTooltip(frame, default_log_tbl)
+  local is_enabled = Elephant:LogsDb().logs[default_log_tbl.id].enabled
+  Elephant:SetTooltip(frame, {
+    default_log_tbl.localized_name,
+    {
+      text = Elephant:GetStateMsg(is_enabled),
+      r = Elephant:GetStateColor(is_enabled, "r"),
+      g = Elephant:GetStateColor(is_enabled, "g"),
+      b = Elephant:GetStateColor(is_enabled, "b"),
+    },
+    format(
+      Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
+      #Elephant:LogsDb().logs[default_log_tbl.id].logs
+    ),
+  })
 end
 
 -- Displays or hides the main frame depending on its current state.

@@ -195,12 +195,9 @@ end
   (trade, worlddefense, ...) and creates a new log structure for them.
 ]]
 function Elephant:MaybeInitDefaultLogStructures()
-  for name_id, index in pairs(Elephant:DefaultConfiguration().defaultindexes) do
-    if not Elephant:LogsDb().logs[index] then
-      CreateNewLogStructure(
-        index,
-        Elephant:DefaultConfiguration().defaultnames[name_id]
-      )
+  for name_id, log_tbl in pairs(Elephant:DefaultConfiguration().defaultlogs) do
+    if not Elephant:LogsDb().logs[log_tbl.id] then
+      CreateNewLogStructure(log_tbl.id, log_tbl.localized_name)
     end
   end
 

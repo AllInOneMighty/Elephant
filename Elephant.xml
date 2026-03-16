@@ -453,36 +453,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_GUILD"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.guild].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.guild
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.guild)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.guild.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -496,36 +476,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_OFFICER"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.officer].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.officer
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.officer)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.officer.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -539,36 +499,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_WHISPER"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.whisper].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.whisper
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.whisper)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.whisper.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -582,36 +522,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_PARTY"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.party].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.party
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.party)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.party.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -625,36 +545,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_RAID"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.raid].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.raid
+            )
           </OnEnter>
           <OnLeave>
            Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.raid)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.raid.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -668,36 +568,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.instance].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.instance
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-           Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.instance)
+           Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.instance.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -711,36 +591,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_SAY"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.say].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.say
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.say)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.say.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>
@@ -754,36 +614,16 @@
         </Anchors>
         <Scripts>
           <OnEnter>
-            Elephant:SetTooltip(self, {
-              Elephant.L["STRING_CHAT_NAME_YELL"],
-              {
-                text = Elephant:GetStateMsg(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled
-                ),
-                r = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled,
-                  "r"
-                ),
-                g = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled,
-                  "g"
-                ),
-                b = Elephant:GetStateColor(
-                  Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].enabled,
-                  "b"
-                ),
-              },
-              format(
-                Elephant.L["STRING_MAIN_WINDOW_CHAT_BUTTONS_LINES"],
-                #Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.yell].logs
-              ),
-            })
+            Elephant:SetDefaultTabButtonTooltip(
+              self,
+              Elephant:DefaultConfiguration().defaultlogs.yell
+            )
           </OnEnter>
           <OnLeave>
             Elephant:UnsetTooltip()
           </OnLeave>
           <OnClick>
-            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultindexes.yell)
+            Elephant:ChangeLog(Elephant:DefaultConfiguration().defaultlogs.yell.id)
           </OnClick>
         </Scripts>
         <ButtonText name="$parentText"/>

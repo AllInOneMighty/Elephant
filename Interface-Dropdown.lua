@@ -120,9 +120,9 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L["STRING_CHAT_NAME_ACHIEVEMENT"]
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.achievement
+  info.arg1 = Elephant:DefaultConfiguration().defaultlogs.achievement.id
   if
-    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.achievement].enabled
+    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultlogs.achievement.id].enabled
   then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
@@ -133,9 +133,9 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L["STRING_CHAT_NAME_LOOT"]
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.loot
+  info.arg1 = Elephant:DefaultConfiguration().defaultlogs.loot.id
   if
-    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.loot].enabled
+    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultlogs.loot.id].enabled
   then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
@@ -146,9 +146,9 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L["STRING_CHAT_NAME_PET_BATTLE_COMBAT_LOG"]
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.pet_battle
+  info.arg1 = Elephant:DefaultConfiguration().defaultlogs.pet_battle.id
   if
-    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.pet_battle].enabled
+    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultlogs.pet_battle.id].enabled
   then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
@@ -159,9 +159,9 @@ local function DropdownMiscChatsInitialize()
   info.notCheckable = true
   info.text = Elephant.L["STRING_CHAT_NAME_SYSTEM"]
   info.func = Elephant.ChangeLog
-  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.system
+  info.arg1 = Elephant:DefaultConfiguration().defaultlogs.system.id
   if
-    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.system].enabled
+    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultlogs.system.id].enabled
   then
     info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
     info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
