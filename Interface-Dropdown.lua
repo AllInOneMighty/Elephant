@@ -144,6 +144,19 @@ local function DropdownMiscChatsInitialize()
 
   info = UIDropDownMenu_CreateInfo()
   info.notCheckable = true
+  info.text = Elephant.L["STRING_CHAT_NAME_PET_BATTLE_COMBAT_LOG"]
+  info.func = Elephant.ChangeLog
+  info.arg1 = Elephant:DefaultConfiguration().defaultindexes.pet_battle
+  if
+    not Elephant:LogsDb().logs[Elephant:DefaultConfiguration().defaultindexes.pet_battle].enabled
+  then
+    info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
+    info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
+  end
+  UIDropDownMenu_AddButton(info)
+
+  info = UIDropDownMenu_CreateInfo()
+  info.notCheckable = true
   info.text = Elephant.L["STRING_CHAT_NAME_SYSTEM"]
   info.func = Elephant.ChangeLog
   info.arg1 = Elephant:DefaultConfiguration().defaultindexes.system

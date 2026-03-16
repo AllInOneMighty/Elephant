@@ -129,6 +129,7 @@ local default_channel_indexes = {
   system = 9,
   achievement = 10,
   instance = 11,
+  pet_battle = 12,
 }
 
 -- Default configuration, doesn't change at runtime
@@ -163,6 +164,7 @@ local default_configuration = {
     system = Elephant.L["STRING_CHAT_NAME_SYSTEM"],
     achievement = Elephant.L["STRING_CHAT_NAME_ACHIEVEMENT"],
     instance = Elephant.L["STRING_CHAT_NAME_INSTANCE_CHAT"],
+    pet_battle = Elephant.L["STRING_CHAT_NAME_PET_BATTLE_COMBAT_LOG"],
   },
   generalchatchannelmetadata = {
     -- Keep it in the order it should be shown in the dropdown menu.
@@ -394,6 +396,18 @@ local default_configuration = {
         channels = {
           [default_channel_indexes.party] = -1,
           [default_channel_indexes.raid] = 0,
+        },
+      },
+      ["CHAT_MSG_PET_BATTLE_COMBAT_LOG"] = {
+        type = "PET_BATTLE_INFO",
+        channels = {
+          [default_channel_indexes.pet_battle] = -1,
+        },
+      },
+      ["CHAT_MSG_PET_BATTLE_INFO"] = {
+        type = "PET_BATTLE_COMBAT_LOG",
+        channels = {
+          [default_channel_indexes.pet_battle] = -1,
         },
       },
       ["CHAT_MSG_RAID"] = {

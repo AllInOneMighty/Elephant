@@ -207,19 +207,29 @@ local function SetObjectColorWithCurrentLogColor(obj)
     type_info = "GUILD"
   elseif
     Elephant:CharDb().currentlogindex
-    == Elephant:DefaultConfiguration().defaultindexes.system
-  then
-    type_info = "SYSTEM"
-  elseif
-    Elephant:CharDb().currentlogindex
     == Elephant:DefaultConfiguration().defaultindexes.loot
   then
     type_info = "LOOT"
   elseif
     Elephant:CharDb().currentlogindex
+    == Elephant:DefaultConfiguration().defaultindexes.system
+  then
+    type_info = "SYSTEM"
+  elseif
+    Elephant:CharDb().currentlogindex
+    == Elephant:DefaultConfiguration().defaultindexes.achievement
+  then
+    type_info = "ACHIEVEMENT"
+  elseif
+    Elephant:CharDb().currentlogindex
     == Elephant:DefaultConfiguration().defaultindexes.instance
   then
     type_info = "INSTANCE_CHAT"
+  elseif
+    Elephant:CharDb().currentlogindex
+    == Elephant:DefaultConfiguration().defaultindexes.pet_battle
+  then
+    type_info = "PET_BATTLE_COMBAT_LOG"
   else
     type_info = "CHANNEL"
 
