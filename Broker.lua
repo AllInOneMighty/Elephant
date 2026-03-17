@@ -2,10 +2,10 @@
 local function OnBrokerTooltipShow(tt)
   tt:AddLine(
     Elephant.L["STRING_OPTIONS_MAX_LOG_LINES"]
-      .. ": |c"
-      .. Elephant:MakeTextHexColor(1.0, 1.0, 1.0)
-      .. Elephant:FactionRealmDb().maxlog
-      .. "|r"
+      .. ": "
+      .. CreateColor(1.0, 1.0, 1.0):WrapTextInColorCode(
+        Elephant:FactionRealmDb().maxlog
+      )
   )
 
   if Elephant:ProfileDb().filters and #Elephant:ProfileDb().filters > 0 then

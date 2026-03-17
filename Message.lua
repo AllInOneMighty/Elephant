@@ -63,17 +63,8 @@ end
   will return "ffb251ff".
 ]]
 function Elephant:MakeTextHexColor(r, g, b, a)
-  local r = string.format("%02x", r * 255)
-  local g = string.format("%02x", g * 255)
-  local b = string.format("%02x", b * 255)
-  local a
-  if a then
-    a = string.format("%02x", a * 255)
-  else
-    a = "ff"
-  end
-
-  return (a .. r .. g .. b)
+  local color = CreateColor(r, g, b, a)
+  return color:GenerateHexColor()
 end
 
 --[[

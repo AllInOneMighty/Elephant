@@ -14,6 +14,9 @@ end
   slash command giving access to them.
 ]]
 function Elephant:SetupOptions()
+  local color_green = CreateColor(0.2, 1.0, 0.2)
+  local color_red = CreateColor(1.0, 0.2, 0.2)
+
   -- First, registering options
   LibStub("AceConfig-3.0"):RegisterOptionsTable("Elephant", {
     type = "group",
@@ -58,13 +61,11 @@ function Elephant:SetupOptions()
             type = "toggle",
             order = 1,
             name = Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS"],
-            desc = (
-              Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-              .. Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2"]
-              .. "|r"
-            ),
+            desc = Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_1"]
+              .. "\n\n"
+              .. color_green:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_SHARE_LOGS_WITH_ALTS_DESC_2"]
+              ),
             get = function()
               return Elephant:ProfileDb().use_factionrealm_db
             end,
@@ -87,10 +88,10 @@ function Elephant:SetupOptions()
             order = 3,
             name = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS"],
             desc = Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_1"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-              .. Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_2"]
-              .. "|r",
+              .. "\n\n"
+              .. color_green:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_USE_CLASS_COLORS_DESC_2"]
+              ),
             get = function()
               return Elephant:ProfileDb().class_colors_in_log
             end,
@@ -117,17 +118,15 @@ function Elephant:SetupOptions()
             type = "range",
             order = 5,
             name = Elephant.L["STRING_OPTIONS_MAX_LOG_LINES"],
-            desc = (
-              Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_1"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-              .. Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_2"]
-              .. "|r"
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-              .. Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_3"]
-              .. "|r"
-            ),
+            desc = Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_1"]
+              .. "\n\n"
+              .. color_green:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_2"]
+              )
+              .. "\n\n"
+              .. color_red:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_MAX_LOG_LINES_DESC_3"]
+              ),
             min = Elephant:DefaultConfiguration().minlogsize,
             max = Elephant:DefaultConfiguration().maxlogsize,
             step = 1,
@@ -143,10 +142,10 @@ function Elephant:SetupOptions()
             order = 6,
             name = Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS"],
             desc = Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_1"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-              .. Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_2"]
-              .. "|r",
+              .. "\n\n"
+              .. color_red:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_MAX_COPY_CHARACTERS_DESC_2"]
+              ),
             min = Elephant:DefaultConfiguration().copywindowminletters,
             max = Elephant:DefaultConfiguration().copywindowmaxletters,
             step = 1000,
@@ -170,10 +169,10 @@ function Elephant:SetupOptions()
                 desc = Elephant.L["STRING_OPTIONS_PRAT_FORMATTING_DESC_1"]
                   .. "\n\n"
                   .. Elephant.L["STRING_OPTIONS_PRAT_FORMATTING_DESC_2"]
-                  .. "\n\n|c"
-                  .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-                  .. Elephant.L["STRING_OPTIONS_PRAT_FORMATTING_DESC_3"]
-                  .. "|r",
+                  .. "\n\n"
+                  .. color_green:WrapTextInColorCode(
+                    Elephant.L["STRING_OPTIONS_PRAT_FORMATTING_DESC_3"]
+                  ),
                 get = function()
                   return Elephant:ProfileDb().prat
                 end,
@@ -196,10 +195,10 @@ function Elephant:SetupOptions()
                 order = 1,
                 name = Elephant.L["STRING_OPTIONS_FILE_LOGGING_ACTIVATE"],
                 desc = Elephant.L["STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_1"]
-                  .. "\n\n|c"
-                  .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-                  .. Elephant.L["STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_2"]
-                  .. "|r",
+                  .. "\n\n"
+                  .. color_red:WrapTextInColorCode(
+                    Elephant.L["STRING_OPTIONS_FILE_LOGGING_ACTIVATE_DESC_2"]
+                  ),
                 get = function()
                   return Elephant:ProfileDb().activate_log
                 end,
@@ -223,10 +222,10 @@ function Elephant:SetupOptions()
                 order = 3,
                 name = Elephant.L["STRING_OPTIONS_FILE_LOGGING_CHAT"],
                 desc = Elephant.L["STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_1"]
-                  .. "\n\n|c"
-                  .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-                  .. Elephant.L["STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_2"]
-                  .. "|r",
+                  .. "\n\n"
+                  .. color_green:WrapTextInColorCode(
+                    Elephant.L["STRING_OPTIONS_FILE_LOGGING_CHAT_DESC_2"]
+                  ),
                 get = function()
                   return Elephant:ProfileDb().chatlog
                 end,
@@ -243,10 +242,10 @@ function Elephant:SetupOptions()
                 order = 4,
                 name = Elephant.L["STRING_OPTIONS_FILE_LOGGING_COMBAT"],
                 desc = Elephant.L["STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_1"]
-                  .. "\n\n|c"
-                  .. Elephant:MakeTextHexColor(0.2, 1.0, 0.2)
-                  .. Elephant.L["STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_2"]
-                  .. "|r",
+                  .. "\n\n"
+                  .. color_green:WrapTextInColorCode(
+                    Elephant.L["STRING_OPTIONS_FILE_LOGGING_COMBAT_DESC_2"]
+                  ),
                 get = function()
                   return Elephant:ProfileDb().combatlog
                 end,
@@ -414,15 +413,13 @@ function Elephant:SetupOptions()
           desc = {
             type = "description",
             order = 0,
-            name = (
-              Elephant.L["STRING_OPTIONS_RESET_TAB_HEADER_1"]
+            name = Elephant.L["STRING_OPTIONS_RESET_TAB_HEADER_1"]
               .. "\n\n"
               .. Elephant.L["STRING_OPTIONS_RESET_TAB_HEADER_2"]
-              .. "\n\n|c"
-              .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
-              .. Elephant.L["STRING_OPTIONS_RESET_TAB_HEADER_3"]
-              .. "|r"
-            ),
+              .. "\n\n"
+              .. color_red:WrapTextInColorCode(
+                Elephant.L["STRING_OPTIONS_RESET_TAB_HEADER_3"]
+              ),
             fontSize = "medium",
           },
           resetall = {
