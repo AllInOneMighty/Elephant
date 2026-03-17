@@ -13,14 +13,12 @@ local function GetAndFormatBattleTagOrId(message_struct)
   end
 end
 
---[[
-  Returns the given sender name with a color string built from the given class
-  color (if not nil). If the with_link parameter is true, a WoW hyperlink is
-  also added on the player name.
-
-  This method does not add colors if the addon "Show class colors in logs"
-  option is not enabled.
-]]
+-- Returns the given sender name with a color string built from the given class
+-- color (if not nil). If the with_link parameter is true, a WoW hyperlink is
+-- also added on the player name.
+--
+-- This method does not add colors if the addon "Show class colors in logs"
+-- option is not enabled.
 local function GetDecoratedSender(message_struct)
   local sender = nil
   local sender_link = nil
@@ -55,24 +53,20 @@ local function GetDecoratedSender(message_struct)
   return decorated_sender
 end
 
---[[
-  Creates a hex color string from the given decimal red, green, blue and alpha
-  values.
-
-  Example: if you call this method using 0.7, 0.32, 1.0 and 1.0, this method
-  will return "ffb251ff".
-]]
+-- Creates a hex color string from the given decimal red, green, blue and alpha
+-- values.
+--
+-- Example: if you call this method using 0.7, 0.32, 1.0 and 1.0, this method
+-- will return "ffb251ff".
 function Elephant:MakeTextHexColor(r, g, b, a)
   local color = CreateColor(r, g, b, a)
   return color:GenerateHexColor()
 end
 
---[[
-  Returns a literal WoW string (with color codes, ...) corresponding to a
-  message structure created by Elephant (see HandleMessage() in Event.lua).
-
-  You have to specify whether to return timestamps or not in the message.
-]]
+-- Returns a literal WoW string (with color codes, ...) corresponding to a
+-- message structure created by Elephant (see HandleMessage() in Event.lua).
+--
+-- You have to specify whether to return timestamps or not in the message.
 function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   local literal_message = ""
 
@@ -94,10 +88,8 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
     literal_message = literal_message .. "<" .. message_struct.arg6 .. ">"
   end
 
-  --[[
-    Sender name (could be monster, player, ...); shouldn't be there if Prat
-    message.
-  ]]
+  -- Sender name (could be monster, player, ...); shouldn't be there if Prat
+  -- message.
   if message_struct.arg2 or message_struct.battleTag then
     if message_struct.type == "EMOTE" then
       literal_message = literal_message

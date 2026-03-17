@@ -58,18 +58,14 @@ function Elephant:Clone(o)
   return new
 end
 
---[[
-  Profile database. Can be changed when changing addon profile. Initialized with
-  DefaultConfiguration().savedconfdefaults
-]]
+-- Profile database. Can be changed when changing addon profile. Initialized
+-- with DefaultConfiguration().savedconfdefaults
 function Elephant:ProfileDb()
   return Elephant._db.profile
 end
 
---[[
-  Returns an appropriate database to save logs. The returned database depends on
-  the per-profile use_factionrealm_db setting.
-]]
+-- Returns an appropriate database to save logs. The returned database depends
+-- on the per-profile use_factionrealm_db setting.
 function Elephant:LogsDb()
   if Elephant:ProfileDb().use_factionrealm_db then
     return Elephant:FactionRealmDb()
@@ -78,19 +74,15 @@ function Elephant:LogsDb()
   end
 end
 
---[[
-  Character database. Proper to the character and only them. Initialized with
-  DefaultConfiguration().savedpercharconfdefaults
-]]
+-- Character database. Proper to the character and only them. Initialized with
+-- DefaultConfiguration().savedpercharconfdefaults
 function Elephant:CharDb()
   return Elephant._db.char
 end
 
---[[
-  Faction realm database. Shared between all characters on the same realm AND
-  faction. Initialized with
-  DefaultConfiguration().savedperfactionrealmconfdefaults
-]]
+-- Faction realm database. Shared between all characters on the same realm AND
+-- faction. Initialized with
+-- DefaultConfiguration().savedperfactionrealmconfdefaults
 function Elephant:FactionRealmDb()
   return Elephant._db.factionrealm
 end
@@ -98,10 +90,9 @@ end
 local volatile_configuration = {
   currentline = nil,
 
-  --[[
-    Data for specific events, such as loot method change (here only for
-    reference).
-  ]]
+  -- Data for specific events, such as loot method change (here only for
+  -- reference).
+
   lootmethod = nil,
   masterlooter = nil,
 
@@ -116,10 +107,8 @@ function Elephant:VolatileConfig()
   return volatile_configuration
 end
 
---[[
-  Default logs that the user cannot delete. Does not include some General chats
-  owned by Blizzard (General, Trade, etc.).
-]]
+-- Default logs that the user cannot delete. Does not include some General chats
+-- owned by Blizzard (General, Trade, etc.).
 local default_logs = {
   whisper = {
     id = 1,
@@ -198,10 +187,8 @@ local default_configuration = {
   copywindowminletters = 1000,
   copywindowmaxletters = 100000,
 
-  --[[
-    Default logs of the addon, cannot be removed (related to default chats
-    defined by Blizzard).
-  ]]
+  -- Default logs of the addon, cannot be removed (related to default chats
+  -- defined by Blizzard).
   defaultlogs = default_logs,
   generalchatchannelmetadata = {
     -- Keep it in the order it should be shown in the dropdown menu.
@@ -250,10 +237,9 @@ local default_configuration = {
     activate_log = false,
     class_colors_in_log = true,
     timestamps_in_copywindow = true,
-    --[[
-      By default, use a per-character database. It has historically been the
-      case with Elephant, so keep it as-is.
-    ]]
+
+    -- By default, use a per-character database. It has historically been the
+    -- case with Elephant, so keep it as-is.
     use_factionrealm_db = false,
     skip_cannot_log_restricted_warning = false,
     -- Minimap
@@ -263,13 +249,12 @@ local default_configuration = {
     log_font_id = nil,
     log_font_size = 14,
     skin_id = "default",
-    --[[
-      Completing saved default configuration: Events & Default catchers.
-      Possible values for channels:
-       -1: Always enabled, cannot be disabled
-        0: Starts disabled, can be enabled
-        1: Starts enabled, can be disabled
-    ]]
+
+    -- Completing saved default configuration: Events & Default catchers.
+    -- Possible values for channels:
+    --   -1: Always enabled, cannot be disabled
+    --    0: Starts disabled, can be enabled
+    --    1: Starts enabled, can be disabled
     events = {
       ["CHAT_MSG_ACHIEVEMENT"] = {
         type = "ACHIEVEMENT",

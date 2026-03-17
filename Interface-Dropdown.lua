@@ -29,10 +29,8 @@ local function SortTable(arg1, arg2)
 
     byte_diff = arg1_char - arg2_char
 
-    --[[
-      Alphabet goes with increasing byte values, so a difference less than 0
-      means the first letter appears before the second in the alphabet.
-    ]]
+    -- Alphabet goes with increasing byte values, so a difference less than 0
+    -- means the first letter appears before the second in the alphabet.
     if byte_diff < 0 then
       return true
     elseif byte_diff > 0 then
@@ -44,12 +42,10 @@ local function SortTable(arg1, arg2)
   return false
 end
 
---[[
-  Dropdowns
-
-  See below local functions declaration for dropdown creation function
-  associations.
-]]
+-- Dropdowns
+--
+-- See below local functions declaration for dropdown creation function
+-- associations.
 
 local function DropdownCustomChatsInitialize()
   local info = {}
@@ -204,10 +200,9 @@ local function DropdownCatchOptionsInitialize(frame, level)
   local catcher, info
   for _, catcher in pairs(menu) do
     if catcher.option == -1 then
-      --[[
-        On first display, seems to be buggy: some of these entries are displayed
-        in white even if they are not clickable. If you find a fix, congrats!
-      ]]
+      -- On first display, seems to be buggy: some of these entries are
+      -- displayed in white even if they are not clickable. If you find a fix,
+      -- congrats!
       info = UIDropDownMenu_CreateInfo()
       info.text = catcher.desc
       info.checked = true
@@ -238,10 +233,8 @@ local function DropdownCatchOptionsInitialize(frame, level)
   end
 end
 
---[[
-  Doing that way avoids calling each drop down initialization function at
-  startup.
-]]
+-- Doing that way avoids calling each drop down initialization function at
+-- startup.
 Elephant.dropdowns = {}
 Elephant.dropdowns.customChats =
   CreateFrame("Frame", "ElephantDropdown", UIParent, "UIDropDownMenuTemplate")

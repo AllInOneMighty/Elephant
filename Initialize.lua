@@ -1,8 +1,6 @@
---[[
-  When addon is initialized. Registers database, options, initializes the main
-  frame, Elephant button if required, enables/disables WoW chat logging, and
-  initializes other useful data.
-]]
+-- When addon is initialized. Registers database, options, initializes the main
+-- frame, Elephant button if required, enables/disables WoW chat logging, and
+-- initializes other useful data.
 function Elephant:OnInitialize()
   -- Registering database with defaults: cloning objects to avoid problems
   Elephant._db = LibStub("AceDB-3.0"):New("ElephantDB", {
@@ -15,9 +13,8 @@ function Elephant:OnInitialize()
     ),
   })
 
-  --[[
-    Now the Elephant._db is initialized, we can use the quick db access methods.
-  ]]
+  -- Now the Elephant._db is initialized, we can use the quick db access
+  -- methods.
 
   -- If old maxlog value exists...
   if Elephant:ProfileDb().maxlog ~= nil then
@@ -48,10 +45,8 @@ function Elephant:OnInitialize()
   Elephant:MaybeInitDefaultLogStructures()
   Elephant:AddHeaderToStructures()
 
-  --[[
-    Getting current loot method to avoid displaying too many times the same loot
-    method in case of ReloadUI() or login.
-  ]]
+  -- Getting current loot method to avoid displaying too many times the same
+  -- loot method in case of ReloadUI() or login.
   Elephant:VolatileConfig().lootmethod = Elephant:GetLootMethod()
 
   -- Minimap icon
@@ -85,10 +80,8 @@ local function SetTabButtonProperties(obj, typeInfo)
   )
 end
 
---[[
-  When addon is enabled. Register events and "displays" the current log (even if
-  main frame isn't shown).
-]]
+-- When addon is enabled. Register events and "displays" the current log (even
+-- if main frame isn't shown).
 function Elephant:OnEnable()
   -- Registering events
   Elephant:RegisterEventsRefresh()

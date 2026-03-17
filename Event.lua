@@ -1,8 +1,6 @@
---[[
-  Returns the hexadecimal string corresponding to the color of the class of the
-  player with the given GUID, or nil if either the GUID is nil, corresponds to
-  no player, or the found class color does not exist.
-]]
+-- Returns the hexadecimal string corresponding to the color of the class of the
+-- player with the given GUID, or nil if either the GUID is nil, corresponds to
+-- no player, or the found class color does not exist.
 local function GetClassColorByGUID(guid)
   if guid then
     local _, english_class = GetPlayerInfoByGUID(guid)
@@ -27,12 +25,10 @@ local function GetClassColorByGUID(guid)
   return nil
 end
 
---[[
-  Returns the channel index to be used for the given channel name. Correctly
-  detects general channels and returns an appropriate integer for them.
-
-  Returns nil if a channel cannot be found.
-]]
+-- Returns the channel index to be used for the given channel name. Correctly
+-- detects general channels and returns an appropriate integer for them.
+--
+-- Returns nil if a channel cannot be found.
 local function GetChannelIndexFromChannelName(channel_name)
   if channel_name == "" then
     return nil
@@ -132,10 +128,8 @@ local function IsLockedDownDueToCombat(event)
     return false
   end
 
-  --[[
-    No Battle.net message can be logged during combat lockdown as all values are
-    secret.
-  ]]
+  -- No Battle.net message can be logged during combat lockdown as all values
+  -- are secret.
   return IsBattleNetEvent(event) or IsOfMonsterOrigin(event)
 end
 
@@ -145,14 +139,12 @@ local function Handle_CHAT_MSG_CHANNEL(
   prat_struct,
   ...
 )
-  --[[
-    Fixing error where structure for channel does not exist.
-
-    This should normally not happen, but it may be triggered if the client
-    never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel.
-    In this case though, the client cannot be displaying that log, so we don't
-    have to update the buttons like when a YOU_JOINED event happens.
-  ]]
+  -- Fixing error where structure for channel does not exist.
+  --
+  -- This should normally not happen, but it may be triggered if the client
+  -- never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel.
+  -- In this case though, the client cannot be displaying that log, so we don't
+  -- have to update the buttons like when a YOU_JOINED event happens.
   Elephant:MaybeInitCustomStructure(channel_index, channel_name)
   if not Elephant:LogsDb().logs[channel_index].enabled then
     return
@@ -342,10 +334,8 @@ local function HandleEvent(prat_struct, event, ...)
         return
       end
 
-      --[[
-        Issue warning that some messages cannot be logged while in combat
-        lockdown.
-      ]]
+      -- Issue warning that some messages cannot be logged while in combat
+      -- lockdown.
       local warning_message = "|cffff4800"
         .. Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
         .. "|r"
@@ -401,15 +391,12 @@ local function HandleEvent(prat_struct, event, ...)
   end
 end
 
---[[
-  Unregisters all events from Elephant, and then registers back either:
-   - Only one Prat event if the "Prat formatting"
-     option is enabled.
-   - All WoW events defined in Core.lua
-
-  This method displays a message if the "Prat formatting" option is checked but
-  Prat is not loaded.
-]]
+-- Unregisters all events from Elephant, and then registers back either:
+--   • Only one Prat event if the "Prat formatting" option is enabled.
+--   • All WoW events defined in Core.lua
+--
+-- This method displays a message if the "Prat formatting" option is checked but
+-- Prat is not loaded.
 function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
 
@@ -438,10 +425,8 @@ function Elephant:RegisterEventsRefresh()
   end
 end
 
---[[
-  Method pre-handling messages sent by Prat before sending them to
-  HandleEvent(). Cannot be local.
-]]
+-- Method pre-handling messages sent by Prat before sending them to
+-- HandleEvent(). Cannot be local.
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
   prat_struct = {
     message = text,

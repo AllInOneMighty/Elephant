@@ -9,10 +9,8 @@ local function ToggleUseFactionRealmDb()
   Elephant:ChangeLog(Elephant:CharDb().currentlogindex)
 end
 
---[[
-  Registers the options of the addon and sets up any configuration window or
-  slash command giving access to them.
-]]
+-- Registers the options of the addon and sets up any configuration window or
+-- slash command giving access to them.
 function Elephant:SetupOptions()
   local color_green = CreateColor(0.2, 1.0, 0.2)
   local color_red = CreateColor(1.0, 0.2, 0.2)
