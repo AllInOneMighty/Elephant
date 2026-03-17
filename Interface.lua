@@ -744,28 +744,29 @@ end
 --   • Copy
 --   • Delete
 function Elephant:UpdateCurrentLogButtons()
-  if Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].enabled then
+  local current_log_index = Elephant:CharDb().currentlogindex
+  local current_log_tbl = Elephant:LogsDb().logs[current_log_index]
+
+  if current_log_tbl.enabled then
     ElephantFrameEnableButton:GetFontString()
       :SetText(Elephant.L["STRING_DISABLE"])
   else
     ElephantFrameEnableButton:GetFontString()
       :SetText(Elephant.L["STRING_ENABLE"])
   end
-  if #Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs > 0 then
+
+  if #current_log_tbl.logs > 0 then
     ElephantFrameCopyButton:Enable()
   else
     ElephantFrameCopyButton:Disable()
   end
+
   if
-    Elephant:IsExactGeneralChatChannelId(Elephant:CharDb().currentlogindex)
-    or (type(Elephant:CharDb().currentlogindex) == "number")
+    type(current_log_index) == "number"
+    or Elephant:IsExactGeneralChatChannelId(current_log_index)
   then
     ElephantFrameDeleteButton:Disable()
-  elseif
-    GetChannelName(
-      Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name
-    ) > 0
-  then
+  elseif GetChannelName(current_log_tbl.name) > 0 then
     ElephantFrameDeleteButton:Disable()
   else
     ElephantFrameDeleteButton:Enable()
