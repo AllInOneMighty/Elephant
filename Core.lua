@@ -255,6 +255,8 @@ local default_configuration = {
     --   -1: Always enabled, cannot be disabled
     --    0: Starts disabled, can be enabled
     --    1: Starts enabled, can be disabled
+    --
+    -- Types are used for getting literal messages.
     events = {
       ["CHAT_MSG_ACHIEVEMENT"] = {
         type = "ACHIEVEMENT",
