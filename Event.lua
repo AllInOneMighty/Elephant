@@ -40,7 +40,7 @@ local function GetChannelIndexFromChannelName(channel_name)
 
   channel_name = string.lower(channel_name)
 
-  local channel_index
+  local channel_index = nil
   for _, general_chat_channel_metadata in
     pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata)
   do
