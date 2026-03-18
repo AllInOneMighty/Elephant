@@ -10,11 +10,11 @@
 disconnected**. It saves the WHISPER & BATTLE.NET, RAID, INSTANCE &
 BATTLEGROUND, PARTY, GUILD, SAY, YELL and OFFICER chats separately, but also all
 _general chats_ (General, Trade, LocalDefense, ...), _custom chats_ you are
-currently on, _achievements_, _loots_ and finally _system_ messages (auctions,
-rolls, server going down, ...). You can easily go through all these logs, thanks
-to a straightforward interface displaying all the access buttons on the right
-side of the main window. You can access the options of the addon by typing
-/elephant and also bind a key to pop up the addon.
+currently on, _achievements_, _loots_, _pet battles_ and finally _system_
+messages (auctions, rolls, server going down, ...). You can easily go through
+all these logs, thanks to a straightforward interface displaying all the access
+buttons on the right side of the main window. You can access the options of the
+addon by typing /elephant and also bind a key to pop up the addon.
 
 **Elephant** gives you the ability to copy up to 100,000 (yes, 100k) characters
 of logs to another application. A BBCode feature is even included, letting you
@@ -45,6 +45,7 @@ restores the chats after you've been disconnected.
 - Enable/disable logging for each chat separately.
 - Item links in logs are displayed in their proper color and are clickable.
 - Player names in the main window are clickable.
+- Customize the font and look of the main window.
 - ...and much more!
 
 ## Bug reports
