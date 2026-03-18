@@ -3,9 +3,9 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local function ToggleUseFactionRealmDb()
   Elephant:ProfileDb().use_factionrealm_db =
     not Elephant:ProfileDb().use_factionrealm_db
-  Elephant:MaybeInitDefaultLogStructures()
-  Elephant:MaybeInitCustomStructures()
-  Elephant:AddHeaderToStructures(true)
+  Elephant:MaybeInitDefaultLogTables()
+  Elephant:MaybeInitCustomChannelLogTables()
+  Elephant:AddHeaderToLogTables(--[[non_custom_channels_only=]] true)
   Elephant:ChangeLog(Elephant:CharDb().currentlogindex)
 end
 

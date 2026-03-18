@@ -41,9 +41,9 @@ function Elephant:OnInitialize()
   Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
   Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
 
-  -- Checks & creates default log structures
-  Elephant:MaybeInitDefaultLogStructures()
-  Elephant:AddHeaderToStructures()
+  -- Checks & creates default log tables
+  Elephant:MaybeInitDefaultLogTables()
+  Elephant:AddHeaderToLogTables()
 
   -- Getting current loot method to avoid displaying too many times the same
   -- loot method in case of ReloadUI() or login.

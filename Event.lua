@@ -136,25 +136,25 @@ end
 local function Handle_CHAT_MSG_CHANNEL(
   channel_index,
   channel_name,
-  prat_struct,
+  prat_tbl,
   ...
 )
-  -- Fixing error where structure for channel does not exist.
+  -- Fixing error where table for channel does not exist.
   --
   -- This should normally not happen, but it may be triggered if the client
   -- never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel.
   -- In this case though, the client cannot be displaying that log, so we don't
   -- have to update the buttons like when a YOU_JOINED event happens.
-  Elephant:MaybeInitCustomStructure(channel_index, channel_name)
+  Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
   if not Elephant:LogsDb().logs[channel_index].enabled then
     return
   end
 
-  if prat_struct then
+  if prat_tbl then
     Elephant:CaptureNewMessage({
       time = time(),
-      prat = prat_struct.message,
-      lineid = prat_struct.lineid,
+      prat = prat_tbl.message,
+      lineid = prat_tbl.lineid,
     }, channel_index)
   else
     local message, sender, _, _, _, flags, _, _, _, _, _, guid = ...
@@ -172,7 +172,7 @@ end
 local function Handle_CHAT_MSG_CHANNEL_NOTICE(channel_index, channel_name, ...)
   local message = ...
   if message == "YOU_JOINED" or message == "YOU_CHANGED" then
-    Elephant:MaybeInitCustomStructure(channel_index, channel_name)
+    Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
     if not Elephant:LogsDb().logs[channel_index].enabled then
       return
     end
@@ -205,7 +205,7 @@ local function Handle_CHAT_MSG_CHANNEL_NOTICE(channel_index, channel_name, ...)
   end
 end
 
-local function HandleChannelEvent(prat_struct, event, ...)
+local function HandleChannelEvent(prat_tbl, event, ...)
   local _, _, _, _, _, _, _, _, channel_name = ...
   local channel_index = GetChannelIndexFromChannelName(channel_name)
 
@@ -215,7 +215,7 @@ local function HandleChannelEvent(prat_struct, event, ...)
   end
 
   if event == "CHAT_MSG_CHANNEL" then
-    Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_struct, ...)
+    Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_tbl, ...)
     return
   end
 
@@ -294,8 +294,8 @@ local function UpdateWithPartyLootMethodChangedEvent(new_message)
 end
 
 -- Handles messages sent by the WoW engine as well as the ones sent by Prat.
-local function HandleEvent(prat_struct, event, ...)
-  if not Elephant:ProfileDb().prat and prat_struct then
+local function HandleEvent(prat_tbl, event, ...)
+  if not Elephant:ProfileDb().prat and prat_tbl then
     return
   end
   if not Elephant:ProfileDb().events[event] then
@@ -304,7 +304,7 @@ local function HandleEvent(prat_struct, event, ...)
 
   -- Channel events
   if IsChannelEvent(event) then
-    HandleChannelEvent(prat_struct, event, ...)
+    HandleChannelEvent(prat_tbl, event, ...)
     return
   end
 
@@ -312,11 +312,11 @@ local function HandleEvent(prat_struct, event, ...)
 
   -- Sometimes we need to log two messages for the price of one.
   local new_message, extra_new_message = nil, nil
-  if prat_struct then
+  if prat_tbl then
     new_message = {
       time = time(),
-      prat = prat_struct.message,
-      lineid = prat_struct.lineid,
+      prat = prat_tbl.message,
+      lineid = prat_tbl.lineid,
       type = Elephant:ProfileDb().events[event].type,
     }
   else
@@ -405,8 +405,8 @@ function Elephant:RegisterEventsRefresh()
     Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
 
     -- Registering additional events not handled by Prat
-    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
-      if event_struct.register_with_prat then
+    for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
+      if event_tbl.register_with_prat then
         Elephant:RegisterEvent(event_type, HandleEvent, nil)
       end
     end
@@ -419,7 +419,7 @@ function Elephant:RegisterEventsRefresh()
       )
     end
 
-    for event_type, event_struct in pairs(Elephant:ProfileDb().events) do
+    for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
       Elephant:RegisterEvent(event_type, HandleEvent, nil)
     end
   end
@@ -428,12 +428,12 @@ end
 -- Method pre-handling messages sent by Prat before sending them to
 -- HandleEvent(). Cannot be local.
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
-  prat_struct = {
+  prat_tbl = {
     message = text,
     lineid = message.ORG.LINE_ID,
   }
   HandleEvent(
-    prat_struct,
+    prat_tbl,
     event,
     message.ORG.MESSAGE,
     _,

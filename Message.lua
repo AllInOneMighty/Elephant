@@ -1,11 +1,11 @@
-local function GetAndFormatBattleTagOrId(message_struct)
-  if message_struct.battleTag then
-    return "<" .. message_struct.battleTag .. ">"
-  elseif message_struct.arg2 then
+local function GetAndFormatBattleTagOrId(message_tbl)
+  if message_tbl.battleTag then
+    return "<" .. message_tbl.battleTag .. ">"
+  elseif message_tbl.arg2 then
     return "["
       .. Elephant.L["STRING_ID"]
       .. ": "
-      .. string.sub(message_struct.arg2, 3, -3)
+      .. string.sub(message_tbl.arg2, 3, -3)
       .. "]"
   else
     -- Should never happen, but we have this for safeguard.
@@ -19,18 +19,18 @@ end
 --
 -- This method does not add colors if the addon "Show class colors in logs"
 -- option is not enabled.
-local function GetDecoratedSender(message_struct)
+local function GetDecoratedSender(message_tbl)
   local sender = nil
   local sender_link = nil
 
   if
-    message_struct.type == "BN_WHISPER_INFORM"
-    or message_struct.type == "BN_WHISPER"
+    message_tbl.type == "BN_WHISPER_INFORM"
+    or message_tbl.type == "BN_WHISPER"
   then
-    sender = GetAndFormatBattleTagOrId(message_struct)
+    sender = GetAndFormatBattleTagOrId(message_tbl)
   else
-    sender = message_struct.arg2
-    if message_struct.type ~= "EMOTE" then
+    sender = message_tbl.arg2
+    if message_tbl.type ~= "EMOTE" then
       sender_link = "player:" .. sender
     end
   end
@@ -41,7 +41,7 @@ local function GetDecoratedSender(message_struct)
 
   local decorated_sender = sender
 
-  local class_color = message_struct.clColor
+  local class_color = message_tbl.clColor
   if class_color and Elephant:ProfileDb().class_colors_in_log then
     decorated_sender = "|c" .. class_color .. decorated_sender .. "|r"
   end
@@ -64,63 +64,63 @@ function Elephant:MakeTextHexColor(r, g, b, a)
 end
 
 -- Returns a literal WoW string (with color codes, ...) corresponding to a
--- message structure created by Elephant (see HandleMessage() in Event.lua).
+-- message table created by Elephant (see HandleMessage() in Event.lua).
 --
 -- You have to specify whether to return timestamps or not in the message.
-function Elephant:GetLiteralMessage(message_struct, use_timestamps)
+function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
   local literal_message = ""
 
   -- Time if needed
-  if use_timestamps and message_struct.time then
+  if use_timestamps and message_tbl.time then
     literal_message = "|cff888888"
-      .. date("%H:%M:%S", message_struct.time)
+      .. date("%H:%M:%S", message_tbl.time)
       .. "|r "
       .. literal_message
   end
 
   -- Handling Prat messages
-  if message_struct.prat then
-    literal_message = literal_message .. message_struct.prat
+  if message_tbl.prat then
+    literal_message = literal_message .. message_tbl.prat
   end
 
   -- DND/Away tags; shouldn't be there if Prat message
-  if message_struct.arg6 and message_struct.arg6 ~= "" then
-    literal_message = literal_message .. "<" .. message_struct.arg6 .. ">"
+  if message_tbl.arg6 and message_tbl.arg6 ~= "" then
+    literal_message = literal_message .. "<" .. message_tbl.arg6 .. ">"
   end
 
   -- Sender name (could be monster, player, ...); shouldn't be there if Prat
   -- message.
-  if message_struct.arg2 or message_struct.battleTag then
-    if message_struct.type == "EMOTE" then
+  if message_tbl.arg2 or message_tbl.battleTag then
+    if message_tbl.type == "EMOTE" then
       literal_message = literal_message
-        .. GetDecoratedSender(message_struct)
+        .. GetDecoratedSender(message_tbl)
         .. " "
     elseif
-      message_struct.type ~= "MONSTER_EMOTE"
-      and message_struct.type ~= "ACHIEVEMENT"
-      and message_struct.type ~= "GUILD_ACHIEVEMENT"
-      and message_struct.type ~= "RAID_BOSS_EMOTE"
+      message_tbl.type ~= "MONSTER_EMOTE"
+      and message_tbl.type ~= "ACHIEVEMENT"
+      and message_tbl.type ~= "GUILD_ACHIEVEMENT"
+      and message_tbl.type ~= "RAID_BOSS_EMOTE"
     then
-      if message_struct.type == "MONSTER_SAY" then
+      if message_tbl.type == "MONSTER_SAY" then
         literal_message = literal_message
           .. format(
             Elephant.L["STRING_SPECIAL_LOG_MONSTER_SAYS"],
-            message_struct.arg2
+            message_tbl.arg2
           )
-      elseif message_struct.type == "MONSTER_YELL" then
+      elseif message_tbl.type == "MONSTER_YELL" then
         literal_message = literal_message
           .. format(
             Elephant.L["STRING_SPECIAL_LOG_MONSTER_YELLS"],
-            message_struct.arg2
+            message_tbl.arg2
           )
-      elseif message_struct.type == "MONSTER_WHISPER" then
-        literal_message = literal_message .. message_struct.arg2
+      elseif message_tbl.type == "MONSTER_WHISPER" then
+        literal_message = literal_message .. message_tbl.arg2
       else
-        local decorated_sender = GetDecoratedSender(message_struct)
+        local decorated_sender = GetDecoratedSender(message_tbl)
 
         if
-          message_struct.type == "WHISPER_INFORM"
-          or message_struct.type == "BN_WHISPER_INFORM"
+          message_tbl.type == "WHISPER_INFORM"
+          or message_tbl.type == "BN_WHISPER_INFORM"
         then
           literal_message = literal_message
             .. format(
@@ -133,9 +133,9 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
       end
 
       if
-        message_struct.type == "WHISPER"
-        or message_struct.type == "MONSTER_WHISPER"
-        or message_struct.type == "BN_WHISPER"
+        message_tbl.type == "WHISPER"
+        or message_tbl.type == "MONSTER_WHISPER"
+        or message_tbl.type == "BN_WHISPER"
       then
         literal_message =
           format(Elephant.L["STRING_SPECIAL_LOG_WHISPER_FROM"], literal_message)
@@ -146,30 +146,30 @@ function Elephant:GetLiteralMessage(message_struct, use_timestamps)
   end
 
   -- The message itself; shouldn't be there if Prat message
-  if message_struct.arg1 then
-    if message_struct.type == "MONSTER_EMOTE" then
+  if message_tbl.arg1 then
+    if message_tbl.type == "MONSTER_EMOTE" then
       literal_message = literal_message
-        .. format(message_struct.arg1, message_struct.arg2)
+        .. format(message_tbl.arg1, message_tbl.arg2)
     elseif
-      message_struct.arg2
+      message_tbl.arg2
       and (
-        message_struct.type == "ACHIEVEMENT"
-        or message_struct.type == "GUILD_ACHIEVEMENT"
+        message_tbl.type == "ACHIEVEMENT"
+        or message_tbl.type == "GUILD_ACHIEVEMENT"
       )
     then
       literal_message = literal_message
-        .. format(message_struct.arg1, message_struct.arg2)
+        .. format(message_tbl.arg1, message_tbl.arg2)
     else
-      literal_message = literal_message .. message_struct.arg1
+      literal_message = literal_message .. message_tbl.arg1
     end
   end
 
-  if message_struct.type then
+  if message_tbl.type then
     -- Return line color if it is not the default
     return literal_message,
-      ChatTypeInfo[message_struct.type].r,
-      ChatTypeInfo[message_struct.type].g,
-      ChatTypeInfo[message_struct.type].b
+      ChatTypeInfo[message_tbl.type].r,
+      ChatTypeInfo[message_tbl.type].g,
+      ChatTypeInfo[message_tbl.type].b
   else
     return literal_message
   end

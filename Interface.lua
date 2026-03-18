@@ -295,12 +295,12 @@ local function FillCopyWindow()
     SetObjectColorWithCurrentLogColor(ElephantCopyFrameScrollFrameEditBox)
     local total_chars = 0
     for i = Elephant:VolatileConfig().currentline, 0, -1 do
-      local message_struct =
+      local message_tbl =
         Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[i]
-      if message_struct then
+      if message_tbl then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
-            message_struct,
+            message_tbl,
             Elephant:ProfileDb().timestamps_in_copywindow
           )
         )
@@ -325,12 +325,12 @@ local function FillCopyWindow()
     local item_link_site = Elephant.L["URL_ITEM_LINK"]
     local total_chars = 0
     for line_index = Elephant:VolatileConfig().currentline, 0, -1 do
-      local message_struct =
+      local message_tbl =
         Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
-      if message_struct then
+      if message_tbl then
         local message_text = AddColorStrings(
           Elephant:GetLiteralMessage(
-            message_struct,
+            message_tbl,
             Elephant:ProfileDb().timestamps_in_copywindow
           )
         )
@@ -371,14 +371,14 @@ end
 --
 -- The message must be a table of one or more strings, where the first string
 -- will be used as title and the others as content.
-local function PlaceTooltip(frame, message_struct, position)
-  if not (type(message_struct) == "table") then
+local function PlaceTooltip(frame, message_tbl, position)
+  if not (type(message_tbl) == "table") then
     return
   end
 
   GameTooltip:SetOwner(frame, position)
   local line, text, r, g, b
-  for index, line in ipairs(message_struct) do
+  for index, line in ipairs(message_tbl) do
     if index == 1 then
       -- Title color cannot be changed
       GameTooltip:SetText(line)
@@ -702,8 +702,8 @@ function Elephant:ShowCurrentLog()
   end
 
   -- Updating message catchers button
-  for _, event_struct in pairs(Elephant:ProfileDb().events) do
-    if event_struct.channels and event_struct.channels[current_log_index] then
+  for _, event_tbl in pairs(Elephant:ProfileDb().events) do
+    if event_tbl.channels and event_tbl.channels[current_log_index] then
       if not ElephantFrameCatchOptionsButton:IsEnabled() then
         ElephantFrameCatchOptionsButton:Enable()
       end
@@ -861,11 +861,11 @@ end
 
 -- Places a tooltip containing the given message on the given frame, using
 -- ANCHOR_RIGHT.
-function Elephant:SetTooltip(frame, message_struct, anchor)
+function Elephant:SetTooltip(frame, message_tbl, anchor)
   if anchor == nil then
     anchor = "ANCHOR_RIGHT"
   end
-  PlaceTooltip(frame, message_struct, anchor)
+  PlaceTooltip(frame, message_tbl, anchor)
 end
 
 function Elephant:SetDefaultTabButtonTooltip(frame, default_log_tbl)
