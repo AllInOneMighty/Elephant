@@ -55,7 +55,7 @@ Locales\Locale-ruRU.lua
 Core.lua
 Broker.lua
 Options.lua
-Structure.lua
+Logs.lua
 Interface.lua
 Interface-Dropdown.lua
 Initialize.lua
