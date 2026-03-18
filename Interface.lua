@@ -166,34 +166,50 @@ local skins = {
 -- Sets the given frame color using :SetTextColor() to the color used by the
 -- currently log displayed. This method uses Blizzard's default chat type colors.
 local function SetObjectColorWithCurrentLogColor(obj)
+  local current_log_index = Elephant:CharDb().currentlogindex
   local type_info = nil
 
   local log_tbl = nil
   -- Cannot use ipairs() if index is not an integer.
   for _, log_tbl in pairs(Elephant:DefaultConfiguration().defaultlogs) do
-    if Elephant:CharDb().currentlogindex == log_tbl.id then
+    if current_log_index == log_tbl.id then
       type_info = log_tbl.type_info
       break
     end
   end
 
   if not type_info then
-    local channel_id, channelName = nil, nil
-    -- Max: 20 channels
-    local i = nil
-    for i = 1, 20 do
-      -- channel_id is set correctly if channel_name is found and not nil
-      channel_id, channel_name = GetChannelName(i)
+    -- Find if the current log matches a general chat.
+    local found_tbl, general_chat_channel_tbl = nil, nil
+    for _, general_chat_channel_tbl in
+      pairs(Elephant:DefaultConfiguration().generalchatchannels)
+    do
+      if current_log_index == general_chat_channel_tbl.id then
+        found_tbl = general_chat_channel_tbl
+      end
+    end
 
-      if
-        channel_name ~= nil
-        and string.lower(channel_name)
-          == string.lower(
-            Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name
-          )
-      then
-        type_info = ChatTypeInfo["CHANNEL" .. channel_id]
-        break
+    -- If so, identify its color.
+    if found_tbl then
+      local channel_id, channel_name, i = nil, nil, nil
+      -- Max: 20 channels
+      for i = 1, 20 do
+        channel_id, channel_name = GetChannelName(i)
+
+        if channel_name ~= nil then
+          channel_name = string.lower(channel_name)
+          if
+            Elephant:ChannelIdPartiallyMatches(channel_name, found_tbl.id)
+            or Elephant:ChannelIdPartiallyMatches(
+              channel_name,
+              found_tbl.id_alt
+            )
+          then
+            -- channel_id is set correctly if channel_name is found and not nil
+            type_info = ChatTypeInfo["CHANNEL" .. channel_id]
+            break
+          end
+        end
       end
     end
   end
@@ -626,6 +642,28 @@ function Elephant:ChangeLog(channel_index)
   Elephant:ShowCurrentLog()
 end
 
+-- Returns the best name for the given log. Prioritizes localized names if it
+-- can, otherwise uses the log's name.
+function Elephant:GetLogName(log_index)
+  if type(log_index) == "number" then
+    for _, default_log_tbl in pairs(Elephant:DefaultConfiguration().defaultlogs) do
+      if log_index == default_log_tbl.id then
+        return default_log_tbl.localized_name
+      end
+    end
+  end
+
+  for _, general_chat_channel_tbl in
+    ipairs(Elephant:DefaultConfiguration().generalchatchannels)
+  do
+    if log_index == general_chat_channel_tbl.id then
+      return general_chat_channel_tbl.localized_name
+    end
+  end
+
+  return Elephant:LogsDb().logs[log_index].name
+end
+
 -- Shows a log, based on the current selected one.
 --
 -- First clears the main scrolling message frame, then sets the color of the
@@ -635,6 +673,8 @@ end
 --
 -- Finally, populates the frame and updates the status of the catchers button.
 function Elephant:ShowCurrentLog()
+  local current_log_index = Elephant:CharDb().currentlogindex
+
   ElephantFrameScrollingMessageFrame:Clear()
 
   SetObjectColorWithCurrentLogColor(ElephantFrameTitleInfoFrameTabFontString)
@@ -643,21 +683,17 @@ function Elephant:ShowCurrentLog()
   )
   SetObjectColorWithCurrentLogColor(ElephantFrameScrollingMessageFrame)
   ElephantFrameTitleInfoFrameTabFontString:SetText(
-    "< "
-      .. Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].name
-      .. " >"
+    "< " .. Elephant:GetLogName(current_log_index) .. " >"
   )
   Elephant:SetTitleInfoCurrentLine()
   Elephant:UpdateCurrentLogButtons()
 
   -- Populate the scrolling message frame
   for line_index = Elephant:VolatileConfig().currentline - Elephant:DefaultConfiguration().scrollmaxlines, Elephant:VolatileConfig().currentline do
-    if
-      Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index]
-    then
+    if Elephant:LogsDb().logs[current_log_index].logs[line_index] then
       ElephantFrameScrollingMessageFrame:AddMessage(
         Elephant:GetLiteralMessage(
-          Elephant:LogsDb().logs[Elephant:CharDb().currentlogindex].logs[line_index],
+          Elephant:LogsDb().logs[current_log_index].logs[line_index],
           --[[use_timestamps=]]
           true
         )
@@ -667,10 +703,7 @@ function Elephant:ShowCurrentLog()
 
   -- Updating message catchers button
   for _, event_struct in pairs(Elephant:ProfileDb().events) do
-    if
-      event_struct.channels
-      and event_struct.channels[Elephant:CharDb().currentlogindex]
-    then
+    if event_struct.channels and event_struct.channels[current_log_index] then
       if not ElephantFrameCatchOptionsButton:IsEnabled() then
         ElephantFrameCatchOptionsButton:Enable()
       end
@@ -763,7 +796,7 @@ function Elephant:UpdateCurrentLogButtons()
 
   if
     type(current_log_index) == "number"
-    or Elephant:IsExactGeneralChatChannelId(current_log_index)
+    or Elephant:IsGeneralChatLogIndex(current_log_index)
   then
     ElephantFrameDeleteButton:Disable()
   elseif GetChannelName(current_log_tbl.name) > 0 then

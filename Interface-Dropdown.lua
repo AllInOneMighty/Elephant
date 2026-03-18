@@ -53,18 +53,19 @@ local function DropdownCustomChatsInitialize()
   info.isTitle = true
   UIDropDownMenu_AddButton(info, 1)
 
-  local index, tindex, k, v
-  for index, tindex in pairs(Elephant:LogsDb().logs) do
+  local log_index, log_tbl = nil, nil
+  for log_index, log_tbl in pairs(Elephant:LogsDb().logs) do
     if
-      not (type(index) == "number")
-      and not Elephant:IsExactGeneralChatChannelId(index)
+      not (type(log_index) == "number")
+      and not Elephant:IsGeneralChatLogIndex(log_index)
     then
       info = {}
-      info.text = tindex.name
+      -- log_tbl.name always exists on custom chats.
+      info.text = log_tbl.name
       info.func = Elephant.ChangeLog
-      info.arg1 = index
-      info.checked = GetChannelName(tindex.name) ~= 0
-      if not tindex.enabled then
+      info.arg1 = log_index
+      info.checked = GetChannelName(log_tbl.name) ~= 0
+      if not log_tbl.enabled then
         info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
         info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
       end
@@ -82,19 +83,17 @@ local function DropdownGeneralChatsInitialize()
   info.notCheckable = true
   UIDropDownMenu_AddButton(info)
 
-  local general_chat_channel_metadata
-  for _, general_chat_channel_metadata in
-    ipairs(Elephant:DefaultConfiguration().generalchatchannelmetadata)
+  local general_chat_channel_tbl
+  for _, general_chat_channel_tbl in
+    ipairs(Elephant:DefaultConfiguration().generalchatchannels)
   do
-    if Elephant:LogsDb().logs[general_chat_channel_metadata.id] then
+    if Elephant:LogsDb().logs[general_chat_channel_tbl.id] then
       info = UIDropDownMenu_CreateInfo()
       info.notCheckable = true
-      info.text = general_chat_channel_metadata.name
+      info.text = general_chat_channel_tbl.localized_name
       info.func = Elephant.ChangeLog
-      info.arg1 = general_chat_channel_metadata.id
-      if
-        not Elephant:LogsDb().logs[general_chat_channel_metadata.id].enabled
-      then
+      info.arg1 = general_chat_channel_tbl.id
+      if not Elephant:LogsDb().logs[general_chat_channel_tbl.id].enabled then
         info.colorCode = "|c" .. Elephant:MakeTextHexColor(1.0, 0.2, 0.2)
         info.text = info.text .. " (" .. Elephant.L["STRING_DISABLED"] .. ")"
       end

@@ -37,20 +37,20 @@ local function GetChannelIndexFromChannelName(channel_name)
   channel_name = string.lower(channel_name)
 
   local channel_index = nil
-  for _, general_chat_channel_metadata in
-    pairs(Elephant:DefaultConfiguration().generalchatchannelmetadata)
+  for _, general_chat_channel_tbl in
+    pairs(Elephant:DefaultConfiguration().generalchatchannels)
   do
     if
       Elephant:ChannelIdPartiallyMatches(
         channel_name,
-        general_chat_channel_metadata.id
+        general_chat_channel_tbl.id
       )
       or Elephant:ChannelIdPartiallyMatches(
         channel_name,
-        general_chat_channel_metadata.id_alt
+        general_chat_channel_tbl.id_alt
       )
     then
-      channel_index = general_chat_channel_metadata.id
+      channel_index = general_chat_channel_tbl.id
       break
     end
   end

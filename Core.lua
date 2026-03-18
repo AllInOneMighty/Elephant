@@ -190,36 +190,36 @@ local default_configuration = {
   -- Default logs of the addon, cannot be removed (related to default chats
   -- defined by Blizzard).
   defaultlogs = default_logs,
-  generalchatchannelmetadata = {
+  generalchatchannels = {
     -- Keep it in the order it should be shown in the dropdown menu.
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GENERAL"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOOKING_FOR_GROUP"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_GUILD_RECRUITMENT"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_LOCAL_DEFENSE"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_WORLD_DEFENSE"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_ID"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE"],
     },
     {
       id = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES_ID"],
       id_alt = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES_ID_ALT"],
-      name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES"],
+      localized_name = Elephant.L["STRING_GENERAL_CHAT_CHANNEL_NAME_TRADE_SERVICES"],
     },
   },
   defaultlogindex = 1,
