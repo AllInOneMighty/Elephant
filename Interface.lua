@@ -163,6 +163,17 @@ local skins = {
   },
 }
 
+local function GetGeneralChatChannelTableOrNil(log_index)
+  for _, general_chat_channel_tbl in
+    pairs(Elephant:DefaultConfiguration().generalchatchannels)
+  do
+    if log_index == general_chat_channel_tbl.id then
+      return general_chat_channel_tbl
+    end
+  end
+  return
+end
+
 -- Sets the given frame color using :SetTextColor() to the color used by the
 -- currently log displayed. This method uses Blizzard's default chat type colors.
 local function SetObjectColorWithCurrentLogColor(obj)
@@ -179,36 +190,37 @@ local function SetObjectColorWithCurrentLogColor(obj)
   end
 
   if not type_info then
-    -- Find if the current log matches a general chat.
-    local found_tbl, general_chat_channel_tbl = nil, nil
-    for _, general_chat_channel_tbl in
-      pairs(Elephant:DefaultConfiguration().generalchatchannels)
-    do
-      if current_log_index == general_chat_channel_tbl.id then
-        found_tbl = general_chat_channel_tbl
-      end
-    end
+    local general_chat_channel_tbl =
+      GetGeneralChatChannelTableOrNil(current_log_index)
 
-    -- If so, identify its color.
-    if found_tbl then
-      local channel_id, channel_name, i = nil, nil, nil
-      -- Max: 20 channels
-      for i = 1, 20 do
-        channel_id, channel_name = GetChannelName(i)
+    local channel_id, channel_name, i = nil, nil, nil
+    -- Max: 20 channels
+    for i = 1, 20 do
+      channel_id, channel_name = GetChannelName(i)
 
-        if channel_name ~= nil then
-          channel_name = string.lower(channel_name)
-          if
-            Elephant:ChannelIdPartiallyMatches(channel_name, found_tbl.id)
-            or Elephant:ChannelIdPartiallyMatches(
-              channel_name,
-              found_tbl.id_alt
+      if channel_name ~= nil then
+        channel_name = string.lower(channel_name)
+        if
+          -- Current log is a custom channel
+          current_log_index == channel_name
+          or (
+            -- Current log is a general chat
+            general_chat_channel_tbl
+            and (
+              Elephant:ChannelIdPartiallyMatches(
+                channel_name,
+                general_chat_channel_tbl.id
+              )
+              or Elephant:ChannelIdPartiallyMatches(
+                channel_name,
+                general_chat_channel_tbl.id_alt
+              )
             )
-          then
-            -- channel_id is set correctly if channel_name is found and not nil
-            type_info = ChatTypeInfo["CHANNEL" .. channel_id]
-            break
-          end
+          )
+        then
+          -- channel_id is set correctly if channel_name is found and not nil
+          type_info = ChatTypeInfo["CHANNEL" .. channel_id]
+          break
         end
       end
     end
