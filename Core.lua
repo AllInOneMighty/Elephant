@@ -187,6 +187,9 @@ local default_configuration = {
   copywindowminletters = 1000,
   copywindowmaxletters = 100000,
 
+  -- Maximum number of channels a player can join. Limited by Blizzard.
+  maxchannels = 20,
+
   -- Default logs of the addon, cannot be removed (related to default chats
   -- defined by Blizzard).
   defaultlogs = default_logs,

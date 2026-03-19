@@ -194,8 +194,7 @@ local function SetObjectColorWithCurrentLogColor(obj)
       GetGeneralChatChannelTableOrNil(current_log_index)
 
     local channel_id, channel_name, i = nil, nil, nil
-    -- Max: 20 channels
-    for i = 1, 20 do
+    for i = 1, Elephant:DefaultConfiguration().maxchannels do
       channel_id, channel_name = GetChannelName(i)
 
       if channel_name ~= nil then

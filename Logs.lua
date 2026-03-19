@@ -201,8 +201,7 @@ end
 -- worlddefense, ...) and creates a new table for each new one found, keeping
 -- the existing ones intact.
 function Elephant:MaybeInitCustomChannelLogTables()
-  -- Max: 20 channels
-  for channel_index = 1, 20 do
+  for channel_index = 1, Elephant:DefaultConfiguration().maxchannels do
     local _, channel_name = GetChannelName(channel_index)
 
     if channel_name ~= nil then
@@ -418,7 +417,7 @@ function Elephant:Reset()
   Elephant:ChatLogEnable(Elephant:ProfileDb().chatlog)
   Elephant:CombatLogEnable(Elephant:ProfileDb().combatlog)
 
-  for channel_index = 1, GetNumDisplayChannels() do
+  for channel_index = 1, Elephant:DefaultConfiguration().maxchannels do
     local _, channel_name = GetChannelName(channel_index)
 
     if channel_name ~= nil then
