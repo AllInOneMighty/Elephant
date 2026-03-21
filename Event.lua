@@ -69,8 +69,17 @@ local function NilIfEmpty(str)
   end
 end
 
+local function IsChannelTextEvent(event)
+  return event == "CHAT_MSG_CHANNEL"
+end
+
+local function IsChannelNoticeEvent(event)
+  return event == "CHAT_MSG_CHANNEL_NOTICE"
+end
+
+-- Don't mix this up with IsChannelTextEvent().
 local function IsChannelEvent(event)
-  return event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_CHANNEL_NOTICE"
+  return IsChannelTextEvent(event) or IsChannelNoticeEvent(event)
 end
 
 local function IsBattleNetEvent(event)
@@ -82,7 +91,8 @@ local function IsPartyLootMethodChanged(event)
 end
 
 local function HasText(event)
-  return not (IsBattleNetEvent(event) and InCombatLockdown())
+  -- For channel notices, Elephant generates the log content.
+  return not IsChannelNoticeEvent(event)
 end
 
 local function IsOfMonsterOrigin(event)
@@ -111,16 +121,16 @@ local function HasPlayerName(event)
     or event == "CHAT_MSG_GUILD_ACHIEVEMENT"
     or event == "CHAT_MSG_INSTANCE_CHAT"
     or event == "CHAT_MSG_INSTANCE_CHAT_LEADER"
+    or IsChannelTextEvent(event)
     or IsOfMonsterOrigin(event)
 end
 
 local function HasClassColor(event)
-  return HasPlayerName(event)
-    or (IsBattleNetEvent(event) and not InCombatLockdown())
+  return HasPlayerName(event) or IsBattleNetEvent(event)
 end
 
 local function HasFlags(event)
-  return event == "CHAT_MSG_WHISPER"
+  return event == "CHAT_MSG_WHISPER" or IsChannelTextEvent(event)
 end
 
 local function IsLockedDownDueToCombat(event)
@@ -128,120 +138,57 @@ local function IsLockedDownDueToCombat(event)
     return false
   end
 
-  -- No Battle.net message can be logged during combat lockdown as all values
-  -- are secret.
-  return IsBattleNetEvent(event) or IsOfMonsterOrigin(event)
+  return IsBattleNetEvent(event)
+    or IsOfMonsterOrigin(event)
+    -- Special case for channel messages which cannot be logged during combat
+    -- (really, Blizzard?). That said, channel notices can, so we're not using
+    -- IsChannelEvent() here.
+    or IsChannelTextEvent(event)
 end
 
-local function Handle_CHAT_MSG_CHANNEL(
-  channel_index,
-  channel_name,
-  prat_tbl,
-  ...
-)
-  -- Fixing error where table for channel does not exist.
-  --
-  -- This should normally not happen, but it may be triggered if the client
-  -- never received a CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel.
-  -- In this case though, the client cannot be displaying that log, so we don't
-  -- have to update the buttons like when a YOU_JOINED event happens.
-  Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
-  if not Elephant:LogsDb().logs[channel_index].enabled then
-    return
-  end
+local function GetNewMessagesFromChannelNoticeEvent(new_message, ...)
+  -- Clone the parameter to avoid modifying the value given by the caller.
+  local new_message_clone = Elephant:Clone(new_message)
+  local extra_new_message = nil
 
-  if prat_tbl then
-    Elephant:CaptureNewMessage({
-      time = time(),
-      prat = prat_tbl.message,
-      lineid = prat_tbl.lineid,
-    }, channel_index)
-  else
-    local message, sender, _, _, _, flags, _, _, _, _, _, guid = ...
-    Elephant:CaptureNewMessage({
-      time = time(),
-      arg1 = message,
-      arg2 = NilIfEmpty(sender),
-      arg6 = NilIfEmpty(flags),
-      arg9 = channel_name,
-      clColor = GetClassColorByGUID(guid),
-    }, channel_index)
-  end
-end
+  new_message_clone.type = "SYSTEM"
 
-local function Handle_CHAT_MSG_CHANNEL_NOTICE(channel_index, channel_name, ...)
   local message = ...
   if message == "YOU_JOINED" or message == "YOU_CHANGED" then
-    Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
-    if not Elephant:LogsDb().logs[channel_index].enabled then
-      return
-    end
-
-    Elephant:CaptureNewMessage({
-      type = "SYSTEM",
-      arg1 = Elephant.L["STRING_SPECIAL_LOG_JOINED_CHANNEL"],
-    }, channel_index)
-    if Elephant:CharDb().currentlogindex == channel_index then
-      Elephant:UpdateCurrentLogButtons()
-    end
+    new_message_clone.arg1 = Elephant.L["STRING_SPECIAL_LOG_JOINED_CHANNEL"]
+  elseif message == "YOU_LEFT" then
+    new_message_clone.arg1 = Elephant.L["STRING_SPECIAL_LOG_LEFT_CHANNEL"]
+    extra_new_message = {
+      arg1 = " ",
+      -- No need to add arg9 here as the one from new_message is used for
+      -- extra messages.
+    }
+  else
+    -- Message event not handled, don't log anything.
+    return nil, nil
   end
-  if message == "YOU_LEFT" then
-    if
-      not Elephant:LogsDb().logs[channel_index]
-      or not Elephant:LogsDb().logs[channel_index].enabled
-    then
-      return
-    end
 
-    Elephant:CaptureNewMessage(
-      { type = "SYSTEM", arg1 = Elephant.L["STRING_SPECIAL_LOG_LEFT_CHANNEL"] },
-      channel_index
-    )
-    Elephant:CaptureNewMessage({ arg1 = " " }, channel_index)
-    if Elephant:CharDb().currentlogindex == channel_index then
-      Elephant:UpdateCurrentLogButtons()
-      Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]] true)
-    end
-  end
+  return new_message_clone, extra_new_message
 end
 
-local function HandleChannelEvent(prat_tbl, event, ...)
-  local _, _, _, _, _, _, _, _, channel_name = ...
-  local channel_index = GetChannelIndexFromChannelName(channel_name)
-
-  -- channel_index == nil should never happen, but better to ignore than crash.
-  if channel_index == nil or Elephant:IsFiltered(channel_index) then
-    return
-  end
-
-  if event == "CHAT_MSG_CHANNEL" then
-    Handle_CHAT_MSG_CHANNEL(channel_index, channel_name, prat_tbl, ...)
-    return
-  end
-
-  if event == "CHAT_MSG_CHANNEL_NOTICE" then
-    Handle_CHAT_MSG_CHANNEL_NOTICE(channel_index, channel_name, ...)
-    return
-  end
-end
-
-local function UpdateWithBattleNetEvent(new_message, ...)
-  local _, _, _, _, _, _, _, _, _, _, _, _, bn_sender_id = ...
+local function GetBattleTagFromEvent(bn_sender_id)
   if bn_sender_id and C_BattleNet and C_BattleNet.GetAccountInfoByID then
     local account_info = C_BattleNet.GetAccountInfoByID(bn_sender_id)
     if account_info then
-      new_message.battleTag = account_info.battleTag
+      return account_info.battleTag
     end
   end
+  return nil
 end
 
-local function UpdateWithPartyLootMethodChangedEvent(new_message)
+local function GetNewMessagesFromPartyLootMethodChangedEvent(event, new_message)
   local method, masterloot_party, masterloot_raid = Elephant:GetLootMethod()
 
+  -- Build extra new message first, because it might end up being the only one.
   local extra_new_message = nil
 
   if masterloot_party or masterloot_raid then
-    local player
+    local player = nil
     if UnitInRaid("player") then
       player = GetRaidRosterInfo(masterloot_raid)
     else
@@ -274,121 +221,211 @@ local function UpdateWithPartyLootMethodChangedEvent(new_message)
     Elephant:VolatileConfig().masterlooter = nil
   end
 
+  -- Build new main message (if one exists).
+  local new_message_clone = Elephant:Clone(new_message)
+
   if method ~= Elephant:VolatileConfig().lootmethod then
     Elephant:VolatileConfig().lootmethod = method
-    new_message.arg1 = Elephant.L["STRING_LOOT_METHOD__" .. method]
+    new_message_clone.arg1 = Elephant.L["STRING_LOOT_METHOD__" .. method]
   else
-    -- Warning: extra_new_message might be nil
-    for key, _ in pairs(new_message) do
-      new_message[key] = nil
-    end
-    if extra_new_message then
-      for key, value in pairs(extra_new_message) do
-        new_message[key] = value
-      end
-    end
+    -- No new main message, so only log extra new message (might be nil)
+    new_message_clone = extra_new_message
     extra_new_message = nil
   end
 
-  return extra_new_message
+  return new_message_clone, extra_new_message
 end
 
--- Handles messages sent by the WoW engine as well as the ones sent by Prat.
-local function HandleEvent(prat_tbl, event, ...)
-  if not Elephant:ProfileDb().prat and prat_tbl then
-    return
-  end
-  if not Elephant:ProfileDb().events[event] then
-    return
-  end
-
-  -- Channel events
-  if IsChannelEvent(event) then
-    HandleChannelEvent(prat_tbl, event, ...)
-    return
-  end
-
-  -- Other events
-
-  -- Sometimes we need to log two messages for the price of one.
-  local new_message, extra_new_message = nil, nil
+-- Return new messages to log from the given event as a (msg1, msg2) tuple.
+-- Returns (nil, nil) if no message needs to be logged.
+local function GetNewMessagesFromEvent(prat_tbl, event, ...)
+  -- If it's a Prat message, we just log it and that's it. No extra message
+  -- needed.
   if prat_tbl then
-    new_message = {
+    local new_message = {
       time = time(),
       prat = prat_tbl.message,
       lineid = prat_tbl.lineid,
       type = Elephant:ProfileDb().events[event].type,
     }
-  else
-    new_message = {
+    if IsChannelEvent(event) then
+      local _, _, _, _, _, _, _, _, channel_name = ...
+      new_message.arg9 = channel_name
+    end
+    return new_message, nil
+  end
+
+  if IsLockedDownDueToCombat(event) then
+    if
+      Elephant:ProfileDb().skip_cannot_log_restricted_warning
+      or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
+    then
+      -- Skip if a warning has already been issued.
+      return nil, nil
+    end
+
+    -- Issue warning that some messages cannot be logged while in combat
+    -- lockdown.
+    local warning_message =
+      CreateColorFromHexString("ffff4800"):WrapTextInColorCode(
+        Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
+      )
+    Elephant:Print(warning_message)
+    -- We create a warning message.
+    local new_message = {
       time = time(),
       type = Elephant:ProfileDb().events[event].type,
+      arg1 = warning_message,
     }
+    Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
+    return new_message, nil
+  end
 
-    if IsLockedDownDueToCombat(event) then
-      if
-        Elephant:ProfileDb().skip_cannot_log_restricted_warning
-        or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
-      then
-        -- Skip if a warning has already been issued.
-        return
-      end
+  local new_message = {
+    time = time(),
+    type = Elephant:ProfileDb().events[event].type,
+  }
+  local extra_new_message = nil
 
-      -- Issue warning that some messages cannot be logged while in combat
-      -- lockdown.
-      local warning_message = "|cffff4800"
-        .. Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
-        .. "|r"
-      Elephant:Print(warning_message)
-      -- We set the message with a warning.
-      new_message.arg1 = warning_message
-      Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
-    else
-      if HasText(event) then
-        local text = ...
-        new_message.arg1 = text
-      end
+  if HasText(event) then
+    local text = ...
+    new_message.arg1 = text
+  end
 
-      if HasPlayerName(event) then
-        local _, player_name = ...
-        new_message.arg2 = player_name
-      end
+  if HasPlayerName(event) then
+    local _, player_name = ...
+    new_message.arg2 = player_name
+  end
 
-      if HasClassColor(event) then
-        local _, _, _, _, _, _, _, _, _, _, _, guid = ...
-        new_message.clColor = GetClassColorByGUID(guid)
-      end
+  if HasClassColor(event) then
+    local _, _, _, _, _, _, _, _, _, _, _, guid = ...
+    new_message.clColor = GetClassColorByGUID(guid)
+  end
 
-      if IsBattleNetEvent(event) then
-        UpdateWithBattleNetEvent(new_message, ...)
-      end
+  if IsBattleNetEvent(event) then
+    local _, _, _, _, _, _, _, _, _, _, _, _, bn_sender_id = ...
+    new_message.battleTag = GetBattleTagFromEvent(bn_sender_id)
+  end
 
-      if HasFlags(event) then
-        local _, _, _, _, _, flags = ...
-        new_message.arg6 = NilIfEmpty(flags)
-      end
+  if HasFlags(event) then
+    local _, _, _, _, _, flags = ...
+    new_message.arg6 = NilIfEmpty(flags)
+  end
 
-      if IsPartyLootMethodChanged(event) then
-        extra_new_message = UpdateWithPartyLootMethodChangedEvent(new_message)
-      end
+  if IsChannelEvent(event) then
+    local _, _, _, _, _, _, _, _, channel_name = ...
+    new_message.arg9 = channel_name
+
+    if IsChannelNoticeEvent(event) then
+      new_message, extra_new_message =
+        GetNewMessagesFromChannelNoticeEvent(new_message, ...)
     end
   end
 
-  -- Finally, capture the message if it is not nil
-  if new_message ~= nil then
-    local channel_index
-    for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
-      if
-        Elephant:ProfileDb().events[event].channels[channel_index] ~= 0
-        and Elephant:LogsDb().logs[channel_index].enabled
-      then
-        Elephant:CaptureNewMessage(new_message, channel_index)
-        if extra_new_message ~= nil then
-          Elephant:CaptureNewMessage(extra_new_message, channel_index)
-        end
+  if IsPartyLootMethodChanged(event) then
+    new_message, extra_new_message =
+      GetNewMessagesFromPartyLootMethodChangedEvent(event, new_message)
+  end
+
+  return new_message, extra_new_message
+end
+
+-- Logs new messages to Elephant. The first message must always be present. A
+-- second message can be logged, and is ignored if nil.
+local function LogNewMessages(event, new_message, extra_new_message)
+  if IsChannelEvent(event) then
+    local channel_index = GetChannelIndexFromChannelName(new_message.arg9)
+
+    -- channel_index == nil should never happen, but better to ignore than
+    -- crash.
+    if channel_index == nil or Elephant:IsFiltered(channel_index) then
+      return
+    end
+
+    -- Fixing error where table for channel does not exist.
+    --
+    -- This may be triggered if the client never received a
+    -- CHAT_MSG_CHANNEL_NOTICE/YOU_JOINED event for that channel. In this case
+    -- though, the client would not be displaying that log,  so we don't have to
+    -- update the buttons like when a YOU_JOINED event happens.
+    --
+    -- Note that this would create a new structure if the user joined a channel,
+    -- never received a joined notice, and immediately leaves without receiving
+    -- any other message. But it's such a rare event that it's okay to create a
+    -- structure in this case, even if the user has to delete it afterwards.
+    Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
+    if not Elephant:LogsDb().logs[channel_index].enabled then
+      return
+    end
+
+    Elephant:CaptureNewMessage(new_message, channel_index)
+    if extra_new_message ~= nil then
+      Elephant:CaptureNewMessage(extra_new_message, channel_index)
+    end
+
+    return
+  end
+
+  local channel_index = nil
+  for channel_index in pairs(Elephant:ProfileDb().events[event].channels) do
+    if
+      Elephant:ProfileDb().events[event].channels[channel_index] ~= 0
+      and Elephant:LogsDb().logs[channel_index].enabled
+    then
+      Elephant:CaptureNewMessage(new_message, channel_index)
+      if extra_new_message ~= nil then
+        Elephant:CaptureNewMessage(extra_new_message, channel_index)
       end
     end
   end
+end
+
+local function MaybeUpdateCurrentLogButtons(event, ...)
+  if not IsChannelNoticeEvent(event) then
+    return
+  end
+
+  local message, _, _, _, _, _, _, _, channel_name = ...
+  local channel_index = GetChannelIndexFromChannelName(channel_name)
+
+  if Elephant:CharDb().currentlogindex == channel_index then
+    if message == "YOU_JOINED" or message == "YOU_CHANGED" then
+      Elephant:UpdateCurrentLogButtons()
+    elseif message == "YOU_LEFT" then
+      Elephant:UpdateCurrentLogButtons()
+      -- Prevent being able to delete general chat logs.
+      if not Elephant:IsGeneralChatLogIndex(channel_index) then
+        Elephant:ForceCurrentLogDeleteButtonStatus(--[[is_enabled=]] true)
+      end
+    end
+  end
+end
+
+-- Handles messages sent by the WoW engine as well as the ones sent by Prat. The
+-- prat_tbl parameter is only set when Prat logging is enabled.
+local function HandleEvent(prat_tbl, event, ...)
+  if not Elephant:ProfileDb().prat and prat_tbl then
+    -- We received a message sent by Prat but Prat logging is not enabled, so
+    -- let's ignore this message. Should generally never happen, but here as a
+    -- safeguard.
+    return
+  end
+  if not Elephant:ProfileDb().events[event] then
+    -- Event received but not handled by Elephant, ignore. Relevant for Prat as
+    -- there is no way to filter which events Prat sends to Elephant.
+    return
+  end
+
+  -- Retrieve message(s) to log.
+  local new_message, extra_new_message =
+    GetNewMessagesFromEvent(prat_tbl, event, ...)
+
+  -- Log message(s).
+  if new_message then
+    LogNewMessages(event, new_message, extra_new_message)
+  end
+
+  MaybeUpdateCurrentLogButtons(event, ...)
 end
 
 -- Unregisters all events from Elephant, and then registers back either:
@@ -428,7 +465,7 @@ end
 -- Method pre-handling messages sent by Prat before sending them to
 -- HandleEvent(). Cannot be local.
 function Elephant:Prat_PostAddMessage(_, message, _, event, text)
-  prat_tbl = {
+  local prat_tbl = {
     message = text,
     lineid = message.ORG.LINE_ID,
   }
