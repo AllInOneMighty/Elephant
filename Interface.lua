@@ -383,7 +383,7 @@ end
 -- The message must be a table of one or more strings, where the first string
 -- will be used as title and the others as content.
 local function PlaceTooltip(frame, message_tbl, position)
-  if not (type(message_tbl) == "table") then
+  if type(message_tbl) ~= "table" then
     return
   end
 
@@ -930,7 +930,7 @@ function Elephant:ChatLogEnable(enabled_status)
     return
   end
 
-  if not (LoggingChat() == enabled_status) then
+  if LoggingChat() ~= enabled_status then
     LoggingChat(enabled_status)
   end
 end
@@ -943,7 +943,7 @@ function Elephant:CombatLogEnable(enabled_status)
     return
   end
 
-  if not (LoggingCombat() == enabled_status) then
+  if LoggingCombat() ~= enabled_status then
     LoggingCombat(enabled_status)
   end
 end

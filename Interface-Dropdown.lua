@@ -56,7 +56,7 @@ local function DropdownCustomChatsInitialize()
   local log_index, log_tbl = nil, nil
   for log_index, log_tbl in pairs(Elephant:LogsDb().logs) do
     if
-      not (type(log_index) == "number")
+      type(log_index) ~= "number"
       and not Elephant:IsGeneralChatLogIndex(log_index)
     then
       info = {}
