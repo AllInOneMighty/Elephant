@@ -164,7 +164,14 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
     end
   end
 
-  if message_tbl.type then
+  -- Ignore channel messages type so that they are displayed in the right color
+  -- rather than a generic "channel" color. Join/Leave notices are also
+  -- displayed in the chat color.
+  if
+    message_tbl.type
+    and message_tbl.type ~= "CHANNEL"
+    and message_tbl.type ~= "CHANNEL_NOTICE"
+  then
     -- Return line color if it is not the default
     return literal_message,
       ChatTypeInfo[message_tbl.type].r,
