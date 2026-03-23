@@ -474,6 +474,8 @@ local default_configuration = {
         type = "SAY",
         channels = {
           [default_logs.say.id] = -1,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["CHAT_MSG_SYSTEM"] = {
@@ -512,6 +514,8 @@ local default_configuration = {
         channels = {
           [default_logs.say.id] = 0,
           [default_logs.yell.id] = -1,
+          [default_logs.raid.id] = 0,
+          [default_logs.instance.id] = 0,
         },
       },
       ["PARTY_LOOT_METHOD_CHANGED"] = {
