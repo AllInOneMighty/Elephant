@@ -133,17 +133,37 @@ local function HasFlags(event)
   return event == "CHAT_MSG_WHISPER" or IsChannelTextEvent(event)
 end
 
-local function IsLockedDownDueToCombat(event)
+-- Method to test if any of the event data cannot be compared to an empty string
+-- due to being a protected value. issecurevalue() always returns true, so we're
+-- doing this instead to determine whether messages can be logged or not.
+local function TestEventArgsEquality(...)
+  local text, player_name, _, _, _, flags, _, _, channel_name, _, _, guid, bn_sender_id =
+    ...
+  -- None of those parameters should ever be equal to -1, so all of the tests
+  -- below should be attempted.
+  return text == -1
+    or player_name == -1
+    or flags == -1
+    or channel_name == -1
+    or guid == -1
+    or bn_sender_id == -1
+end
+
+local function IsLockedDownDueToCombat(event, ...)
   if not InCombatLockdown() then
     return false
   end
 
-  return IsBattleNetEvent(event)
-    or IsOfMonsterOrigin(event)
-    -- Special case for channel messages which cannot be logged during combat
-    -- (really, Blizzard?). That said, channel notices can, so we're not using
-    -- IsChannelEvent() here.
-    or IsChannelTextEvent(event)
+  -- Has to be outside of the call, otherwise fails with "cannot use '...'
+  -- outside a vararg function".
+  local args = { ... }
+  if pcall(function()
+    TestEventArgsEquality(unpack(args))
+  end) then
+    return false
+  end
+
+  return true
 end
 
 local function GetNewMessagesFromChannelNoticeEvent(new_message, ...)
@@ -255,7 +275,7 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
     return new_message, nil
   end
 
-  if IsLockedDownDueToCombat(event) then
+  if IsLockedDownDueToCombat(event, ...) then
     if
       Elephant:ProfileDb().skip_cannot_log_restricted_warning
       or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
