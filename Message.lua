@@ -64,7 +64,7 @@ function Elephant:MakeTextHexColor(r, g, b, a)
 end
 
 -- Returns a literal WoW string (with color codes, ...) corresponding to a
--- message table created by Elephant (see HandleMessage() in Event.lua).
+-- message table created by Elephant (see HandleEvent() in Event.lua).
 --
 -- You have to specify whether to return timestamps or not in the message.
 function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
@@ -75,12 +75,15 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
     literal_message = "|cff888888"
       .. date("%H:%M:%S", message_tbl.time)
       .. "|r "
-      .. literal_message
   end
 
   -- Handling Prat messages
   if message_tbl.prat then
     literal_message = literal_message .. message_tbl.prat
+  end
+
+  if message_tbl.ellipsis then
+    literal_message = literal_message .. Elephant.L["STRING_ELLIPSIS"]
   end
 
   -- DND/Away tags; shouldn't be there if Prat message

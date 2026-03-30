@@ -256,12 +256,19 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
   end
 
   if IsLockedDownDueToCombat(...) then
+    local ellipsis_message = {
+      time = time(),
+      type = "SYSTEM",
+      -- Special type of message that will just show an ellipsis.
+      -- No two ellipsis messages should be logged / shown in a row.
+      ellipsis = true,
+    }
     if
       Elephant:ProfileDb().skip_cannot_log_restricted_warning
       or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
     then
       -- Skip if a warning has already been issued.
-      return nil, nil
+      return ellipsis_message, nil
     end
 
     -- Issue warning that some messages cannot be logged while in combat
@@ -278,7 +285,9 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
       arg1 = warning_message,
     }
     Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
-    return new_message, nil
+    -- Override ellipsis_message time so it doesn't appear before the warning.
+    ellipsis_message.time = new_message.time
+    return new_message, ellipsis_message
   end
 
   local new_message = {

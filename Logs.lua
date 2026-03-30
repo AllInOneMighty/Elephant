@@ -334,9 +334,11 @@ end
 -- If the affected log is the displayed one, moves the log one line down if the
 -- last line was displayed (otherwise, doesn't change it).
 function Elephant:CaptureNewMessage(message_tbl, log_index)
+  -- Note: this is not the logs proper, but the table that CONTAINS the subtable
+  local logs_tbl = Elephant:LogsDb().logs[log_index]
+
   if message_tbl.prat ~= nil and message_tbl.lineid ~= nil then
-    local last_message_tbl =
-      Elephant:LogsDb().logs[log_index].logs[#Elephant:LogsDb().logs[log_index].logs]
+    local last_message_tbl = logs_tbl.logs[#logs_tbl.logs]
     if
       message_tbl.prat == last_message_tbl.prat
       and message_tbl.lineid == last_message_tbl.lineid
@@ -346,22 +348,23 @@ function Elephant:CaptureNewMessage(message_tbl, log_index)
     end
   end
 
-  table.insert(
-    Elephant:LogsDb().logs[log_index].logs,
-    #Elephant:LogsDb().logs[log_index].logs + 1,
-    message_tbl
-  )
+  if message_tbl.ellipsis then
+    local last_message_tbl = logs_tbl.logs[#logs_tbl.logs]
+    if last_message_tbl.ellipsis then
+      -- Duplicate ellipsis, nothing to do
+      return
+    end
+  end
 
-  if not Elephant:LogsDb().logs[log_index].hasMessage then
-    Elephant:LogsDb().logs[log_index].hasMessage = true
+  table.insert(logs_tbl.logs, #logs_tbl.logs + 1, message_tbl)
+
+  if not logs_tbl.hasMessage then
+    logs_tbl.hasMessage = true
   end
 
   if Elephant:CharDb().currentlogindex == log_index then
     -- Moves the current line if it was at the last line
-    if
-      Elephant:VolatileConfig().currentline
-      == (#Elephant:LogsDb().logs[log_index].logs - 1)
-    then
+    if Elephant:VolatileConfig().currentline == (#logs_tbl.logs - 1) then
       Elephant:VolatileConfig().currentline = Elephant:VolatileConfig().currentline
         + 1
     end
@@ -379,10 +382,7 @@ function Elephant:CaptureNewMessage(message_tbl, log_index)
       Elephant:VolatileConfig().currentline = 1
     end
 
-    if
-      Elephant:VolatileConfig().currentline
-      == #Elephant:LogsDb().logs[log_index].logs
-    then
+    if Elephant:VolatileConfig().currentline == #logs_tbl.logs then
       -- Adds the message to the screen
       ElephantFrameScrollingMessageFrame:AddMessage(
         Elephant:GetLiteralMessage(message_tbl, true)

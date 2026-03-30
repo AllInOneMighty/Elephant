@@ -29,6 +29,7 @@ L['STRING_COPY_WINDOW_SHOW_TIMESTAMPS_CHECKBOX'] = "显示时间戳"
 L['STRING_COPY_WINDOW'] = "复制窗口"
 L['STRING_COPY'] = "复制"
 L['STRING_DISABLED'] = "已禁用"
+L['STRING_ELLIPSIS'] = "(......)"
 L['STRING_EMPTY'] = "清空"  --使用EMPTY仅是显示1个字“空”
 L['STRING_ENABLED'] = "已启用"
 L['STRING_FILTER_VALIDATION_REGEXP'] = "^[%a%*]+$"
