@@ -146,6 +146,16 @@ local function IsRestrictedBySecretValues(...)
     or issecretvalue(bn_sender_id)
 end
 
+local function CreateEllipsisMessageTbl()
+  return {
+    time = time(),
+    type = "SYSTEM",
+    -- Special type of message that will just show an ellipsis.
+    -- No two ellipsis messages should be logged / shown in a row.
+    ellipsis = true,
+  }
+end
+
 local function GetNewMessagesFromChannelNoticeEvent(new_message, ...)
   -- Clone the parameter to avoid modifying the value given by the caller.
   local new_message_clone = Elephant:Clone(new_message)
@@ -256,19 +266,12 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
   end
 
   if IsRestrictedBySecretValues(...) then
-    local ellipsis_message = {
-      time = time(),
-      type = "SYSTEM",
-      -- Special type of message that will just show an ellipsis.
-      -- No two ellipsis messages should be logged / shown in a row.
-      ellipsis = true,
-    }
     if
       Elephant:ProfileDb().skip_cannot_log_restricted_warning
       or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
     then
-      -- Skip if a warning has already been issued.
-      return ellipsis_message, nil
+      -- Only log the ellipsis if a warning has already been issued.
+      return CreateEllipsisMessageTbl(), nil
     end
 
     -- Issue warning that some messages cannot be logged while in combat
@@ -285,9 +288,8 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
       arg1 = warning_message,
     }
     Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
-    -- Override ellipsis_message time so it doesn't appear before the warning.
-    ellipsis_message.time = new_message.time
-    return new_message, ellipsis_message
+    -- Don't forget to add the ellipsis.
+    return new_message, CreateEllipsisMessageTbl()
   end
 
   local new_message = {
