@@ -133,7 +133,7 @@ local function HasFlags(event)
   return event == "CHAT_MSG_WHISPER" or IsChannelTextEvent(event)
 end
 
-local function IsLockedDownDueToCombat(...)
+local function IsRestrictedBySecretValues(...)
   -- Do not return early if combat lockdown is active as it's not representative
   -- of when the below variables are secret or not.
   local text, player_name, _, _, _, flags, _, _, channel_name, _, _, guid, bn_sender_id =
@@ -255,7 +255,7 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
     return new_message, nil
   end
 
-  if IsLockedDownDueToCombat(...) then
+  if IsRestrictedBySecretValues(...) then
     local ellipsis_message = {
       time = time(),
       type = "SYSTEM",
