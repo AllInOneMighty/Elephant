@@ -272,29 +272,20 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
 
   if IsRestrictedBySecretValues(...) then
     if
-      Elephant:ProfileDb().skip_cannot_log_restricted_warning
-      or Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
+      not Elephant:ProfileDb().skip_cannot_log_restricted_warning
+      and not Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat
     then
-      -- Only log the ellipsis if a warning has already been issued.
-      return CreateEllipsisMessageTbl(), nil
+      -- Issue warning that some messages cannot be logged while in combat
+      -- lockdown.
+      local warning_message =
+        CreateColorFromHexString("ffff4800"):WrapTextInColorCode(
+          Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
+        )
+      Elephant:Print(warning_message)
+      Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
     end
 
-    -- Issue warning that some messages cannot be logged while in combat
-    -- lockdown.
-    local warning_message =
-      CreateColorFromHexString("ffff4800"):WrapTextInColorCode(
-        Elephant.L["STRING_INFORM_CHAT_CANNOT_LOG_SOME_MSGS_IN_COMBAT"]
-      )
-    Elephant:Print(warning_message)
-    -- We create a warning message.
-    local new_message = {
-      time = time(),
-      type = Elephant:ProfileDb().events[event].type,
-      arg1 = warning_message,
-    }
-    Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
-    -- Don't forget to add the ellipsis.
-    return new_message, CreateEllipsisMessageTbl()
+    return CreateEllipsisMessageTbl(), nil
   end
 
   local new_message = {
