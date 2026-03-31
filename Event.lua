@@ -134,6 +134,11 @@ local function HasFlags(event)
 end
 
 local function IsRestrictedBySecretValues(...)
+  -- Not available on classic versions
+  if not issecretvalue then
+    return false
+  end
+
   -- Do not return early if combat lockdown is active as it's not representative
   -- of when the below variables are secret or not.
   local text, player_name, _, _, _, flags, _, _, channel_name, _, _, guid, bn_sender_id =
