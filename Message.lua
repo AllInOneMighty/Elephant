@@ -150,7 +150,10 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
 
   -- The message itself; shouldn't be there if Prat message
   if message_tbl.arg1 then
-    if message_tbl.type == "MONSTER_EMOTE" then
+    if
+      message_tbl.type == "MONSTER_EMOTE"
+      or message_tbl.type == "RAID_BOSS_EMOTE"
+    then
       literal_message = literal_message
         .. format(message_tbl.arg1, message_tbl.arg2)
     elseif
