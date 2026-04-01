@@ -150,12 +150,15 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
 
   -- The message itself; shouldn't be there if Prat message
   if message_tbl.arg1 then
+    -- Preprocessing of the icons to fit them in the chat correctly.
+    -- Reducing size from 20 to 12.
+    local arg1 = string.gsub(message_tbl.arg1, "(|T[^:]+:)20(|t)", "%112%2")
+
     if
       message_tbl.type == "MONSTER_EMOTE"
       or message_tbl.type == "RAID_BOSS_EMOTE"
     then
-      literal_message = literal_message
-        .. format(message_tbl.arg1, message_tbl.arg2)
+      literal_message = literal_message .. format(arg1, message_tbl.arg2)
     elseif
       message_tbl.arg2
       and (
@@ -163,10 +166,9 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
         or message_tbl.type == "GUILD_ACHIEVEMENT"
       )
     then
-      literal_message = literal_message
-        .. format(message_tbl.arg1, message_tbl.arg2)
+      literal_message = literal_message .. format(arg1, message_tbl.arg2)
     else
-      literal_message = literal_message .. message_tbl.arg1
+      literal_message = literal_message .. arg1
     end
   end
 
