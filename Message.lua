@@ -152,7 +152,7 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
   if message_tbl.arg1 then
     -- Preprocessing of the icons to fit them in the chat correctly.
     -- Reducing size from 20 to 12.
-    local arg1 = string.gsub(message_tbl.arg1, "(|T[^:]+:)20(|t)", "%112%2")
+    local arg1 = string.gsub(message_tbl.arg1, "(|T[^:]+:)%d%d(|t)", "%112%2")
 
     if
       message_tbl.type == "MONSTER_EMOTE"
