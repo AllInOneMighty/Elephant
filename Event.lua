@@ -360,7 +360,7 @@ local function LogNewMessages(event, new_message, extra_new_message)
     -- never received a joined notice, and immediately leaves without receiving
     -- any other message. But it's such a rare event that it's okay to create a
     -- structure in this case, even if the user has to delete it afterwards.
-    Elephant:MaybeInitCustomChannelLogTable(channel_index, channel_name)
+    Elephant:MaybeInitCustomChannelLogTable(channel_index, new_message.arg9)
     if not Elephant:LogsDb().logs[channel_index].enabled then
       return
     end

@@ -58,6 +58,11 @@ local function DropdownCustomChatsInitialize()
     if
       type(log_index) ~= "number"
       and not Elephant:IsGeneralChatLogIndex(log_index)
+      -- Fix for custom chat not having a name. This may have happened due to
+      -- an older Elephant bug that created custom logs without a name.
+      -- Fixes itself on the next message sent or received on that custom
+      -- channel.
+      and log_tbl.name
     then
       info = {}
       -- log_tbl.name always exists on custom chats.

@@ -224,6 +224,11 @@ end
 --     first header to the log.
 function Elephant:MaybeInitCustomChannelLogTable(log_index, name)
   if Elephant:LogsDb().logs[log_index] then
+    -- Fixing custom log without a name. May have happened due to old code
+    -- giving a nil 'name' parameter.
+    if not Elephant:LogsDb().logs[log_index].name then
+      Elephant:LogsDb().logs[log_index].name = name
+    end
     return
   end
 
