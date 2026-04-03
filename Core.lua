@@ -427,12 +427,14 @@ local default_configuration = {
       },
       ["CHAT_MSG_PET_BATTLE_COMBAT_LOG"] = {
         type = "PET_BATTLE_INFO",
+        register_with_prat = true,
         channels = {
           [default_logs.pet_battle.id] = -1,
         },
       },
       ["CHAT_MSG_PET_BATTLE_INFO"] = {
         type = "PET_BATTLE_COMBAT_LOG",
+        register_with_prat = true,
         channels = {
           [default_logs.pet_battle.id] = -1,
         },
