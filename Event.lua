@@ -288,6 +288,14 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
     return CreateEllipsisMessageTbl(), nil
   end
 
+  -- When Prat is enabled, only log events that are marked to be logged with it.
+  if
+    Elephant:ProfileDb().prat
+    and not Elephant:ProfileDb().events[event].log_even_with_prat_enabled
+  then
+    return nil, nil
+  end
+
   local new_message = {
     time = time(),
     type = Elephant:ProfileDb().events[event].type,
@@ -450,9 +458,7 @@ function Elephant:RegisterEventsRefresh()
 
     -- Registering additional events not handled by Prat
     for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
-      if event_tbl.register_with_prat then
-        Elephant:RegisterEvent(event_type, HandleEvent, nil)
-      end
+      Elephant:RegisterEvent(event_type, HandleEvent, nil)
     end
   else
     if not Prat and Elephant:ProfileDb().prat then

@@ -346,7 +346,7 @@ local default_configuration = {
       },
       ["CHAT_MSG_LOOT"] = {
         type = "LOOT",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         desc = ITEM_LOOT,
         channels = {
           [default_logs.loot.id] = -1,
@@ -354,7 +354,7 @@ local default_configuration = {
       },
       ["CHAT_MSG_MONEY"] = {
         type = "MONEY",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         desc = MONEY_LOOT,
         channels = {
           [default_logs.loot.id] = 1,
@@ -362,7 +362,7 @@ local default_configuration = {
       },
       ["CHAT_MSG_CURRENCY"] = {
         type = "CURRENCY",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         channels = {
           [default_logs.loot.id] = 1,
         },
@@ -427,14 +427,14 @@ local default_configuration = {
       },
       ["CHAT_MSG_PET_BATTLE_COMBAT_LOG"] = {
         type = "PET_BATTLE_INFO",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         channels = {
           [default_logs.pet_battle.id] = -1,
         },
       },
       ["CHAT_MSG_PET_BATTLE_INFO"] = {
         type = "PET_BATTLE_COMBAT_LOG",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         channels = {
           [default_logs.pet_battle.id] = -1,
         },
@@ -522,7 +522,7 @@ local default_configuration = {
       },
       ["PARTY_LOOT_METHOD_CHANGED"] = {
         type = "SYSTEM",
-        register_with_prat = true,
+        log_even_with_prat_enabled = true,
         desc = LOOT_METHOD,
         channels = {
           [default_logs.loot.id] = -1,
