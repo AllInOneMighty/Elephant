@@ -411,7 +411,7 @@ end
 -- Handles messages sent by the WoW engine as well as the ones sent by Prat. The
 -- prat_tbl parameter is only set when Prat logging is enabled.
 local function HandleEvent(prat_tbl, event, ...)
-  if not Elephant:ProfileDb().prat and prat_tbl then
+  if prat_tbl and not Elephant:ProfileDb().prat then
     -- We received a message sent by Prat but Prat logging is not enabled, so
     -- let's ignore this message. Should generally never happen, but here as a
     -- safeguard.
