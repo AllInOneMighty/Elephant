@@ -452,26 +452,21 @@ end
 function Elephant:RegisterEventsRefresh()
   Elephant:UnregisterAllEvents()
 
-  local event_type
-  if Prat and Elephant:ProfileDb().prat then
-    Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
-
-    -- Registering additional events not handled by Prat
-    for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
-      Elephant:RegisterEvent(event_type, HandleEvent, nil)
-    end
-  else
-    if not Prat and Elephant:ProfileDb().prat then
+  if Elephant:ProfileDb().prat then
+    if Prat then
+      Prat.RegisterChatEvent(Elephant, Prat.Events.POST_ADDMESSAGE)
+    else
       Elephant:Print(
-        "|cffff0000"
-          .. Elephant.L["STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT"]
-          .. "|r"
+        CreateColor(1.0, 0.0, 0.0):WrapTextInColorCode(
+          Elephant.L["STRING_INFORM_CHAT_PRAT_WITHOUT_PRAT"]
+        )
       )
     end
+  end
 
-    for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
-      Elephant:RegisterEvent(event_type, HandleEvent, nil)
-    end
+  local event_type, event_tbl = nil, nil
+  for event_type, event_tbl in pairs(Elephant:ProfileDb().events) do
+    Elephant:RegisterEvent(event_type, HandleEvent, nil)
   end
 end
 
