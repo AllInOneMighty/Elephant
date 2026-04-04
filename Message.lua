@@ -43,7 +43,10 @@ local function GetDecoratedSender(message_tbl)
 
   local class_color = message_tbl.clColor
   if class_color and Elephant:ProfileDb().class_colors_in_log then
-    decorated_sender = "|c" .. class_color .. decorated_sender .. "|r"
+    decorated_sender =
+      CreateColorFromHexString(class_color):WrapTextInColorCode(
+        decorated_sender
+      )
   end
 
   if sender_link then
@@ -72,9 +75,9 @@ function Elephant:GetLiteralMessage(message_tbl, use_timestamps)
 
   -- Time if needed
   if use_timestamps and message_tbl.time then
-    literal_message = "|cff888888"
-      .. date("%H:%M:%S", message_tbl.time)
-      .. "|r "
+    literal_message = CreateColor(0.53, 0.53, 0.53):WrapTextInColorCode(
+      date("%H:%M:%S", message_tbl.time)
+    ) .. " "
   end
 
   -- Handling Prat messages
