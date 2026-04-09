@@ -30,7 +30,7 @@ end
 --
 -- Returns nil if a channel cannot be found.
 local function GetChannelIndexFromChannelName(channel_name)
-  if channel_name == "" then
+  if not channel_name or channel_name == "" then
     return nil
   end
 
@@ -285,7 +285,15 @@ local function GetNewMessagesFromEvent(prat_tbl, event, ...)
       Elephant:VolatileConfig().warned_cannot_log_some_msgs_in_combat = true
     end
 
-    return CreateEllipsisMessageTbl(), nil
+    local ellipsis_message = CreateEllipsisMessageTbl()
+    if IsChannelEvent(event) then
+      local _, _, _, _, _, _, _, _, channel_name = ...
+      -- Should never be a secret value, but a safeguard is always good to have.
+      if not issecretvalue(channel_name) then
+        ellipsis_message.arg9 = channel_name
+      end
+    end
+    return ellipsis_message, nil
   end
 
   -- When Prat is enabled, only log events that are marked to be logged with it.
