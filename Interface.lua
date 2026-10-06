@@ -3,6 +3,12 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local skins = {
   default = {
     name = DEFAULT,
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\Addons\Elephant\roth.tga]],
       width = 16,
@@ -19,6 +25,12 @@ local skins = {
   },
   achievement = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_ACHIEVEMENT"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\ACHIEVEMENTFRAME\UI-Achievement-WoodBorder]],
       width = 64,
@@ -35,6 +47,9 @@ local skins = {
   },
   bank = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_BANK"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+    },
     border = {
       texture = [[Interface\LFGFRAME\LFGBorder]],
       width = 32,
@@ -51,6 +66,12 @@ local skins = {
   },
   dialog = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_DIALOG"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Border]],
       width = 32,
@@ -67,6 +88,12 @@ local skins = {
   },
   dialog_gold = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_DIALOG_GOLD"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Gold-Border]],
       width = 32,
@@ -83,6 +110,12 @@ local skins = {
   },
   panel = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_PANEL"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\GLUES\COMMON\TextPanel-Border]],
       width = 32,
@@ -99,6 +132,12 @@ local skins = {
   },
   tooltip = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_NORMAL"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CLASSIC,
+      WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
+      WOW_PROJECT_MISTS_CLASSIC,
+    },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border]],
       width = 16,
@@ -115,6 +154,9 @@ local skins = {
   },
   tooltip_azerite = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_AZERITE"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+    },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Azerite]],
       width = 16,
@@ -131,6 +173,9 @@ local skins = {
   },
   tooltip_corrupted = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_CORRUPTED"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+    },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Corrupted]],
       width = 16,
@@ -147,6 +192,9 @@ local skins = {
   },
   tooltip_maw = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_MAW"],
+    project_ids = {
+      WOW_PROJECT_MAINLINE,
+    },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Maw]],
       width = 16,
@@ -203,8 +251,7 @@ local function SetObjectColorWithCurrentLogColor(obj)
           -- Current log is a custom channel
           current_log_index == channel_name
           or (
-            -- Current log is a general chat
-            general_chat_channel_tbl
+            general_chat_channel_tbl -- Current log is a general chat
             and (
               Elephant:ChannelIdPartiallyMatches(
                 channel_name,
@@ -642,6 +689,17 @@ local function ChangeSkin(skin_id)
   end
 end
 
+-- Technically a "table.contains" method, but using a specific name to avoid
+-- having to create a "Utils.lua"
+local function HasProjectId(project_ids, project_id)
+  for _, v in ipairs(project_ids) do
+    if v == project_id then
+      return true
+    end
+  end
+  return false
+end
+
 -- Changes the display of the current log to the one at the given index.
 --
 -- Changes the value of the current log index to the new one, changes the
@@ -1058,11 +1116,14 @@ function Elephant:OpenOptions()
   end
 end
 
--- Returns all skins available.
+-- Returns all skins available. Filters any skin that is not available for the
+-- running version of World of Warcraft.
 function Elephant:GetSkinNames()
   local skin_names = {}
   for skin_id, skin_tbl in pairs(skins) do
-    skin_names[skin_id] = skin_tbl.name
+    if HasProjectId(skin_tbl.project_ids, WOW_PROJECT_ID) then
+      skin_names[skin_id] = skin_tbl.name
+    end
   end
   return skin_names
 end
