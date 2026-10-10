@@ -292,14 +292,14 @@ local default_configuration = {
         type = "BN_WHISPER",
         desc = format("%s (%s)", BN_WHISPER, CHAT_MSG_WHISPER),
         channels = {
-          [default_logs.whisper.id] = -1,
+          [default_logs.whisper.id] = 1,
         },
       },
       ["CHAT_MSG_BN_WHISPER_INFORM"] = {
         type = "BN_WHISPER_INFORM",
         desc = format("%s (%s)", BN_WHISPER, CHAT_MSG_WHISPER_INFORM),
         channels = {
-          [default_logs.whisper.id] = -1,
+          [default_logs.whisper.id] = 1,
         },
       },
       ["CHAT_MSG_CHANNEL"] = {
