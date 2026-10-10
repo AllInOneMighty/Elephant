@@ -8,6 +8,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\Addons\Elephant\roth.tga]],
@@ -30,6 +31,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\ACHIEVEMENTFRAME\UI-Achievement-WoodBorder]],
@@ -49,6 +51,7 @@ local skins = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_BANK"],
     project_ids = {
       WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\LFGFRAME\LFGBorder]],
@@ -71,6 +74,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Border]],
@@ -93,6 +97,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\DialogFrame\UI-DialogBox-Gold-Border]],
@@ -115,6 +120,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\GLUES\COMMON\TextPanel-Border]],
@@ -137,6 +143,7 @@ local skins = {
       WOW_PROJECT_CLASSIC,
       WOW_PROJECT_BURNING_CRUSADE_CLASSIC,
       WOW_PROJECT_MISTS_CLASSIC,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border]],
@@ -156,6 +163,7 @@ local skins = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_AZERITE"],
     project_ids = {
       WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Azerite]],
@@ -175,6 +183,7 @@ local skins = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_CORRUPTED"],
     project_ids = {
       WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Corrupted]],
@@ -194,6 +203,7 @@ local skins = {
     name = Elephant.L["STRING_OPTIONS_SKIN_NAME_TOOLTIP_MAW"],
     project_ids = {
       WOW_PROJECT_MAINLINE,
+      WOW_PROJECT_CAMELOT,
     },
     border = {
       texture = [[Interface\Tooltips\UI-Tooltip-Border-Maw]],
@@ -692,7 +702,7 @@ end
 -- Technically a "table.contains" method, but using a specific name to avoid
 -- having to create a "Utils.lua"
 local function HasProjectId(project_ids, project_id)
-  for _, v in ipairs(project_ids) do
+  for _, v in pairs(project_ids) do
     if v == project_id then
       return true
     end
